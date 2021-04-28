@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <RootNamespace>AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP</RootNamespace>
+    <Authors>CrazyHein</Authors>
+    <Company>AMEC</Company>
+    <Copyright>Copyright ©  2021</Copyright>
+    <PackageId>CrazyHein.Gagharv</PackageId>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Slave\" />
+  </ItemGroup>
+
+</Project>

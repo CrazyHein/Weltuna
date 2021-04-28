@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31112.23
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gagharv", "Gagharv\Gagharv.csproj", "{7BB4605C-6847-4BBE-BDC4-CC8E89E8AF79}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp", "ConsoleApp\ConsoleApp.csproj", "{D6D1CAB6-E0EF-4D5A-86B2-43AC7A18CCD0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7BB4605C-6847-4BBE-BDC4-CC8E89E8AF79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BB4605C-6847-4BBE-BDC4-CC8E89E8AF79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BB4605C-6847-4BBE-BDC4-CC8E89E8AF79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BB4605C-6847-4BBE-BDC4-CC8E89E8AF79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6D1CAB6-E0EF-4D5A-86B2-43AC7A18CCD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6D1CAB6-E0EF-4D5A-86B2-43AC7A18CCD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6D1CAB6-E0EF-4D5A-86B2-43AC7A18CCD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6D1CAB6-E0EF-4D5A-86B2-43AC7A18CCD0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D01AB6DA-CDF8-4649-945A-69E9237E5602}
+	EndGlobalSection
+EndGlobal
