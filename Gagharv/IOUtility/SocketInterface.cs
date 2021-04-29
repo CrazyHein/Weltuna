@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.IOUtility
 {
-    public interface SocketInterface
+    public interface SocketInterface: IDisposable
     {
         int Send(byte[] buffer, int offset, int size, SocketFlags socketFlags = SocketFlags.None);
         int Receive(byte[] buffer, int offset, int size, SocketFlags socketFlags = SocketFlags.None);
+        string Name();
     }
 }

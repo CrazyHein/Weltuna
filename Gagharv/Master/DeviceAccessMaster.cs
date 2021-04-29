@@ -26,8 +26,18 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Master
         private int __device_points_length;
         SUB_COMMANDS_T __subcommand;
 
+        public SocketInterface COM
+        {
+            set
+            {
+                lock(__sync_object)
+                {
+                    __socket = value;
+                }
+            }
+        }
 
-        public DeviceAccessMaster(MESSAGE_FRAME_TYPE_T frameType, MESSAGE_DATA_CODE_T dataCode, bool dedicationR, SocketInterface sc, ref DESTINATION_ADDRESS_T destination, int sendBufferSize, int receiveBufferSize, object sync)
+        public DeviceAccessMaster(MESSAGE_FRAME_TYPE_T frameType, MESSAGE_DATA_CODE_T dataCode, bool dedicationR, SocketInterface sc, ref DESTINATION_ADDRESS_T destination, int sendBufferSize = 4096, int receiveBufferSize = 4096, object sync = null)
         {
             __socket = sc;
             __frame_type = frameType;
@@ -35,7 +45,7 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Master
             __destination = destination;
             __send_byte_array = new byte[sendBufferSize];
             __receive_byte_array = new byte[receiveBufferSize];
-            __sync_object = sync;
+            __sync_object = sync ?? new object();
 
             switch (frameType, dataCode, dedicationR)
             {
@@ -48,15 +58,14 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Master
                     __subcommand = 0;
                     __serial_number_generator = null;
                     break;
-
-                case (MESSAGE_FRAME_TYPE_T.MC_4E, MESSAGE_DATA_CODE_T.ASCII, true):
+                case (MESSAGE_FRAME_TYPE_T.MC_3E, MESSAGE_DATA_CODE_T.ASCII, true):
                     __command_header_length = Marshal.SizeOf<REQUEST_COMMAND_HEADER_IN_3E_ASCII_T>();
                     __device_specification_length = Marshal.SizeOf<DEVICE_SPECIFICATION_IN_R_ASCII_T>();
                     __device_extension_specification_length = Marshal.SizeOf<DEVICE_EXTENSION_SPECIFICATION_IN_R_ASCII_T>();
-                    __response_message_header_length = Marshal.SizeOf<RESPONSE_MESSAGE_HEADER_IN_4E_ASCII_T>();
+                    __response_message_header_length = Marshal.SizeOf<RESPONSE_MESSAGE_HEADER_IN_3E_ASCII_T>();
                     __device_points_length = 4;
                     __subcommand = SUB_COMMANDS_T.R_MODULE_DEVICE_COMMAND_DEDICATION;
-                    __serial_number_generator = new Random();
+                    __serial_number_generator = null;
                     break;
                 case (MESSAGE_FRAME_TYPE_T.MC_3E, MESSAGE_DATA_CODE_T.BINARY, false):
                     __command_header_length = Marshal.SizeOf<REQUEST_COMMAND_HEADER_IN_3E_BINARY_T>();
@@ -67,6 +76,43 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Master
                     __subcommand = 0;
                     __serial_number_generator = null;
                     break;
+                case (MESSAGE_FRAME_TYPE_T.MC_3E, MESSAGE_DATA_CODE_T.BINARY, true):
+                    __command_header_length = Marshal.SizeOf<REQUEST_COMMAND_HEADER_IN_3E_BINARY_T>();
+                    __device_specification_length = Marshal.SizeOf<DEVICE_SPECIFICATION_IN_R_BINARY_T>();
+                    __device_extension_specification_length = Marshal.SizeOf<DEVICE_EXTENSION_SPECIFICATION_IN_R_BINARY_T>();
+                    __response_message_header_length = Marshal.SizeOf<RESPONSE_MESSAGE_HEADER_IN_3E_BINARY_T>();
+                    __device_points_length = 2;
+                    __subcommand = SUB_COMMANDS_T.R_MODULE_DEVICE_COMMAND_DEDICATION;
+                    __serial_number_generator = null;
+                    break;
+
+                case (MESSAGE_FRAME_TYPE_T.MC_4E, MESSAGE_DATA_CODE_T.ASCII, false):
+                    __command_header_length = Marshal.SizeOf<REQUEST_COMMAND_HEADER_IN_3E_ASCII_T>();
+                    __device_specification_length = Marshal.SizeOf<DEVICE_SPECIFICATION_IN_QL_ASCII_T>();
+                    __device_extension_specification_length = Marshal.SizeOf<DEVICE_EXTENSION_SPECIFICATION_IN_QL_ASCII_T>();
+                    __response_message_header_length = Marshal.SizeOf<RESPONSE_MESSAGE_HEADER_IN_4E_ASCII_T>();
+                    __device_points_length = 4;
+                    __subcommand = 0;
+                    __serial_number_generator = new Random();
+                    break;
+                case (MESSAGE_FRAME_TYPE_T.MC_4E, MESSAGE_DATA_CODE_T.ASCII, true):
+                    __command_header_length = Marshal.SizeOf<REQUEST_COMMAND_HEADER_IN_3E_ASCII_T>();
+                    __device_specification_length = Marshal.SizeOf<DEVICE_SPECIFICATION_IN_R_ASCII_T>();
+                    __device_extension_specification_length = Marshal.SizeOf<DEVICE_EXTENSION_SPECIFICATION_IN_R_ASCII_T>();
+                    __response_message_header_length = Marshal.SizeOf<RESPONSE_MESSAGE_HEADER_IN_4E_ASCII_T>();
+                    __device_points_length = 4;
+                    __subcommand = SUB_COMMANDS_T.R_MODULE_DEVICE_COMMAND_DEDICATION;
+                    __serial_number_generator = new Random();
+                    break;
+                case (MESSAGE_FRAME_TYPE_T.MC_4E, MESSAGE_DATA_CODE_T.BINARY, false):
+                    __command_header_length = Marshal.SizeOf<REQUEST_COMMAND_HEADER_IN_3E_BINARY_T>();
+                    __device_specification_length = Marshal.SizeOf<DEVICE_SPECIFICATION_IN_QL_BINARY_T>();
+                    __device_extension_specification_length = Marshal.SizeOf<DEVICE_EXTENSION_SPECIFICATION_IN_QL_BINARY_T>();
+                    __response_message_header_length = Marshal.SizeOf<RESPONSE_MESSAGE_HEADER_IN_4E_BINARY_T>();
+                    __device_points_length = 2;
+                    __subcommand = 0;
+                    __serial_number_generator = new Random();
+                    break;
                 case (MESSAGE_FRAME_TYPE_T.MC_4E, MESSAGE_DATA_CODE_T.BINARY, true):
                     __command_header_length = Marshal.SizeOf<REQUEST_COMMAND_HEADER_IN_3E_BINARY_T>();
                     __device_specification_length = Marshal.SizeOf<DEVICE_SPECIFICATION_IN_R_BINARY_T>();
@@ -76,6 +122,7 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Master
                     __subcommand = SUB_COMMANDS_T.R_MODULE_DEVICE_COMMAND_DEDICATION;
                     __serial_number_generator = new Random();
                     break;
+
                 case (MESSAGE_FRAME_TYPE_T.STATION_NUM_EXTENSION, MESSAGE_DATA_CODE_T.BINARY, false):
                     __command_header_length = Marshal.SizeOf<REQUEST_COMMAND_HEADER_IN_EX_BINARY_T>();
                     __device_specification_length = Marshal.SizeOf<DEVICE_SPECIFICATION_IN_QL_BINARY_T>();
@@ -117,10 +164,8 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Master
                 ushort responseDataLength;
 
                 int offset = 0;
-                if (__frame_type == MESSAGE_FRAME_TYPE_T.MC_3E)
-                    serialNo0 = 0;
-                else
-                    serialNo0 = (ushort)__serial_number_generator.Next(65536);
+                serialNo0 = __serial_number_generator == null ? (ushort)0 : (ushort)__serial_number_generator.Next(65536);
+
                 if ((subcommand & SUB_COMMANDS_T.DEVICE_EXTENSION_SPECIFICATION) == 0)
                     offset = RequestMessage.BUILD_BYTE_ARRAY_HEADER(__frame_type, __data_code, serialNo0,
                                         destination.network_number, destination.station_number,
@@ -214,10 +259,7 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Master
                 int devicePointLength = DeviceAccess.DEIVICE_REGISTER_DATA_ARRAY_LENGTH(__data_code, subcommand, devicePoints);
 
                 int offset = 0;
-                if (__frame_type == MESSAGE_FRAME_TYPE_T.MC_3E)
-                    serialNo0 = 0;
-                else
-                    serialNo0 = (ushort)__serial_number_generator.Next(65536);
+                serialNo0 = __serial_number_generator == null ? (ushort)0 : (ushort)__serial_number_generator.Next(65536);
 
                 if ((subcommand & SUB_COMMANDS_T.DEVICE_EXTENSION_SPECIFICATION) == 0)
                     offset = RequestMessage.BUILD_BYTE_ARRAY_HEADER(__frame_type, __data_code, serialNo0,

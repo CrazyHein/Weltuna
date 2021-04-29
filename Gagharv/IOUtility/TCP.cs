@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.IOUtility
 {
-    public class TCP : SocketInterface, IDisposable
+    public class TCP : SocketInterface
     {
         private bool disposedValue;
 
@@ -108,6 +108,11 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.IOUtility
             // 不要更改此代码。请将清理代码放入“Dispose(bool disposing)”方法中
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
+        }
+
+        public string Name()
+        {
+            return "TCP";
         }
     }
 }
