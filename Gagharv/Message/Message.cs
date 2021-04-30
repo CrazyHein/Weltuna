@@ -119,6 +119,13 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Message
             return res;
         }
 
+        public static int BINARY_TO_ASCII_ARRAY(uint data, byte[] dataArray, int startIndex)
+        {
+            int res = BINARY_TO_ASCII_ARRAY((ushort)(data >> 16), dataArray, startIndex);
+            res += BINARY_TO_ASCII_ARRAY((ushort)(data & 0xFFFF), dataArray, startIndex + res);
+            return res;
+        }
+
         public static int BINARY_TO_BINARY_ARRAY(byte data, byte[] dataArray, int startIndex)
         {
             dataArray[startIndex] = data;
@@ -130,6 +137,15 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Message
             dataArray[startIndex] = (byte)(data & 0x00FF);
             dataArray[startIndex + 1] = (byte)(data >> 8);
             return 2;
+        }
+
+        public static int BINARY_TO_BINARY_ARRAY(uint data, byte[] dataArray, int startIndex)
+        {
+            dataArray[startIndex] = (byte)(data & 0x000000FF);
+            dataArray[startIndex + 1] = (byte)((data >> 8) & 0x000000FF);
+            dataArray[startIndex + 2] = (byte)((data >> 16) & 0x000000FF);
+            dataArray[startIndex + 3] = (byte)((data >> 24) & 0x000000FF);
+            return 4;
         }
 
         public static int ASCII_ARRAY_TO_BINARY(byte[] dataArray, int startIndex, out byte data)

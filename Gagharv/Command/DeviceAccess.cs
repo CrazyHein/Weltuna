@@ -415,13 +415,13 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Command
                     {
                         if ((subcommand & SUB_COMMANDS_T.DEVICE_EXTENSION_SPECIFICATION) != 0)
                         {
-                            if (dataArray.Length - startIndex < Marshal.SizeOf<DEVICE_EXTENSION_SPECIFICATION_IN_R_ASCII_T>())
+                            if (dataArray.Length - startIndex < Marshal.SizeOf<DEVICE_EXTENSION_SPECIFICATION_IN_R_ASCII_T>() + 4)
                                 throw new SLMPException(SLMP_EXCEPTION_CODE_T.INSUFFICIENT_DATA_ARRAY_BUFFER);
                             index += __BUILD_DEVICE_EXTENSION_SPECIFICATION_IN_R_ASCII(deviceCode, headDevice, extension, extensionModification, deviceModification, indirectSpecification, dataArray, index);
                         }
                         else
                         {
-                            if (dataArray.Length - startIndex < Marshal.SizeOf<DEVICE_SPECIFICATION_IN_R_ASCII_T>())
+                            if (dataArray.Length - startIndex < Marshal.SizeOf<DEVICE_SPECIFICATION_IN_R_ASCII_T>() + 4)
                                 throw new SLMPException(SLMP_EXCEPTION_CODE_T.INSUFFICIENT_DATA_ARRAY_BUFFER);
                             index += __BUILD_DEVICE_SPECIFICATION_IN_R_ASCII(deviceCode, headDevice, dataArray, index);
                         }
@@ -430,13 +430,13 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Command
                     {
                         if ((subcommand & SUB_COMMANDS_T.DEVICE_EXTENSION_SPECIFICATION) != 0)
                         {
-                            if (dataArray.Length - startIndex < Marshal.SizeOf<DEVICE_EXTENSION_SPECIFICATION_IN_QL_ASCII_T>())
+                            if (dataArray.Length - startIndex < Marshal.SizeOf<DEVICE_EXTENSION_SPECIFICATION_IN_QL_ASCII_T>() + 4)
                                 throw new SLMPException(SLMP_EXCEPTION_CODE_T.INSUFFICIENT_DATA_ARRAY_BUFFER);
                             index += __BUILD_DEVICE_EXTENSION_SPECIFICATION_IN_QL_ASCII(deviceCode, headDevice, extension, extensionModification, deviceModification, indirectSpecification, dataArray, index);
                         }
                         else
                         {
-                            if (dataArray.Length - startIndex < Marshal.SizeOf<DEVICE_SPECIFICATION_IN_QL_ASCII_T>())
+                            if (dataArray.Length - startIndex < Marshal.SizeOf<DEVICE_SPECIFICATION_IN_QL_ASCII_T>() + 4)
                                 throw new SLMPException(SLMP_EXCEPTION_CODE_T.INSUFFICIENT_DATA_ARRAY_BUFFER);
                             index += __BUILD_DEVICE_SPECIFICATION_IN_QL_ASCII(deviceCode, headDevice, dataArray, index); 
                         }
@@ -449,13 +449,13 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Command
                     {
                         if ((subcommand & SUB_COMMANDS_T.DEVICE_EXTENSION_SPECIFICATION) != 0)
                         {
-                            if (dataArray.Length - startIndex < Marshal.SizeOf<DEVICE_EXTENSION_SPECIFICATION_IN_R_BINARY_T>())
+                            if (dataArray.Length - startIndex < Marshal.SizeOf<DEVICE_EXTENSION_SPECIFICATION_IN_R_BINARY_T>() + 2)
                                 throw new SLMPException(SLMP_EXCEPTION_CODE_T.INSUFFICIENT_DATA_ARRAY_BUFFER);
                             index += __BUILD_DEVICE_EXTENSION_SPECIFICATION_IN_R_BINARY(deviceCode, headDevice, extension, extensionModification, deviceModification, indirectSpecification, dataArray, index);
                         }
                         else
                         {
-                            if (dataArray.Length - startIndex < Marshal.SizeOf<DEVICE_SPECIFICATION_IN_R_BINARY_T>())
+                            if (dataArray.Length - startIndex < Marshal.SizeOf<DEVICE_SPECIFICATION_IN_R_BINARY_T>() + 2)
                                 throw new SLMPException(SLMP_EXCEPTION_CODE_T.INSUFFICIENT_DATA_ARRAY_BUFFER);
                             index += __BUILD_DEVICE_SPECIFICATION_IN_R_BINARY(deviceCode, headDevice, dataArray, index);
                         }
@@ -464,18 +464,555 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Command
                     {
                         if ((subcommand & SUB_COMMANDS_T.DEVICE_EXTENSION_SPECIFICATION) != 0)
                         {
-                            if (dataArray.Length - startIndex < Marshal.SizeOf<DEVICE_EXTENSION_SPECIFICATION_IN_QL_BINARY_T>())
+                            if (dataArray.Length - startIndex < Marshal.SizeOf<DEVICE_EXTENSION_SPECIFICATION_IN_QL_BINARY_T>() + 2)
                                 throw new SLMPException(SLMP_EXCEPTION_CODE_T.INSUFFICIENT_DATA_ARRAY_BUFFER);
                             index += __BUILD_DEVICE_EXTENSION_SPECIFICATION_IN_QL_BINARY(deviceCode, headDevice, extension, extensionModification, deviceModification, indirectSpecification, dataArray, index);
                         }
                         else
                         {
-                            if (dataArray.Length - startIndex < Marshal.SizeOf<DEVICE_SPECIFICATION_IN_QL_BINARY_T>())
+                            if (dataArray.Length - startIndex < Marshal.SizeOf<DEVICE_SPECIFICATION_IN_QL_BINARY_T>() + 2)
                                 throw new SLMPException(SLMP_EXCEPTION_CODE_T.INSUFFICIENT_DATA_ARRAY_BUFFER);
                             index += __BUILD_DEVICE_SPECIFICATION_IN_QL_BINARY(deviceCode, headDevice, dataArray, index);
                         } 
                     }
                     index += Message.Message.BINARY_TO_BINARY_ARRAY(devicePoints, dataArray, index);
+                    break;
+                default:
+                    throw new SLMPException(SLMP_EXCEPTION_CODE_T.INVALID_DATA_CODE);
+            }
+            return index - startIndex;
+        }
+
+        public static int BUILD_DEVICE_READ_RANDOM_BYTE_ARRAY_HEADER(MESSAGE_FRAME_TYPE_T frameType, MESSAGE_DATA_CODE_T dataCode, SUB_COMMANDS_T subcommand,
+                                                                    (string extension, string extensionModification, string deviceModification, string indirectSpecification, string deviceCode, uint headDevice)[] exdevicein16,
+                                                                    (string extension, string extensionModification, string deviceModification, string indirectSpecification, string deviceCode, uint headDevice)[] exdevicein32,
+                                                                    (string deviceCode, uint headDevice)[] devicein16, (string deviceCode, uint headDevice)[] devicein32,
+                                                                    byte[] dataArray, int startIndex)
+        {
+            int index = startIndex;
+            byte device32points = 0;
+            byte device16points = 0;
+            switch (dataCode)
+            {
+                case MESSAGE_DATA_CODE_T.ASCII:
+                    if ((subcommand & SUB_COMMANDS_T.R_MODULE_DEVICE_COMMAND_DEDICATION) != 0)
+                    {
+                        if ((subcommand & SUB_COMMANDS_T.DEVICE_EXTENSION_SPECIFICATION) != 0)
+                        {
+                            device32points = (byte)(exdevicein32 == null ? 0 : exdevicein32.Length);
+                            device16points = (byte)(exdevicein16 == null ? 0 : exdevicein16.Length);
+                            if (dataArray.Length - startIndex < Marshal.SizeOf<DEVICE_EXTENSION_SPECIFICATION_IN_R_ASCII_T>() * (device32points + device16points) + 4)
+                                throw new SLMPException(SLMP_EXCEPTION_CODE_T.INSUFFICIENT_DATA_ARRAY_BUFFER);
+                            index += Message.Message.BINARY_TO_ASCII_ARRAY(device16points, dataArray, index);
+                            index += Message.Message.BINARY_TO_ASCII_ARRAY(device32points, dataArray, index);
+                            if(exdevicein16 != null)
+                                foreach(var d in exdevicein16)
+                                    index += __BUILD_DEVICE_EXTENSION_SPECIFICATION_IN_R_ASCII(d.deviceCode, d.headDevice, d.extension, d.extensionModification, d.deviceModification, d.indirectSpecification, dataArray, index);
+                            if (exdevicein32 != null)
+                                foreach (var d in exdevicein32)
+                                    index += __BUILD_DEVICE_EXTENSION_SPECIFICATION_IN_R_ASCII(d.deviceCode, d.headDevice, d.extension, d.extensionModification, d.deviceModification, d.indirectSpecification, dataArray, index);
+                        }
+                        else
+                        {
+                            device32points = (byte)(devicein32 == null ? 0 : devicein32.Length);
+                            device16points = (byte)(devicein16 == null ? 0 : devicein16.Length);
+                            if (dataArray.Length - startIndex < Marshal.SizeOf<DEVICE_SPECIFICATION_IN_R_ASCII_T>() * (device32points + device16points) + 4)
+                                throw new SLMPException(SLMP_EXCEPTION_CODE_T.INSUFFICIENT_DATA_ARRAY_BUFFER);
+                            index += Message.Message.BINARY_TO_ASCII_ARRAY(device16points, dataArray, index);
+                            index += Message.Message.BINARY_TO_ASCII_ARRAY(device32points, dataArray, index);
+                            if (devicein16 != null)
+                                foreach (var d in devicein16)
+                                    index += __BUILD_DEVICE_SPECIFICATION_IN_R_ASCII(d.deviceCode, d.headDevice, dataArray, index);
+                            if (devicein32 != null)
+                                foreach (var d in devicein32)
+                                    index += __BUILD_DEVICE_SPECIFICATION_IN_R_ASCII(d.deviceCode, d.headDevice, dataArray, index);
+                        }
+                    }
+                    else
+                    {
+                        if ((subcommand & SUB_COMMANDS_T.DEVICE_EXTENSION_SPECIFICATION) != 0)
+                        {
+                            device32points = (byte)(exdevicein32 == null ? 0 : exdevicein32.Length);
+                            device16points = (byte)(exdevicein16 == null ? 0 : exdevicein16.Length);
+                            if (dataArray.Length - startIndex < Marshal.SizeOf<DEVICE_EXTENSION_SPECIFICATION_IN_QL_ASCII_T>() * (device32points + device16points) + 4)
+                                throw new SLMPException(SLMP_EXCEPTION_CODE_T.INSUFFICIENT_DATA_ARRAY_BUFFER);
+                            index += Message.Message.BINARY_TO_ASCII_ARRAY(device16points, dataArray, index);
+                            index += Message.Message.BINARY_TO_ASCII_ARRAY(device32points, dataArray, index);
+                            if (exdevicein16 != null)
+                                foreach (var d in exdevicein16)
+                                    index += __BUILD_DEVICE_EXTENSION_SPECIFICATION_IN_QL_ASCII(d.deviceCode, d.headDevice, d.extension, d.extensionModification, d.deviceModification, d.indirectSpecification, dataArray, index);
+                            if (exdevicein32 != null)
+                                foreach (var d in exdevicein32)
+                                    index += __BUILD_DEVICE_EXTENSION_SPECIFICATION_IN_QL_ASCII(d.deviceCode, d.headDevice, d.extension, d.extensionModification, d.deviceModification, d.indirectSpecification, dataArray, index);
+                        }
+                        else
+                        {
+                            device32points = (byte)(devicein32 == null ? 0 : devicein32.Length);
+                            device16points = (byte)(devicein16 == null ? 0 : devicein16.Length);
+                            if (dataArray.Length - startIndex < Marshal.SizeOf<DEVICE_SPECIFICATION_IN_QL_ASCII_T>() * (device32points + device16points) + 4)
+                                throw new SLMPException(SLMP_EXCEPTION_CODE_T.INSUFFICIENT_DATA_ARRAY_BUFFER);
+                            index += Message.Message.BINARY_TO_ASCII_ARRAY(device16points, dataArray, index);
+                            index += Message.Message.BINARY_TO_ASCII_ARRAY(device32points, dataArray, index);
+                            if (devicein16 != null)
+                                foreach (var d in devicein16)
+                                    index += __BUILD_DEVICE_SPECIFICATION_IN_QL_ASCII(d.deviceCode, d.headDevice, dataArray, index);
+                            if (devicein32 != null)
+                                foreach (var d in devicein32)
+                                    index += __BUILD_DEVICE_SPECIFICATION_IN_QL_ASCII(d.deviceCode, d.headDevice, dataArray, index);
+                        }
+                    }
+                    break;
+                case MESSAGE_DATA_CODE_T.BINARY:
+                    if ((subcommand & SUB_COMMANDS_T.R_MODULE_DEVICE_COMMAND_DEDICATION) != 0)
+                    {
+                        if ((subcommand & SUB_COMMANDS_T.DEVICE_EXTENSION_SPECIFICATION) != 0)
+                        {
+                            device32points = (byte)(exdevicein32 == null ? 0 : exdevicein32.Length);
+                            device16points = (byte)(exdevicein16 == null ? 0 : exdevicein16.Length);
+                            if (dataArray.Length - startIndex < Marshal.SizeOf<DEVICE_EXTENSION_SPECIFICATION_IN_R_BINARY_T>() * (device32points + device16points) + 2)
+                                throw new SLMPException(SLMP_EXCEPTION_CODE_T.INSUFFICIENT_DATA_ARRAY_BUFFER);
+                            dataArray[index++] = device16points;
+                            dataArray[index++] = device32points;
+                            if (exdevicein16 != null)
+                                foreach (var d in exdevicein16)
+                                    index += __BUILD_DEVICE_EXTENSION_SPECIFICATION_IN_R_BINARY(d.deviceCode, d.headDevice, d.extension, d.extensionModification, d.deviceModification, d.indirectSpecification, dataArray, index);
+                            if (exdevicein32 != null)
+                                foreach (var d in exdevicein32)
+                                    index += __BUILD_DEVICE_EXTENSION_SPECIFICATION_IN_R_BINARY(d.deviceCode, d.headDevice, d.extension, d.extensionModification, d.deviceModification, d.indirectSpecification, dataArray, index);
+                        }
+                        else
+                        {
+                            device32points = (byte)(devicein32 == null ? 0 : devicein32.Length);
+                            device16points = (byte)(devicein16 == null ? 0 : devicein16.Length);
+                            if (dataArray.Length - startIndex < Marshal.SizeOf<DEVICE_SPECIFICATION_IN_R_BINARY_T>() * (device32points + device16points) + 2)
+                                throw new SLMPException(SLMP_EXCEPTION_CODE_T.INSUFFICIENT_DATA_ARRAY_BUFFER);
+                            dataArray[index++] = device16points;
+                            dataArray[index++] = device32points;
+                            if (devicein16 != null)
+                                foreach (var d in devicein16)
+                                    index += __BUILD_DEVICE_SPECIFICATION_IN_R_BINARY(d.deviceCode, d.headDevice, dataArray, index);
+                            if (devicein32 != null)
+                                foreach (var d in devicein32)
+                                    index += __BUILD_DEVICE_SPECIFICATION_IN_R_BINARY(d.deviceCode, d.headDevice, dataArray, index);
+                        }
+                    }
+                    else
+                    {
+                        if ((subcommand & SUB_COMMANDS_T.DEVICE_EXTENSION_SPECIFICATION) != 0)
+                        {
+                            device32points = (byte)(exdevicein32 == null ? 0 : exdevicein32.Length);
+                            device16points = (byte)(exdevicein16 == null ? 0 : exdevicein16.Length);
+                            if (dataArray.Length - startIndex < Marshal.SizeOf<DEVICE_EXTENSION_SPECIFICATION_IN_QL_BINARY_T>() * (device32points + device16points) + 2)
+                                throw new SLMPException(SLMP_EXCEPTION_CODE_T.INSUFFICIENT_DATA_ARRAY_BUFFER);
+                            dataArray[index++] = device16points;
+                            dataArray[index++] = device32points;
+                            if (exdevicein16 != null)
+                                foreach (var d in exdevicein16)
+                                    index += __BUILD_DEVICE_EXTENSION_SPECIFICATION_IN_QL_BINARY(d.deviceCode, d.headDevice, d.extension, d.extensionModification, d.deviceModification, d.indirectSpecification, dataArray, index);
+                            if (exdevicein32 != null)
+                                foreach (var d in exdevicein32)
+                                    index += __BUILD_DEVICE_EXTENSION_SPECIFICATION_IN_QL_BINARY(d.deviceCode, d.headDevice, d.extension, d.extensionModification, d.deviceModification, d.indirectSpecification, dataArray, index);
+                        }
+                        else
+                        {
+                            device32points = (byte)(devicein32 == null ? 0 : devicein32.Length);
+                            device16points = (byte)(devicein16 == null ? 0 : devicein16.Length);
+                            if (dataArray.Length - startIndex < Marshal.SizeOf<DEVICE_SPECIFICATION_IN_QL_BINARY_T>() * (device32points + device16points) + 2)
+                                throw new SLMPException(SLMP_EXCEPTION_CODE_T.INSUFFICIENT_DATA_ARRAY_BUFFER);
+                            dataArray[index++] = device16points;
+                            dataArray[index++] = device32points;
+                            if (devicein16 != null)
+                                foreach (var d in devicein16)
+                                    index += __BUILD_DEVICE_SPECIFICATION_IN_QL_BINARY(d.deviceCode, d.headDevice, dataArray, index);
+                            if (devicein32 != null)
+                                foreach (var d in devicein32)
+                                    index += __BUILD_DEVICE_SPECIFICATION_IN_QL_BINARY(d.deviceCode, d.headDevice, dataArray, index);
+                        }
+                    }
+                    break;
+                default:
+                    throw new SLMPException(SLMP_EXCEPTION_CODE_T.INVALID_DATA_CODE);
+            }
+            return index - startIndex;
+        }
+
+        public static int BUILD_DEVICE_WRITE_RANDOM_BYTE_ARRAY_HEADER(MESSAGE_FRAME_TYPE_T frameType, MESSAGE_DATA_CODE_T dataCode, SUB_COMMANDS_T subcommand,
+                                                                    (string extension, string extensionModification, string deviceModification, string indirectSpecification, string deviceCode, uint headDevice, byte value)[] exbitdevice,
+                                                                    (string deviceCode, uint headDevice, byte value)[] bitdevice,
+                                                                    byte[] dataArray, int startIndex)
+        {
+            int index = startIndex;
+            byte bitpoints = 0;
+            switch (dataCode)
+            {
+                case MESSAGE_DATA_CODE_T.ASCII:
+                    if ((subcommand & SUB_COMMANDS_T.R_MODULE_DEVICE_COMMAND_DEDICATION) != 0)
+                    {
+                        if ((subcommand & SUB_COMMANDS_T.DEVICE_EXTENSION_SPECIFICATION) != 0)
+                        {
+                            bitpoints = (byte)(exbitdevice == null ? 0 : exbitdevice.Length);
+                            if (dataArray.Length - startIndex < (Marshal.SizeOf<DEVICE_EXTENSION_SPECIFICATION_IN_R_ASCII_T>() + 2) * bitpoints + 2)
+                                throw new SLMPException(SLMP_EXCEPTION_CODE_T.INSUFFICIENT_DATA_ARRAY_BUFFER);
+                            index += Message.Message.BINARY_TO_ASCII_ARRAY(bitpoints, dataArray, index);
+                            if (exbitdevice != null)
+                            {
+                                foreach (var d in exbitdevice)
+                                {
+                                    index += __BUILD_DEVICE_EXTENSION_SPECIFICATION_IN_R_ASCII(d.deviceCode, d.headDevice, d.extension, d.extensionModification, d.deviceModification, d.indirectSpecification, dataArray, index);
+                                    index += Message.Message.BINARY_TO_ASCII_ARRAY(d.value, dataArray, index);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            bitpoints = (byte)(bitdevice == null ? 0 : bitdevice.Length);
+                            if (dataArray.Length - startIndex < (Marshal.SizeOf<DEVICE_SPECIFICATION_IN_R_ASCII_T>() + 2) * bitpoints + 2)
+                                throw new SLMPException(SLMP_EXCEPTION_CODE_T.INSUFFICIENT_DATA_ARRAY_BUFFER);
+                            index += Message.Message.BINARY_TO_ASCII_ARRAY(bitpoints, dataArray, index);
+                            if (bitdevice != null)
+                            {
+                                foreach (var d in bitdevice)
+                                {
+                                    index += __BUILD_DEVICE_SPECIFICATION_IN_R_ASCII(d.deviceCode, d.headDevice, dataArray, index);
+                                    index += Message.Message.BINARY_TO_ASCII_ARRAY(d.value, dataArray, index);
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if ((subcommand & SUB_COMMANDS_T.DEVICE_EXTENSION_SPECIFICATION) != 0)
+                        {
+                            bitpoints = (byte)(exbitdevice == null ? 0 : exbitdevice.Length);
+                            if (dataArray.Length - startIndex < (Marshal.SizeOf<DEVICE_EXTENSION_SPECIFICATION_IN_QL_ASCII_T>() + 2) * bitpoints + 2)
+                                throw new SLMPException(SLMP_EXCEPTION_CODE_T.INSUFFICIENT_DATA_ARRAY_BUFFER);
+                            index += Message.Message.BINARY_TO_ASCII_ARRAY(bitpoints, dataArray, index);
+                            if (exbitdevice != null)
+                            {
+                                foreach (var d in exbitdevice)
+                                {
+                                    index += __BUILD_DEVICE_EXTENSION_SPECIFICATION_IN_QL_ASCII(d.deviceCode, d.headDevice, d.extension, d.extensionModification, d.deviceModification, d.indirectSpecification, dataArray, index);
+                                    index += Message.Message.BINARY_TO_ASCII_ARRAY(d.value, dataArray, index);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            bitpoints = (byte)(bitdevice == null ? 0 : bitdevice.Length);
+                            if (dataArray.Length - startIndex < (Marshal.SizeOf<DEVICE_SPECIFICATION_IN_QL_ASCII_T>() + 2) * bitpoints + 2)
+                                throw new SLMPException(SLMP_EXCEPTION_CODE_T.INSUFFICIENT_DATA_ARRAY_BUFFER);
+                            index += Message.Message.BINARY_TO_ASCII_ARRAY(bitpoints, dataArray, index);
+                            if (bitdevice != null)
+                            {
+                                foreach (var d in bitdevice)
+                                {
+                                    index += __BUILD_DEVICE_SPECIFICATION_IN_QL_ASCII(d.deviceCode, d.headDevice, dataArray, index);
+                                    index += Message.Message.BINARY_TO_ASCII_ARRAY(d.value, dataArray, index);
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case MESSAGE_DATA_CODE_T.BINARY:
+                    if ((subcommand & SUB_COMMANDS_T.R_MODULE_DEVICE_COMMAND_DEDICATION) != 0)
+                    {
+                        if ((subcommand & SUB_COMMANDS_T.DEVICE_EXTENSION_SPECIFICATION) != 0)
+                        {
+                            bitpoints = (byte)(exbitdevice == null ? 0 : exbitdevice.Length);
+                            if (dataArray.Length - startIndex < (Marshal.SizeOf<DEVICE_EXTENSION_SPECIFICATION_IN_R_BINARY_T>() + 1) * bitpoints + 1)
+                                throw new SLMPException(SLMP_EXCEPTION_CODE_T.INSUFFICIENT_DATA_ARRAY_BUFFER);
+                            dataArray[index++] = bitpoints;
+                            if (exbitdevice != null)
+                            {
+                                foreach (var d in exbitdevice)
+                                {
+                                    index += __BUILD_DEVICE_EXTENSION_SPECIFICATION_IN_R_BINARY(d.deviceCode, d.headDevice, d.extension, d.extensionModification, d.deviceModification, d.indirectSpecification, dataArray, index);
+                                    dataArray[index++] = d.value;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            bitpoints = (byte)(bitdevice == null ? 0 : bitdevice.Length);
+                            if (dataArray.Length - startIndex < (Marshal.SizeOf<DEVICE_SPECIFICATION_IN_R_BINARY_T>() + 1) * bitpoints + 1)
+                                throw new SLMPException(SLMP_EXCEPTION_CODE_T.INSUFFICIENT_DATA_ARRAY_BUFFER);
+                            dataArray[index++] = bitpoints;
+                            if (bitdevice != null)
+                            {
+                                foreach (var d in bitdevice)
+                                {
+                                    index += __BUILD_DEVICE_SPECIFICATION_IN_R_BINARY(d.deviceCode, d.headDevice, dataArray, index);
+                                    dataArray[index++] = d.value;
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if ((subcommand & SUB_COMMANDS_T.DEVICE_EXTENSION_SPECIFICATION) != 0)
+                        {
+                            bitpoints = (byte)(exbitdevice == null ? 0 : exbitdevice.Length);
+                            if (dataArray.Length - startIndex < (Marshal.SizeOf<DEVICE_EXTENSION_SPECIFICATION_IN_QL_BINARY_T>() + 1) * bitpoints + 1)
+                                throw new SLMPException(SLMP_EXCEPTION_CODE_T.INSUFFICIENT_DATA_ARRAY_BUFFER);
+                            dataArray[index++] = bitpoints;
+                            if (exbitdevice != null)
+                            {
+                                foreach (var d in exbitdevice)
+                                {
+                                    index += __BUILD_DEVICE_EXTENSION_SPECIFICATION_IN_QL_BINARY(d.deviceCode, d.headDevice, d.extension, d.extensionModification, d.deviceModification, d.indirectSpecification, dataArray, index);
+                                    dataArray[index++] = d.value;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            bitpoints = (byte)(bitdevice == null ? 0 : bitdevice.Length);
+                            if (dataArray.Length - startIndex < (Marshal.SizeOf<DEVICE_SPECIFICATION_IN_QL_BINARY_T>() + 1) * bitpoints + 1)
+                                throw new SLMPException(SLMP_EXCEPTION_CODE_T.INSUFFICIENT_DATA_ARRAY_BUFFER);
+                            dataArray[index++] = bitpoints;
+                            if (bitdevice != null)
+                            {
+                                foreach (var d in bitdevice)
+                                {
+                                    index += __BUILD_DEVICE_SPECIFICATION_IN_QL_BINARY(d.deviceCode, d.headDevice, dataArray, index);
+                                    dataArray[index++] = d.value;
+                                }
+                            }
+                        }
+                    }
+                    break;
+                default:
+                    throw new SLMPException(SLMP_EXCEPTION_CODE_T.INVALID_DATA_CODE);
+            }
+            return index - startIndex;
+        }
+
+        public static int BUILD_DEVICE_WRITE_RANDOM_BYTE_ARRAY_HEADER(MESSAGE_FRAME_TYPE_T frameType, MESSAGE_DATA_CODE_T dataCode, SUB_COMMANDS_T subcommand,
+                                                                    (string extension, string extensionModification, string deviceModification, string indirectSpecification, string deviceCode, uint headDevice, ushort value)[] exdevicein16,
+                                                                    (string extension, string extensionModification, string deviceModification, string indirectSpecification, string deviceCode, uint headDevice, uint value)[] exdevicein32,
+                                                                    (string deviceCode, uint headDevice, ushort value)[] devicein16, (string deviceCode, uint headDevice, uint value)[] devicein32,
+                                                                    byte[] dataArray, int startIndex)
+        {
+            int index = startIndex;
+            byte device32points = 0;
+            byte device16points = 0;
+            switch (dataCode)
+            {
+                case MESSAGE_DATA_CODE_T.ASCII:
+                    if ((subcommand & SUB_COMMANDS_T.R_MODULE_DEVICE_COMMAND_DEDICATION) != 0)
+                    {
+                        if ((subcommand & SUB_COMMANDS_T.DEVICE_EXTENSION_SPECIFICATION) != 0)
+                        {
+                            device32points = (byte)(exdevicein32 == null ? 0 : exdevicein32.Length);
+                            device16points = (byte)(exdevicein16 == null ? 0 : exdevicein16.Length);
+                            if (dataArray.Length - startIndex < (Marshal.SizeOf<DEVICE_EXTENSION_SPECIFICATION_IN_R_ASCII_T>() + 4) * device16points + (Marshal.SizeOf<DEVICE_EXTENSION_SPECIFICATION_IN_R_ASCII_T>() + 8) * device32points + 4)
+                                throw new SLMPException(SLMP_EXCEPTION_CODE_T.INSUFFICIENT_DATA_ARRAY_BUFFER);
+                            index += Message.Message.BINARY_TO_ASCII_ARRAY(device16points, dataArray, index);
+                            index += Message.Message.BINARY_TO_ASCII_ARRAY(device32points, dataArray, index);
+                            if (exdevicein16 != null)
+                            {
+                                foreach (var d in exdevicein16)
+                                {
+                                    index += __BUILD_DEVICE_EXTENSION_SPECIFICATION_IN_R_ASCII(d.deviceCode, d.headDevice, d.extension, d.extensionModification, d.deviceModification, d.indirectSpecification, dataArray, index);
+                                    index += Message.Message.BINARY_TO_ASCII_ARRAY(d.value, dataArray, index);
+                                }
+                            }
+                            if (exdevicein32 != null)
+                            {
+                                foreach (var d in exdevicein32)
+                                {
+                                    index += __BUILD_DEVICE_EXTENSION_SPECIFICATION_IN_R_ASCII(d.deviceCode, d.headDevice, d.extension, d.extensionModification, d.deviceModification, d.indirectSpecification, dataArray, index);
+                                    index += Message.Message.BINARY_TO_ASCII_ARRAY(d.value, dataArray, index);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            device32points = (byte)(devicein32 == null ? 0 : devicein32.Length);
+                            device16points = (byte)(devicein16 == null ? 0 : devicein16.Length);
+                            if (dataArray.Length - startIndex < (Marshal.SizeOf<DEVICE_SPECIFICATION_IN_R_ASCII_T>() + 4) * device16points + (Marshal.SizeOf<DEVICE_SPECIFICATION_IN_R_ASCII_T>() + 8) * device32points + 4)
+                                throw new SLMPException(SLMP_EXCEPTION_CODE_T.INSUFFICIENT_DATA_ARRAY_BUFFER);
+                            index += Message.Message.BINARY_TO_ASCII_ARRAY(device16points, dataArray, index);
+                            index += Message.Message.BINARY_TO_ASCII_ARRAY(device32points, dataArray, index);
+                            if (devicein16 != null)
+                            {
+                                foreach (var d in devicein16)
+                                {
+                                    index += __BUILD_DEVICE_SPECIFICATION_IN_R_ASCII(d.deviceCode, d.headDevice, dataArray, index);
+                                    index += Message.Message.BINARY_TO_ASCII_ARRAY(d.value, dataArray, index);
+                                }
+                            }
+                            if (devicein32 != null)
+                            {
+                                foreach (var d in devicein32)
+                                {
+                                    index += __BUILD_DEVICE_SPECIFICATION_IN_R_ASCII(d.deviceCode, d.headDevice, dataArray, index);
+                                    index += Message.Message.BINARY_TO_ASCII_ARRAY(d.value, dataArray, index);
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if ((subcommand & SUB_COMMANDS_T.DEVICE_EXTENSION_SPECIFICATION) != 0)
+                        {
+                            device32points = (byte)(exdevicein32 == null ? 0 : exdevicein32.Length);
+                            device16points = (byte)(exdevicein16 == null ? 0 : exdevicein16.Length);
+                            if (dataArray.Length - startIndex < (Marshal.SizeOf<DEVICE_EXTENSION_SPECIFICATION_IN_QL_ASCII_T>() + 4) * device16points + (Marshal.SizeOf<DEVICE_EXTENSION_SPECIFICATION_IN_QL_ASCII_T>() + 8) * device32points + 4)
+                                throw new SLMPException(SLMP_EXCEPTION_CODE_T.INSUFFICIENT_DATA_ARRAY_BUFFER);
+                            index += Message.Message.BINARY_TO_ASCII_ARRAY(device16points, dataArray, index);
+                            index += Message.Message.BINARY_TO_ASCII_ARRAY(device32points, dataArray, index);
+                            if (exdevicein16 != null)
+                            {
+                                foreach (var d in exdevicein16)
+                                {
+                                    index += __BUILD_DEVICE_EXTENSION_SPECIFICATION_IN_QL_ASCII(d.deviceCode, d.headDevice, d.extension, d.extensionModification, d.deviceModification, d.indirectSpecification, dataArray, index);
+                                    index += Message.Message.BINARY_TO_ASCII_ARRAY(d.value, dataArray, index);
+                                }
+                            }
+                            if (exdevicein32 != null)
+                            {
+                                foreach (var d in exdevicein32)
+                                {
+                                    index += __BUILD_DEVICE_EXTENSION_SPECIFICATION_IN_QL_ASCII(d.deviceCode, d.headDevice, d.extension, d.extensionModification, d.deviceModification, d.indirectSpecification, dataArray, index);
+                                    index += Message.Message.BINARY_TO_ASCII_ARRAY(d.value, dataArray, index);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            device32points = (byte)(devicein32 == null ? 0 : devicein32.Length);
+                            device16points = (byte)(devicein16 == null ? 0 : devicein16.Length);
+                            if (dataArray.Length - startIndex < (Marshal.SizeOf<DEVICE_SPECIFICATION_IN_QL_ASCII_T>() + 4) * device16points + (Marshal.SizeOf<DEVICE_SPECIFICATION_IN_QL_ASCII_T>() + 8) * device32points + 4)
+                                throw new SLMPException(SLMP_EXCEPTION_CODE_T.INSUFFICIENT_DATA_ARRAY_BUFFER);
+                            index += Message.Message.BINARY_TO_ASCII_ARRAY(device16points, dataArray, index);
+                            index += Message.Message.BINARY_TO_ASCII_ARRAY(device32points, dataArray, index);
+                            if (devicein16 != null)
+                            {
+                                foreach (var d in devicein16)
+                                {
+                                    index += __BUILD_DEVICE_SPECIFICATION_IN_QL_ASCII(d.deviceCode, d.headDevice, dataArray, index);
+                                    index += Message.Message.BINARY_TO_ASCII_ARRAY(d.value, dataArray, index);
+                                }
+                            }
+                            if (devicein32 != null)
+                            {
+                                foreach (var d in devicein32)
+                                {
+                                    index += __BUILD_DEVICE_SPECIFICATION_IN_QL_ASCII(d.deviceCode, d.headDevice, dataArray, index);
+                                    index += Message.Message.BINARY_TO_ASCII_ARRAY(d.value, dataArray, index);
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case MESSAGE_DATA_CODE_T.BINARY:
+                    if ((subcommand & SUB_COMMANDS_T.R_MODULE_DEVICE_COMMAND_DEDICATION) != 0)
+                    {
+                        if ((subcommand & SUB_COMMANDS_T.DEVICE_EXTENSION_SPECIFICATION) != 0)
+                        {
+                            device32points = (byte)(exdevicein32 == null ? 0 : exdevicein32.Length);
+                            device16points = (byte)(exdevicein16 == null ? 0 : exdevicein16.Length);
+                            if (dataArray.Length - startIndex < (Marshal.SizeOf<DEVICE_EXTENSION_SPECIFICATION_IN_R_BINARY_T>() + 2) * device16points + (Marshal.SizeOf<DEVICE_EXTENSION_SPECIFICATION_IN_R_BINARY_T>() + 4) * device32points + 2)
+                                throw new SLMPException(SLMP_EXCEPTION_CODE_T.INSUFFICIENT_DATA_ARRAY_BUFFER);
+                            dataArray[index++] = device16points;
+                            dataArray[index++] = device32points;
+                            if (exdevicein16 != null)
+                            {
+                                foreach (var d in exdevicein16)
+                                {
+                                    index += __BUILD_DEVICE_EXTENSION_SPECIFICATION_IN_R_BINARY(d.deviceCode, d.headDevice, d.extension, d.extensionModification, d.deviceModification, d.indirectSpecification, dataArray, index);
+                                    index += Message.Message.BINARY_TO_BINARY_ARRAY(d.value, dataArray, index);
+                                }
+                            }
+                            if (exdevicein32 != null)
+                            {
+                                foreach (var d in exdevicein32)
+                                {
+                                    index += __BUILD_DEVICE_EXTENSION_SPECIFICATION_IN_R_BINARY(d.deviceCode, d.headDevice, d.extension, d.extensionModification, d.deviceModification, d.indirectSpecification, dataArray, index);
+                                    index += Message.Message.BINARY_TO_BINARY_ARRAY(d.value, dataArray, index);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            device32points = (byte)(devicein32 == null ? 0 : devicein32.Length);
+                            device16points = (byte)(devicein16 == null ? 0 : devicein16.Length);
+                            if (dataArray.Length - startIndex < (Marshal.SizeOf<DEVICE_SPECIFICATION_IN_R_BINARY_T>() + 2) * device16points + (Marshal.SizeOf<DEVICE_SPECIFICATION_IN_R_BINARY_T>() + 4) * device32points + 2)
+                                throw new SLMPException(SLMP_EXCEPTION_CODE_T.INSUFFICIENT_DATA_ARRAY_BUFFER);
+                            dataArray[index++] = device16points;
+                            dataArray[index++] = device32points;
+                            if (devicein16 != null)
+                            {
+                                foreach (var d in devicein16)
+                                {
+                                    index += __BUILD_DEVICE_SPECIFICATION_IN_R_BINARY(d.deviceCode, d.headDevice, dataArray, index);
+                                    index += Message.Message.BINARY_TO_BINARY_ARRAY(d.value, dataArray, index);
+                                }
+                            }
+                            if (devicein32 != null)
+                            {
+                                foreach (var d in devicein32)
+                                {
+                                    index += __BUILD_DEVICE_SPECIFICATION_IN_R_BINARY(d.deviceCode, d.headDevice, dataArray, index);
+                                    index += Message.Message.BINARY_TO_BINARY_ARRAY(d.value, dataArray, index);
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if ((subcommand & SUB_COMMANDS_T.DEVICE_EXTENSION_SPECIFICATION) != 0)
+                        {
+                            device32points = (byte)(exdevicein32 == null ? 0 : exdevicein32.Length);
+                            device16points = (byte)(exdevicein16 == null ? 0 : exdevicein16.Length);
+                            if (dataArray.Length - startIndex < (Marshal.SizeOf<DEVICE_EXTENSION_SPECIFICATION_IN_QL_BINARY_T>() + 2) * device16points + (Marshal.SizeOf<DEVICE_EXTENSION_SPECIFICATION_IN_QL_BINARY_T>() + 4) * device32points + 2)
+                                throw new SLMPException(SLMP_EXCEPTION_CODE_T.INSUFFICIENT_DATA_ARRAY_BUFFER);
+                            dataArray[index++] = device16points;
+                            dataArray[index++] = device32points;
+                            if (exdevicein16 != null)
+                            {
+                                foreach (var d in exdevicein16)
+                                {
+                                    index += __BUILD_DEVICE_EXTENSION_SPECIFICATION_IN_QL_BINARY(d.deviceCode, d.headDevice, d.extension, d.extensionModification, d.deviceModification, d.indirectSpecification, dataArray, index);
+                                    index += Message.Message.BINARY_TO_BINARY_ARRAY(d.value, dataArray, index);
+                                }
+                            }
+                            if (exdevicein32 != null)
+                            {
+                                foreach (var d in exdevicein32)
+                                {
+                                    index += __BUILD_DEVICE_EXTENSION_SPECIFICATION_IN_QL_BINARY(d.deviceCode, d.headDevice, d.extension, d.extensionModification, d.deviceModification, d.indirectSpecification, dataArray, index);
+                                    index += Message.Message.BINARY_TO_BINARY_ARRAY(d.value, dataArray, index);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            device32points = (byte)(devicein32 == null ? 0 : devicein32.Length);
+                            device16points = (byte)(devicein16 == null ? 0 : devicein16.Length);
+                            if (dataArray.Length - startIndex < (Marshal.SizeOf<DEVICE_SPECIFICATION_IN_QL_BINARY_T>() + 2) * device16points + (Marshal.SizeOf<DEVICE_SPECIFICATION_IN_QL_BINARY_T>() + 4) * device32points + 2)
+                                throw new SLMPException(SLMP_EXCEPTION_CODE_T.INSUFFICIENT_DATA_ARRAY_BUFFER);
+                            dataArray[index++] = device16points;
+                            dataArray[index++] = device32points;
+                            if (devicein16 != null)
+                            {
+                                foreach (var d in devicein16)
+                                {
+                                    index += __BUILD_DEVICE_SPECIFICATION_IN_QL_BINARY(d.deviceCode, d.headDevice, dataArray, index);
+                                    index += Message.Message.BINARY_TO_BINARY_ARRAY(d.value, dataArray, index);
+                                }
+                            }
+                            if (devicein32 != null)
+                            {
+                                foreach (var d in devicein32)
+                                {
+                                    index += __BUILD_DEVICE_SPECIFICATION_IN_QL_BINARY(d.deviceCode, d.headDevice, dataArray, index);
+                                    index += Message.Message.BINARY_TO_BINARY_ARRAY(d.value, dataArray, index);
+                                }
+                            }
+                        }
+                    }
                     break;
                 default:
                     throw new SLMPException(SLMP_EXCEPTION_CODE_T.INVALID_DATA_CODE);
@@ -917,6 +1454,39 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Command
             return wordpoints;
         }
 
+        public static int READ_DEVICE_IN_DWORD_UNIT(ReadOnlySpan<byte> source, MESSAGE_DATA_CODE_T dataCode, ushort dwordpoints, Span<uint> data)
+        {
+            int length = DEIVICE_REGISTER_DATA_ARRAY_LENGTH(dataCode, 0, dwordpoints) * 2;
+            if (source.Length < length)
+                throw new SLMPException(SLMP_EXCEPTION_CODE_T.DEVICE_REGISTER_DATA_CORRUPTED);
+            if (data.Length < dwordpoints)
+                throw new SLMPException(SLMP_EXCEPTION_CODE_T.INSUFFICIENT_DATA_ARRAY_BUFFER);
+
+            switch (dataCode)
+            {
+                case MESSAGE_DATA_CODE_T.ASCII:
+                    for (int i = 0; i < dwordpoints; ++i)
+                    {
+                        try
+                        {
+                            data[i] = Convert.ToUInt32(System.Text.Encoding.ASCII.GetString(source.Slice(i * 8, 8)), 16);
+                        }
+                        catch (Exception)
+                        {
+                            throw new SLMPException(SLMP_EXCEPTION_CODE_T.INVALID_DEVICE_REGISTER_DATA);
+                        }
+                    }
+                    break;
+                case MESSAGE_DATA_CODE_T.BINARY:
+                    for (int i = 0; i < dwordpoints; ++i)
+                        data[i] = (uint)(source[i * 4] + (source[i * 4 + 1] << 8) + (source[i * 4 + 2] << 16) + (source[i * 4 + 3] << 24));
+                    break;
+                default:
+                    throw new SLMPException(SLMP_EXCEPTION_CODE_T.INVALID_DATA_CODE);
+            }
+            return dwordpoints;
+        }
+
         public static int WRITE_BIT_DEVICE_IN_BIT_UNIT(ReadOnlySpan<byte> source, MESSAGE_DATA_CODE_T dataCode, ushort bitpoints, Span<byte> data)
         {
             int length = DEIVICE_REGISTER_DATA_ARRAY_LENGTH(dataCode, SUB_COMMANDS_T.DEVICE_COMMAND_ACCESS_IN_BIT_UNIT, bitpoints);
@@ -996,6 +1566,39 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Command
             }
 
             return wordpoints;
+        }
+
+        public static int WRITE_DEVICE_IN_DWORD_UNIT(ReadOnlySpan<uint> source, MESSAGE_DATA_CODE_T dataCode, ushort dwordpoints, Span<byte> data)
+        {
+            int length = DEIVICE_REGISTER_DATA_ARRAY_LENGTH(dataCode, 0, dwordpoints) * 2;
+            if (source.Length < dwordpoints)
+                throw new SLMPException(SLMP_EXCEPTION_CODE_T.DEVICE_REGISTER_DATA_CORRUPTED);
+            if (data.Length < length)
+                throw new SLMPException(SLMP_EXCEPTION_CODE_T.INSUFFICIENT_DATA_ARRAY_BUFFER);
+
+            switch (dataCode)
+            {
+                case MESSAGE_DATA_CODE_T.ASCII:
+                    for (int i = 0; i < dwordpoints; ++i)
+                    {
+                        string s = source[i].ToString("X8");
+                        System.Text.Encoding.ASCII.GetBytes(s, data.Slice(i * 8, 8));
+                    }
+                    break;
+                case MESSAGE_DATA_CODE_T.BINARY:
+                    for (int i = 0; i < length; i += 4)
+                    {
+                        data[i] = (byte)(source[i / 4] & 0x000000FF);
+                        data[i + 1] = (byte)((source[i / 4] >> 8) & 0x000000FF);
+                        data[i + 2] = (byte)((source[i / 4] >> 16) & 0x000000FF);
+                        data[i + 3] = (byte)((source[i / 4] >> 24) & 0x000000FF);
+                    }
+                    break;
+                default:
+                    throw new SLMPException(SLMP_EXCEPTION_CODE_T.INVALID_DATA_CODE);
+            }
+
+            return dwordpoints;
         }
 
     }

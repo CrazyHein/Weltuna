@@ -284,7 +284,7 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Message
                 case MESSAGE_DATA_CODE_T.ASCII:
                     if (source.StartsWith(__MC3E_ASCII_SUBHEADER))
                         frameType = MESSAGE_FRAME_TYPE_T.MC_3E;
-                    else if (source.StartsWith(__MC4E_ASCII_SUBHEADER))
+                    else if (source.StartsWith(__MC4E_ASCII_SUBHEADER.AsSpan(0, 4)) && source.Slice(8).StartsWith(__MC4E_ASCII_SUBHEADER.AsSpan(8)))
                         frameType = MESSAGE_FRAME_TYPE_T.MC_4E;
                     else
                         throw new SLMPException(SLMP_EXCEPTION_CODE_T.INVALID_FRAME_TYPE);
@@ -292,9 +292,9 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Message
                 case MESSAGE_DATA_CODE_T.BINARY:
                     if (source.StartsWith(__MC3E_BINARY_SUBHEADER))
                         frameType = MESSAGE_FRAME_TYPE_T.MC_3E;
-                    else if (source.StartsWith(__MC4E_BINARY_SUBHEADER))
+                    else if (source.StartsWith(__MC4E_BINARY_SUBHEADER.AsSpan(0, 2)) && source.Slice(4).StartsWith(__MC4E_BINARY_SUBHEADER.AsSpan(4)))
                         frameType = MESSAGE_FRAME_TYPE_T.MC_4E;
-                    else if (source.StartsWith(__STATION_EXTENSION_SUBHEADER))
+                    else if (source.StartsWith(__STATION_EXTENSION_SUBHEADER.AsSpan(0, 2)) && source.Slice(4).StartsWith(__STATION_EXTENSION_SUBHEADER.AsSpan(4)))
                         frameType = MESSAGE_FRAME_TYPE_T.STATION_NUM_EXTENSION;
                     else
                         throw new SLMPException(SLMP_EXCEPTION_CODE_T.INVALID_FRAME_TYPE);
@@ -443,7 +443,7 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Message
                 case MESSAGE_DATA_CODE_T.ASCII:
                     if (source.StartsWith(__MC3E_ASCII_SUBHEADER))
                         frameType = MESSAGE_FRAME_TYPE_T.MC_3E;
-                    else if (source.StartsWith(__MC4E_ASCII_SUBHEADER))
+                    else if (source.StartsWith(__MC4E_ASCII_SUBHEADER.AsSpan(0, 4)) && source.Slice(8).StartsWith(__MC4E_ASCII_SUBHEADER.AsSpan(8)))
                         frameType = MESSAGE_FRAME_TYPE_T.MC_4E;
                     else
                         throw new SLMPException(SLMP_EXCEPTION_CODE_T.INVALID_FRAME_TYPE);
@@ -451,9 +451,9 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Message
                 case MESSAGE_DATA_CODE_T.BINARY:
                     if (source.StartsWith(__MC3E_BINARY_SUBHEADER))
                         frameType = MESSAGE_FRAME_TYPE_T.MC_3E;
-                    else if (source.StartsWith(__MC4E_BINARY_SUBHEADER))
+                    else if (source.StartsWith(__MC4E_BINARY_SUBHEADER.AsSpan(0, 2)) && source.Slice(4).StartsWith(__MC4E_BINARY_SUBHEADER.AsSpan(4)))
                         frameType = MESSAGE_FRAME_TYPE_T.MC_4E;
-                    else if (source.StartsWith(__STATION_EXTENSION_SUBHEADER))
+                    else if (source.StartsWith(__STATION_EXTENSION_SUBHEADER.AsSpan(0, 2)) && source.Slice(4).StartsWith(__STATION_EXTENSION_SUBHEADER.AsSpan(4)))
                         frameType = MESSAGE_FRAME_TYPE_T.STATION_NUM_EXTENSION;
                     else
                         throw new SLMPException(SLMP_EXCEPTION_CODE_T.INVALID_FRAME_TYPE);

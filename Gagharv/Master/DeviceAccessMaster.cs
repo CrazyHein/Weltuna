@@ -215,6 +215,92 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Master
             }
         }
 
+        private void __read_device_random(ref DESTINATION_ADDRESS_T destination, SUB_COMMANDS_T subcommand,
+            ushort monitoringTimer,
+            (string extension, string extensionModification, string deviceModification, string indirectSpecification, string deviceCode, uint headDevice)[] exdevicein16,
+            (string extension, string extensionModification, string deviceModification, string indirectSpecification, string deviceCode, uint headDevice)[] exdevicein32,
+            (string deviceCode, uint headDevice)[] devicein16, (string deviceCode, uint headDevice)[] devicein32,
+            out ushort endCode, Span<ushort> data16, Span<uint> data32)
+        {
+            lock (__sync_object)
+            {
+                MESSAGE_FRAME_TYPE_T frameType;
+                byte destinationNetwork;
+                byte destinationStation;
+                ushort destinationModuleIO;
+                byte destinationMultidrop;
+                ushort destinationExtensionStation;
+                ushort serialNo0;
+                ushort serialNo1;
+                ushort responseDataLength;
+
+                ushort device32points = 0;
+                ushort device16points = 0;
+
+                int offset = 0;
+                serialNo0 = __serial_number_generator == null ? (ushort)0 : (ushort)__serial_number_generator.Next(65536);
+
+                if ((subcommand & SUB_COMMANDS_T.DEVICE_EXTENSION_SPECIFICATION) == 0)
+                {
+                    device32points = (ushort)(devicein32 == null? 0 : devicein32.Length);
+                    device16points = (ushort)(devicein16 == null ? 0 : devicein16.Length);
+                    offset = RequestMessage.BUILD_BYTE_ARRAY_HEADER(__frame_type, __data_code, serialNo0,
+                                        destination.network_number, destination.station_number,
+                                        destination.module_io, destination.multidrop_number, destination.extension_station_number,
+                                        (ushort)(__command_header_length + __device_specification_length * (device32points + device16points) + __device_points_length), monitoringTimer,
+                                        __send_byte_array, 0);
+
+                }
+                else
+                {
+                    device32points = (ushort)(exdevicein32 == null ? 0 : exdevicein32.Length);
+                    device16points = (ushort)(exdevicein16 == null ? 0 : exdevicein16.Length);
+                    offset = RequestMessage.BUILD_BYTE_ARRAY_HEADER(__frame_type, __data_code, serialNo0,
+                                        destination.network_number, destination.station_number,
+                                        destination.module_io, destination.multidrop_number, destination.extension_station_number,
+                                        (ushort)(__command_header_length + __device_extension_specification_length * (device32points + device16points) + __device_points_length), monitoringTimer,
+                                        __send_byte_array, 0);
+                }
+
+                offset += RequestCommand.BUILD_BYTE_ARRAY_HEADER(__frame_type, __data_code, COMMANDS_T.DEVICE_READ_RANDOM, subcommand,
+                                        __send_byte_array, offset);
+
+                offset += DeviceAccess.BUILD_DEVICE_READ_RANDOM_BYTE_ARRAY_HEADER(__frame_type, __data_code, subcommand, 
+                                        exdevicein16, exdevicein32, devicein16, devicein32,
+                                        __send_byte_array, offset);
+
+                __socket.Send(__send_byte_array, 0, offset);
+
+                __socket.Receive(__receive_byte_array, 0, __response_message_header_length);
+                ResponseMessage.PARSE_BYTE_ARRAY_HEADER(__receive_byte_array.AsSpan(0, __response_message_header_length), __data_code,
+                    out frameType, out destinationNetwork, out destinationStation, out destinationModuleIO, out destinationMultidrop, out destinationExtensionStation,
+                    out serialNo1, out responseDataLength, out endCode);
+
+
+                __socket.Receive(__receive_byte_array, __response_message_header_length, responseDataLength);
+
+                if (frameType != __frame_type || destinationNetwork != destination.network_number ||
+                    destinationStation != destination.station_number ||
+                    destinationModuleIO != destination.module_io ||
+                    destinationMultidrop != destination.multidrop_number ||
+                    destinationExtensionStation != destination.extension_station_number ||
+                    serialNo1 != serialNo0)
+                    throw new SLMPException(SLMP_EXCEPTION_CODE_T.RECEIVED_UNMATCHED_MESSAGE);
+
+                if (endCode == (ushort)RESPONSE_MESSAGE_ENDCODE_T.NO_ERROR)
+                {
+                    int device16bytes = DeviceAccess.DEIVICE_REGISTER_DATA_ARRAY_LENGTH(__data_code, subcommand, device16points);
+                    int device32bytes = DeviceAccess.DEIVICE_REGISTER_DATA_ARRAY_LENGTH(__data_code, subcommand, device32points) * 2;
+
+                    if (device16bytes + device32bytes != responseDataLength)
+                        throw new SLMPException(SLMP_EXCEPTION_CODE_T.DEVICE_REGISTER_DATA_CORRUPTED);
+
+                    DeviceAccess.READ_DEVICE_IN_WORD_UNIT(__receive_byte_array.AsSpan(__response_message_header_length, device16bytes), __data_code, device16points, data16);
+                    DeviceAccess.READ_DEVICE_IN_DWORD_UNIT(__receive_byte_array.AsSpan(__response_message_header_length + device16bytes, device32bytes), __data_code, device32points, data32);
+                }
+            }
+        }
+
         public void ReadLocalDeviceInWord(ushort monitoringTimer, string deviceCode, uint headDevice, ushort devicePoints, out ushort endCode, Span<ushort> data)
         {
             __read_device(ref __destination,
@@ -238,6 +324,21 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Master
                             __subcommand | SUB_COMMANDS_T.DEVICE_EXTENSION_SPECIFICATION,
                             extensionSepcification, null, null, null,
                             monitoringTimer, "G", headDevice, devicePoints, out endCode, data, null);
+        }
+
+        public void ReadLocalDeviceInWord(ushort monitoringTimer, (string deviceCode, uint headDevice)[] wordDevice, (string deviceCode, uint headDevice)[] dwordDevice,
+            out ushort endCode, Span<ushort> worddata, Span<uint> dworddata)
+        {
+            __read_device_random(ref __destination,
+                            __subcommand,
+                            monitoringTimer,
+                            null, null, wordDevice, dwordDevice,
+                            out endCode, worddata, dworddata);
+        }
+
+        public void ReadModuleAccessDeviceInWord(ushort monitoringTimer, (string, uint)[] devices, out ushort endCode, Span<ushort> data)
+        {
+            throw new NotImplementedException();
         }
 
         private void __write_device(ref DESTINATION_ADDRESS_T destination, SUB_COMMANDS_T subcommand,
@@ -334,6 +435,37 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Master
                             __subcommand | SUB_COMMANDS_T.DEVICE_EXTENSION_SPECIFICATION,
                             extensionSepcification, null, null, null,
                             monitoringTimer, "G", headDevice, devicePoints, out endCode, data, null);
+        }
+
+        private void __write_device_random(ref DESTINATION_ADDRESS_T destination, SUB_COMMANDS_T subcommand,
+            ushort monitoringTimer,
+            (string extension, string extensionModification, string deviceModification, string indirectSpecification, string deviceCode, uint headDevice, ushort value)[] exdevicein16,
+            (string extension, string extensionModification, string deviceModification, string indirectSpecification, string deviceCode, uint headDevice, uint value)[] exdevicein32,
+            (string deviceCode, uint headDevice, ushort value)[] devicein16, (string deviceCode, uint headDevice, uint value)[] devicein32,
+            out ushort endCode)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void __write_device_random(ref DESTINATION_ADDRESS_T destination, SUB_COMMANDS_T subcommand,
+            ushort monitoringTimer,
+            (string extension, string extensionModification, string deviceModification, string indirectSpecification, string deviceCode, uint headDevice, byte value)[] exbitdevice,
+            (string deviceCode, uint headDevice, byte value)[] bitdevice, 
+            out ushort endCode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void WriteLocalDeviceInWord(ushort monitoringTimer, (string deviceCode, uint headDevice, ushort value)[] wordDevice, (string deviceCode, uint headDevice, uint value)[] dwordDevice,
+            out ushort endCode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void WriteLocalDeviceInBit(ushort monitoringTimer, (string deviceCode, uint headDevice, ushort value)[] wordDevice, (string deviceCode, uint headDevice,  byte value)[] dwordDevice,
+            out ushort endCode)
+        {
+            throw new NotImplementedException();
         }
     }
 }
