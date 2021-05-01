@@ -176,7 +176,7 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Command
         }
     }
 
-    public enum DIRECT_MEMORT_SPECIFICATION_T : byte
+    public enum DIRECT_MEMORY_SPECIFICATION_T : byte
     {
         LINK_DIRECT_DEVICE = 0xF9,
         MODULE_ACCESS_DEVICE = 0xF8,
@@ -1236,11 +1236,11 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Command
                 {
                     dp.extension_specification = Message.Message.SMALL_ENDIAN_MODE(Convert.ToUInt16(extension[1..], 16));
                     if (extension.StartsWith("U3E"))
-                        dp.direct_memory_specification = (byte)(DIRECT_MEMORT_SPECIFICATION_T.CPU_BUFFER_MEMORY_ACCESS_DEVICE);
+                        dp.direct_memory_specification = (byte)(DIRECT_MEMORY_SPECIFICATION_T.CPU_BUFFER_MEMORY_ACCESS_DEVICE);
                     else if(extension.StartsWith("U"))
-                        dp.direct_memory_specification = (byte)(DIRECT_MEMORT_SPECIFICATION_T.MODULE_ACCESS_DEVICE);
+                        dp.direct_memory_specification = (byte)(DIRECT_MEMORY_SPECIFICATION_T.MODULE_ACCESS_DEVICE);
                     else
-                        dp.direct_memory_specification = (byte)(DIRECT_MEMORT_SPECIFICATION_T.LINK_DIRECT_DEVICE);
+                        dp.direct_memory_specification = (byte)(DIRECT_MEMORY_SPECIFICATION_T.LINK_DIRECT_DEVICE);
 
                 }
                 else
@@ -1250,7 +1250,7 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Command
             if (extensionModification != null)
             {
                 if (__QL_EXTENSION_MODIFICATION_PATTERN.IsMatch(extensionModification))
-                    dp.extension_specification_modification = Message.Message.SMALL_ENDIAN_MODE((ushort)(Convert.ToByte(extensionModification[1..], 10) << 8 + (ushort)DEVICE_ACCESS_MODIFICATION.Z_DEVICE_MODIFICATION));
+                    dp.extension_specification_modification = Message.Message.SMALL_ENDIAN_MODE((ushort)((Convert.ToByte(extensionModification[1..], 10) << 8) + (ushort)DEVICE_ACCESS_MODIFICATION.Z_DEVICE_MODIFICATION));
                 else
                     throw new SLMPException(SLMP_EXCEPTION_CODE_T.INVALID_DEVICE_EXTENSION_MODIFICATION);
             }
@@ -1268,10 +1268,8 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Command
 
             if (deviceModification != null)
             {
-                if (__RZ_EXTENSION_MODIFICATION_PATTERN.IsMatch(deviceModification))
-                    dp.device_modification |= Message.Message.SMALL_ENDIAN_MODE((ushort)DEVICE_ACCESS_MODIFICATION.Z_DEVICE_MODIFICATION);
-                else if (__RLZ_EXTENSION_MODIFICATION_PATTERN.IsMatch(deviceModification))
-                    dp.device_modification |= Message.Message.SMALL_ENDIAN_MODE((ushort)DEVICE_ACCESS_MODIFICATION.LZ_DEVICE_MODIFICATION);
+                if (__QL_EXTENSION_MODIFICATION_PATTERN.IsMatch(deviceModification))
+                    dp.device_modification |= Message.Message.SMALL_ENDIAN_MODE((ushort)((ushort)DEVICE_ACCESS_MODIFICATION.Z_DEVICE_MODIFICATION + (Convert.ToByte(deviceModification[1..], 10) << 8)));
                 else
                     throw new SLMPException(SLMP_EXCEPTION_CODE_T.INVALID_DEVICE_MODIFICATION);
             }
@@ -1299,11 +1297,11 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Command
                 {
                     dp.extension_specification = Message.Message.SMALL_ENDIAN_MODE(Convert.ToUInt16(extension[1..], 16));
                     if (extension.StartsWith("U3E"))
-                        dp.direct_memory_specification = (byte)(DIRECT_MEMORT_SPECIFICATION_T.CPU_BUFFER_MEMORY_ACCESS_DEVICE);
+                        dp.direct_memory_specification = (byte)(DIRECT_MEMORY_SPECIFICATION_T.CPU_BUFFER_MEMORY_ACCESS_DEVICE);
                     else if (extension.StartsWith("U"))
-                        dp.direct_memory_specification = (byte)(DIRECT_MEMORT_SPECIFICATION_T.MODULE_ACCESS_DEVICE);
+                        dp.direct_memory_specification = (byte)(DIRECT_MEMORY_SPECIFICATION_T.MODULE_ACCESS_DEVICE);
                     else
-                        dp.direct_memory_specification = (byte)(DIRECT_MEMORT_SPECIFICATION_T.LINK_DIRECT_DEVICE);
+                        dp.direct_memory_specification = (byte)(DIRECT_MEMORY_SPECIFICATION_T.LINK_DIRECT_DEVICE);
 
                 }
                 else
@@ -1312,8 +1310,10 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Command
 
             if (extensionModification != null)
             {
-                if (__QL_EXTENSION_MODIFICATION_PATTERN.IsMatch(extensionModification))
-                    dp.extension_specification_modification = Message.Message.SMALL_ENDIAN_MODE((ushort)(Convert.ToByte(extensionModification[1..], 10) << 8 + (ushort)DEVICE_ACCESS_MODIFICATION.Z_DEVICE_MODIFICATION));
+                if (__RZ_EXTENSION_MODIFICATION_PATTERN.IsMatch(deviceModification))
+                    dp.extension_specification_modification = Message.Message.SMALL_ENDIAN_MODE((ushort)((Convert.ToByte(extensionModification[2..], 10) << 8) + (ushort)DEVICE_ACCESS_MODIFICATION.Z_DEVICE_MODIFICATION));
+                else if (__RLZ_EXTENSION_MODIFICATION_PATTERN.IsMatch(extensionModification))
+                    dp.extension_specification_modification = Message.Message.SMALL_ENDIAN_MODE((ushort)((Convert.ToByte(extensionModification[2..], 10) << 8) + (ushort)DEVICE_ACCESS_MODIFICATION.LZ_DEVICE_MODIFICATION));
                 else
                     throw new SLMPException(SLMP_EXCEPTION_CODE_T.INVALID_DEVICE_EXTENSION_MODIFICATION);
             }
@@ -1332,9 +1332,9 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Command
             if (deviceModification != null)
             {
                 if (__RZ_EXTENSION_MODIFICATION_PATTERN.IsMatch(deviceModification))
-                    dp.device_modification |= Message.Message.SMALL_ENDIAN_MODE((ushort)DEVICE_ACCESS_MODIFICATION.Z_DEVICE_MODIFICATION);
+                    dp.device_modification |= Message.Message.SMALL_ENDIAN_MODE((ushort)((ushort)DEVICE_ACCESS_MODIFICATION.Z_DEVICE_MODIFICATION + (Convert.ToByte(deviceModification[2..], 10) << 8)));
                 else if (__RLZ_EXTENSION_MODIFICATION_PATTERN.IsMatch(deviceModification))
-                    dp.device_modification |= Message.Message.SMALL_ENDIAN_MODE((ushort)DEVICE_ACCESS_MODIFICATION.LZ_DEVICE_MODIFICATION);
+                    dp.device_modification |= Message.Message.SMALL_ENDIAN_MODE((ushort)((ushort)DEVICE_ACCESS_MODIFICATION.LZ_DEVICE_MODIFICATION + (Convert.ToByte(deviceModification[2..], 10) << 8)));
                 else
                     throw new SLMPException(SLMP_EXCEPTION_CODE_T.INVALID_DEVICE_MODIFICATION);
             }
