@@ -383,7 +383,7 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Master
             ushort monitoringTimer,
             IEnumerable<(string extension, string extensionModification, string deviceModification, string indirectSpecification, string deviceCode, uint headDevice, ushort devicePoints)> wordDeviceBlock,
             IEnumerable<(string extension, string extensionModification, string deviceModification, string indirectSpecification, string deviceCode, uint headDevice, ushort devicePoints)> bitDeviceBlock,
-            out ushort endCode, IList<Memory<ushort>> wordDataBlock, IList<Memory<ushort>> bitDataBlock)
+            out ushort endCode, Memory<ushort>[] wordDataBlock, Memory<ushort>[] bitDataBlock)
         {
             lock (__sync_object)
             {
@@ -475,7 +475,7 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Master
         }
 
         public void ReadLocalDeviceInWord(ushort monitoringTimer, IEnumerable<(string deviceCode, uint headDevice, ushort devicePoints)> wordDeviceBlock, IEnumerable<(string deviceCode, uint headDevice, ushort devicePoints)> bitDeviceBlock,
-            out ushort endCode, IList<Memory<ushort>> wordDataBlock, IList<Memory<ushort>> bitDataBlock)
+            out ushort endCode, Memory<ushort>[] wordDataBlock, Memory<ushort>[] bitDataBlock)
         {
             IEnumerable<(string, string, string, string, string, uint, ushort)> word = null;
             IEnumerable<(string, string, string, string, string, uint, ushort)> bit = null;
@@ -492,7 +492,7 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Master
         }
 
         public void ReadModuleAccessDeviceInWord(ushort monitoringTimer, IEnumerable<(string extensionSpecification, uint headDevice, ushort devicePoints)> wordDeviceBlock,
-            out ushort endCode, IList<Memory<ushort>> wordDataBlock)
+            out ushort endCode, Memory<ushort>[] wordDataBlock)
         {
             __read_device_block(ref __destination,
                             __subcommand | SUB_COMMANDS_T.DEVICE_EXTENSION_SPECIFICATION,

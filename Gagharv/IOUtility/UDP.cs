@@ -62,7 +62,9 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.IOUtility
                                                 socketFlags, 
                                                 ref point);
 
-                    if (length <= left)
+                    if (length == 0)
+                        throw new SLMPException(SLMP_EXCEPTION_CODE_T.REMOTE_STATION_DISCONNECTED);
+                    else if (length <= left)
                     {
                         Array.Copy(__internal_buffer_memory, __internal_buffer_pointer, buffer, offset, length);
                         left -= length;      

@@ -29,6 +29,9 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP
 
         REMOTE_STATION_DISCONNECTED                                 = 0x00000030,
 
+        INVALID_REMOTE_OPERATION                                    = 0x00000040,
+        INVALID_MODEL_CODE                                          = 0x00000041,
+
         RECEIVED_UNMATCHED_MESSAGE                                  = 0x00000080,
 
 
