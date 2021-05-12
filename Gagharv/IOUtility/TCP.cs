@@ -17,13 +17,20 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.IOUtility
 
         public TCP(IPEndPoint source, IPEndPoint destination, int sendTimeout, int receiveTimeout)
         {
-            __tcp = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            if (source != null)
-                __tcp.Bind(source);
-            __destination_endpoint = destination;
-            __tcp.SendTimeout = sendTimeout;
-            __tcp.ReceiveTimeout = receiveTimeout;
-            __tcp.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.NoDelay, true);
+            try
+            {
+                __tcp = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                if (source != null)
+                    __tcp.Bind(source);
+                __destination_endpoint = destination;
+                __tcp.SendTimeout = sendTimeout;
+                __tcp.ReceiveTimeout = receiveTimeout;
+                __tcp.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.NoDelay, true);
+            }
+            catch (Exception e)
+            {
+                throw new SLMPException(e);
+            }
         }
 
         public TCP(Socket sc, IPEndPoint destination)

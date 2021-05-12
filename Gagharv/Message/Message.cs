@@ -31,7 +31,7 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Message
 
     public enum REQUEST_DESTINATION_EXTENSION_STATION_T : ushort
     {
-        DESTINATION_STATION                     = 0x0000,
+        AS_DESTINATION_STATION                  = 0x0000,
         ASSIGNED_CONTROL_MASTER_STATION         = 0x0000,
         CONNECTED_STATION                       = 0xFFFF,
     }
@@ -76,13 +76,15 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Message
             this.extension_station_number = extensionStation;
         }
 
-        public DESTINATION_ADDRESS_T(bool ownStation)
+        public static DESTINATION_ADDRESS_T CONNECTED_OWN_STATION()
         {
-            this.network_number = (byte)REQUEST_DESTINATION_NETWORK_T.CONNECTED_NETWORK;
-            this.station_number = (byte)REQUEST_DESTINATION_STATION_T.CONNECTED_STATION;
-            this.module_io = (ushort)REQUEST_CPU_DESTINATION_MODULE_IO_T.OWN_STATION;
-            this.multidrop_number = 0;
-            this.extension_station_number = (ushort)REQUEST_DESTINATION_EXTENSION_STATION_T.DESTINATION_STATION;
+            return new DESTINATION_ADDRESS_T(
+                (byte)REQUEST_DESTINATION_NETWORK_T.CONNECTED_NETWORK,
+                (byte)REQUEST_DESTINATION_STATION_T.CONNECTED_STATION,
+                (ushort)REQUEST_CPU_DESTINATION_MODULE_IO_T.OWN_STATION,
+                0,
+                (ushort)REQUEST_DESTINATION_EXTENSION_STATION_T.AS_DESTINATION_STATION
+                );
         }
     }
 

@@ -21,19 +21,26 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.IOUtility
 
         public UDP(IPEndPoint source, IPEndPoint destination, int internalBufferSize, int sendTimeout, int receiveTimeout)
         {
-            __udp = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-            __udp.Bind(source);
-            uint IOC_IN = 0x80000000;
-            uint IOC_VENDOR = 0x18000000;
-            uint SIO_UDP_CONNRESET = IOC_IN | IOC_VENDOR | 12;
-            __udp.IOControl((int)SIO_UDP_CONNRESET, new byte[] { Convert.ToByte(false) }, null);
-            __udp.SendTimeout = sendTimeout;
-            __udp.ReceiveTimeout = receiveTimeout;
-            __source_endpoint = source;
-            __destination_endpoint = destination;
-            __internal_buffer_memory = new byte[internalBufferSize];
-            __internal_buffer_pointer = 0;
-            __internal_buffer_available = 0;
+            try
+            {
+                __udp = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+                __udp.Bind(source);
+                uint IOC_IN = 0x80000000;
+                uint IOC_VENDOR = 0x18000000;
+                uint SIO_UDP_CONNRESET = IOC_IN | IOC_VENDOR | 12;
+                __udp.IOControl((int)SIO_UDP_CONNRESET, new byte[] { Convert.ToByte(false) }, null);
+                __udp.SendTimeout = sendTimeout;
+                __udp.ReceiveTimeout = receiveTimeout;
+                __source_endpoint = source;
+                __destination_endpoint = destination;
+                __internal_buffer_memory = new byte[internalBufferSize];
+                __internal_buffer_pointer = 0;
+                __internal_buffer_available = 0;
+            }
+            catch(Exception e)
+            {
+                throw new SLMPException(e);
+            }
         }
         
         public int Receive(byte[] buffer, int offset, int size, SocketFlags socketFlags = SocketFlags.None)

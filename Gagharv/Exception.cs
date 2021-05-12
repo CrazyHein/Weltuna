@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP
 {
-    public enum SLMP_EXCEPTION_CODE_T
+    public enum SLMP_EXCEPTION_CODE_T: UInt32
     {
         NO_ERROR                                                    = 0x00000000,
+        RUNTIME_ERROR                                               = 0xFFFFFFFF,
 
         INVALID_SUBHEADER                                           = 0x00000001,
         INVALID_DATA_CODE                                           = 0x00000002,
@@ -51,16 +52,18 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP
 
         public SLMPException(Exception exp)
         {
-            ExceptionCode = SLMP_EXCEPTION_CODE_T.NO_ERROR;
+            ExceptionCode = SLMP_EXCEPTION_CODE_T.RUNTIME_ERROR;
             RuntimeException = exp;
         }
 
         public override string ToString()
         {
-            if (ExceptionCode != SLMP_EXCEPTION_CODE_T.NO_ERROR)
+            if (ExceptionCode != SLMP_EXCEPTION_CODE_T.RUNTIME_ERROR)
                 return ExceptionCode.ToString();
-            else
+            else if (RuntimeException != null)
                 return RuntimeException.ToString();
+            else
+                return "UNDEFINED_RUNTIME_ERROR";
         }
     }
 }

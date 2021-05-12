@@ -117,7 +117,7 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Command
         public byte[] extension_specification_modification;
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
         public byte[] device_code;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 10)]
         public byte[] head_device;
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
         public byte[] device_modification;
@@ -128,7 +128,7 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Command
             extension_specification = new byte[] { dummy, dummy, dummy, dummy };
             extension_specification_modification = new byte[] { dummy, dummy, dummy, dummy };
             device_code = new byte[] { dummy, dummy, dummy, dummy };
-            head_device = new byte[] { dummy, dummy, dummy, dummy, dummy, dummy, dummy, dummy };
+            head_device = new byte[] { dummy, dummy, dummy, dummy, dummy, dummy, dummy, dummy, dummy, dummy };
             device_modification = new byte[] { dummy, dummy, dummy, dummy };
         }
     }
