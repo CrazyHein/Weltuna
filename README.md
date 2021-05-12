@@ -8,35 +8,35 @@
 - [License](#license)
 - [Usage](#usage)
   - [1 Gagharv](#1-gagharv)
-    - [1.1 Introduction](#1.1-introduction)
-    - [1.2 Data Structure & Socket Interface](#1.2-data-structure-&-socket-interface)
-      - [1.2.1 MESSAGE_FRAME_TYPE_T](#1.2.1-message_frame_type_t)
-      - [1.2.2 MESSAGE_DATA_CODE_T](#1.2.2-message_data_code_t)
-      - [1.2.3 DESTINATION_ADDRESS_T](#1.2.3-destination_address_t)
-      - [1.2.4 SocketInterface](#1.2.4-socketinterface)
-      - [1.2.5 SLMP_EXCEPTION_CODE_T](#1.2.5-slmp_exception_code_t)
-      - [1.2.6 REMOTE_CONTROL_MODE_T](#1.2.6-remote_control_mode_t)
-      - [1.2.7 REMOTE_CLEAR_MODE_T](#1.2.7-remote_clear_mode_t)
-    - [1.3 TCP](#1.3-tcp)
-      - [1.3.1 Constructors](#1.3.1-constructors)
-      - [1.3.2 Methods](#1.3.2-methods)
-    - [1.4 UDP](#1.4-udp)
-      - [1.4.1 Constructors](#1.4.1-constructors)
-      - [1.4.2 Methods](#1.4.2-methods)
-    - [1.5 DeviceAccessMaster](#1.5-deviceaccessmaster)
-      - [1.5.1 Constructors](#1.5.1-constructors)
-      - [1.5.2 Properties](#1.5.2-properties)
-      - [1.5.3 Methods](#1.5.3-methods)
-    - [1.6 RemoteOperationMaster](#1.6 remoteoperationmaster)
-      - [1.6.1 Constructors](#1.6.1-constructors)
-      - [1.6.2 Properties](#1.6.2-properties)
-      - [1.6.3 Methods](#1.6.3-methods)
-    - [1.7 SLMPException](#1.7-slmpexception)
-      - [1.7.1 Constructors](#1.7.1-constructors)
-      - [1.7.2 Properties](#1.7.2-properties)
-      - [1.7.3 Methods](#1.7.3-methods)
-    - [1.8 Reference](#1.8-reference)
-      - [1.8.1 Device Code for Local Device Access](#1.8.1-device-code-for-local-device-access)
+    - [1-1 Introduction](#1-1-introduction)
+    - [1-2 Data Structure & Socket Interface](#1-2-data-structure-&-socket-interface)
+      - [1-2-1 MESSAGE_FRAME_TYPE_T](#1-2-1-message_frame_type_t)
+      - [1-2-2 MESSAGE_DATA_CODE_T](#1-2-2-message_data_code_t)
+      - [1-2-3 DESTINATION_ADDRESS_T](#1-2-3-destination_address_t)
+      - [1-2-4 SocketInterface](#1-2-4-socketinterface)
+      - [1-2-5 SLMP_EXCEPTION_CODE_T](#1-2-5-slmp_exception_code_t)
+      - [1-2-6 REMOTE_CONTROL_MODE_T](#1-2-6-remote_control_mode_t)
+      - [1-2-7 REMOTE_CLEAR_MODE_T](#1-2-7-remote_clear_mode_t)
+    - [1-3 TCP](#1-3-tcp)
+      - [1-3-1 Constructors](#1-3-1-constructors)
+      - [1-3-2 Methods](#1-3-2-methods)
+    - [1-4 UDP](#1-4-udp)
+      - [1-4-1 Constructors](#1-4-1-constructors)
+      - [1-4-2 Methods](#1-4-2-methods)
+    - [1-5 DeviceAccessMaster](#1-5-deviceaccessmaster)
+      - [1-5-1 Constructors](#1-5-1-constructors)
+      - [1-5-2 Properties](#1-5-2-properties)
+      - [1-5-3 Methods](#1-5-3-methods)
+    - [1-6 RemoteOperationMaster](#1-6-remoteoperationmaster)
+      - [1-6-1 Constructors](#1-6-1-constructors)
+      - [1-6-2 Properties](#1-6-2-properties)
+      - [1-6-3 Methods](#1-6-3-methods)
+    - [1-7 SLMPException](#1-7-slmpexception)
+      - [1-7-1 Constructors](#1-7-1-constructors)
+      - [1-7-2 Properties](#1-7-2-properties)
+      - [1-7-3 Methods](#1-7-3-methods)
+    - [1-8 Reference](#1-8-reference)
+      - [1-8-1 Device Code for Local Device Access](#1-8-1-device-code-for-local-device-access)
 
 ## License
 
@@ -46,15 +46,15 @@ TBD
 
 ### 1 Gagharv
 
-#### 1.1 Introduction
+#### 1-1 Introduction
 
 *Gagharv* is a .Net 5 library which implements the SLMP client, written in C# language.
 
 
 
-#### 1.2 Data Structure & Socket Interface
+#### 1-2 Data Structure & Socket Interface
 
-##### 1.2.1 MESSAGE_FRAME_TYPE_T
+##### 1-2-1 MESSAGE_FRAME_TYPE_T
 
 Namespace: AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Message
 
@@ -74,7 +74,7 @@ public enum MESSAGE_FRAME_TYPE_T
 
 
 
-##### 1.2.2 MESSAGE_DATA_CODE_T
+##### 1-2-2 MESSAGE_DATA_CODE_T
 
 Namespace: AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Message
 
@@ -97,7 +97,7 @@ When using binary codes, the communication time will decrease since the amount o
 
 
 
-##### 1.2.3 DESTINATION_ADDRESS_T
+##### 1-2-3 DESTINATION_ADDRESS_T
 
 Namespace: AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Message
 
@@ -132,7 +132,7 @@ Please refer to ***SLMP reference Manual*** for a comprehensive explanation.
 
 
 
-##### 1.2.4 SocketInterface
+##### 1-2-4 SocketInterface
 
 Namespace: AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.IOUtility
 
@@ -149,11 +149,11 @@ public interface SocketInterface: IDisposable
 
 **Remarks**
 
-The library build-in [UDP](#1.3_udp) class  and [TCP](#1.4_tcp) class implement the interface.
+The library build-in [UDP](#1-4-udp) class  and [TCP](#1-3-tcp) class implement the interface.
 
 
 
-##### 1.2.5 SLMP_EXCEPTION_CODE_T
+##### 1-2-5 SLMP_EXCEPTION_CODE_T
 
 Namespace: AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP
 
@@ -192,7 +192,7 @@ Represents the error code and error name of the exception.
 
 
 
-##### 1.2.6 REMOTE_CONTROL_MODE_T
+##### 1-2-6 REMOTE_CONTROL_MODE_T
 
 Namespace: AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Command
 
@@ -211,7 +211,7 @@ public enum REMOTE_CONTROL_MODE_T:ushort
 
 
 
-##### 1.2.7 REMOTE_CLEAR_MODE_T
+##### 1-2-7 REMOTE_CLEAR_MODE_T
 
 Namespace: AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Command
 
@@ -232,11 +232,11 @@ public enum REMOTE_CLEAR_MODE_T : byte
 
 
 
-#### 1.3 TCP
+#### 1-3 TCP
 
 Namespace: AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.IOUtility
 
-Implements the [SocketInterface](#1.2.4-socketinterface) via TCP.
+Implements the [SocketInterface](#1-2-4-socketinterface) via TCP.
 
 ```c#
 public class TCP : SocketInterface
@@ -244,11 +244,11 @@ public class TCP : SocketInterface
 
 
 
-##### 1.3.1 Constructors
+##### 1-3-1 Constructors
 
 **TCP(IPEndPoint, IPEndPoint, Int32, Int32)**
 
-Initializes a new instance of the [TCP](#1.3-tcp) class using specific local endpoint, destination endpoint, send timeout and receive timeout.
+Initializes a new instance of the [TCP](#1-3-tcp) class using specific local endpoint, destination endpoint, send timeout and receive timeout.
 
 ```c#
 public TCP(IPEndPoint source, IPEndPoint destination, int sendTimeout, int receiveTimeout)
@@ -256,31 +256,31 @@ public TCP(IPEndPoint source, IPEndPoint destination, int sendTimeout, int recei
 
 ​	**Parameters**
 
-​	**`source`**  [IPEndPoint](https://docs.microsoft.com/zh-cn/dotnet/api/system.net.ipendpoint?view=net-5.0) 
+​	**`source`**  [IPEndPoint](https://docs.microsoft.com/en-us/dotnet/api/system.net.ipendpoint?view=net-5.0) 
 
-​	The local [IPEndPoint](https://docs.microsoft.com/zh-cn/dotnet/api/system.net.ipendpoint?view=net-5.0) to associate with the [TCP](#1.3-tcp). If the parameter is null, the underlying service provider will assign the local network address and port 	number when you call [Connect](#1.3.2.3-connect) method.
+​	The local [IPEndPoint](https://docs.microsoft.com/en-us/dotnet/api/system.net.ipendpoint?view=net-5.0) to associate with the [TCP](#1-3-tcp). If the parameter is null, the underlying service provider will assign the local network address and port 	number when you call [Connect](#1-3-2-4-connect) method.
 
-​	**`destination`** [IPEndPoint](https://docs.microsoft.com/zh-cn/dotnet/api/system.net.ipendpoint?view=net-5.0) 
+​	**`destination`** [IPEndPoint](https://docs.microsoft.com/en-us/dotnet/api/system.net.ipendpoint?view=net-5.0) 
 
 ​	The [IPEndPoint](https://docs.microsoft.com/en-us/dotnet/api/system.net.endpoint?view=net-5.0) that represents the destination for the data.
 
 ​	**`sendTimeout`** Int32
 
-​	Specifies the amount of time in milliseconds after which a synchronous [Send](#1.3.2.1-send) call will time out.
+​	Specifies the amount of time in milliseconds after which a synchronous [Send](#1-3-2-1-send) call will time out.
 
 ​	**`receiveTimeout`** Int32
 
-​	Specifies the amount of time in milliseconds after which a synchronous [Receive](#1.3.2.2-receive) call will time out.
+​	Specifies the amount of time in milliseconds after which a synchronous [Receive](#1-3-2-2-receive) call will time out.
 
 ​	**Exceptions**
 
-​	[SLMPException](#1.7-slmpexception)
+​	[SLMPException](#1-7-slmpexception)
 
 ​	
 
-##### 1.3.2 Methods
+##### 1-3-2 Methods
 
-###### 1.3.2.1 Send
+###### 1-3-2-1 Send
 
 Sends the specified number of bytes of data to a socket interface, starting at the specified offset, and using the specified [SocketFlags](https://docs.microsoft.com/en-us/dotnet/api/system.net.sockets.socketflags?view=net-5.0).
 
@@ -314,17 +314,17 @@ public int Send(byte[] buffer, int offset, int size, SocketFlags socketFlags = S
 
 ​	**Exceptions**
 
-​	[SLMPException](#1.7-slmpexception)
+​	[SLMPException](#1-7-slmpexception)
 
 ​	**Remarks**
 
 ​	The method will block until the requested number of bytes are sent. 
 
-​	If the time-out value was exceeded, the method will throw a [SLMPException](#1.7-slmpexception).
+​	If the time-out value was exceeded, the method will throw a [SLMPException](#1-7-slmpexception).
 
 
 
-###### 1.3.2.2 Receive
+###### 1-3-2-2 Receive
 
 Receives the specified number of bytes from a bound socket into the specified offset position of the receive buffer, using the specified [SocketFlags](https://docs.microsoft.com/en-us/dotnet/api/system.net.sockets.socketflags?view=net-5.0).
 
@@ -332,7 +332,7 @@ Receives the specified number of bytes from a bound socket into the specified of
 public int Receive(byte[] buffer, int offset, int size, SocketFlags socketFlags = SocketFlags.None)
 ```
 
-**Parameters**
+​	**Parameters**
 
 ​	**`buffer`** Byte[]
 
@@ -358,7 +358,7 @@ public int Receive(byte[] buffer, int offset, int size, SocketFlags socketFlags 
 
 ​	**Exceptions**
 
-​	[SLMPException](#1.7-slmpexception)
+​	[SLMPException](#1-7-slmpexception)
 
 ​	**Remarks**
 
@@ -366,11 +366,11 @@ public int Receive(byte[] buffer, int offset, int size, SocketFlags socketFlags 
 
 ​	If no data is available for reading, the method will block until data is available. 
 
-​	If the time-out value was exceeded, the [Receive](https://docs.microsoft.com/en-us/dotnet/api/system.net.sockets.socket.receive?view=net-5.0) call will throw a [SLMPException](#1.7-slmpexception).
+​	If the time-out value was exceeded, the [Receive](https://docs.microsoft.com/en-us/dotnet/api/system.net.sockets.socket.receive?view=net-5.0) call will throw a [SLMPException](#1-7-slmpexception).
 
 
 
-###### 1.3.2.3 Name
+###### 1-3-2-3 Name
 
 Returns the name of the socket interface.
 
@@ -386,9 +386,9 @@ public string Name()
 
 
 
-###### 1.3.2.4 Connect
+###### 1-3-2-4 Connect
 
-Establishes a connection to a destination endpoint specified in [Constructors](#1.3.1-constructors)
+Establishes a connection to a destination endpoint specified in [Constructors](#1-3-1-constructors)
 
 ```c#
 public void Connect()
@@ -396,19 +396,19 @@ public void Connect()
 
 ​	**Exceptions**
 
-​	[SLMPException](#1.7-slmpexception)
+​	[SLMPException](#1-7-slmpexception)
 
 ​	**Remarks**
 
-​	The method will block and synchronously establishes a network connection between local and destination [IPEndPoint](https://docs.microsoft.com/zh-cn/dotnet/api/system.net.ipendpoint?view=net-5.0) specified in [Constructors](#1.3.1-constructors).
+​	The method will block and synchronously establishes a network connection between local and destination [IPEndPoint](https://docs.microsoft.com/zh-cn/dotnet/api/system.net.ipendpoint?view=net-5.0) specified in [Constructors](#1-3-1-constructors).
 
 
 
-#### 1.4 UDP
+#### 1-4 UDP
 
 Namespace: AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.IOUtility
 
-Implements the [SocketInterface](#1.2.4-socketinterface) via UDP.
+Implements the [SocketInterface](#1-2-4-socketinterface) via UDP.
 
 ```c#
 public class UDP : SocketInterface
@@ -416,11 +416,11 @@ public class UDP : SocketInterface
 
 
 
-##### 1.4.1 Constructors
+##### 1-4-1 Constructors
 
 **UDP(IPEndPoint, IPEndPoint, Int32, Int32, Int32)**
 
-Initializes a new instance of the [UDP](#1.4-udp) class using specific local endpoint, destination endpoint, receive buffer size, send timeout and receive timeout.
+Initializes a new instance of the [UDP](#1-4-udp) class using specific local endpoint, destination endpoint, receive buffer size, send timeout and receive timeout.
 
 ```c#
 public UDP(IPEndPoint source, IPEndPoint destination, int internalBufferSize, int sendTimeout, int receiveTimeout)
@@ -428,11 +428,11 @@ public UDP(IPEndPoint source, IPEndPoint destination, int internalBufferSize, in
 
 ​	**Parameters**
 
-​	**`source`**  [IPEndPoint](https://docs.microsoft.com/zh-cn/dotnet/api/system.net.ipendpoint?view=net-5.0) 
+​	**`source`**  [IPEndPoint](https://docs.microsoft.com/en-us/dotnet/api/system.net.ipendpoint?view=net-5.0) 
 
-​	The local [IPEndPoint](https://docs.microsoft.com/zh-cn/dotnet/api/system.net.ipendpoint?view=net-5.0) to associate with the [UDP](#1.4-udp).
+​	The local [IPEndPoint](https://docs.microsoft.com/en-us/dotnet/api/system.net.ipendpoint?view=net-5.0) to associate with the [UDP](#1-4-udp).
 
-​	**`destination`** [IPEndPoint](https://docs.microsoft.com/zh-cn/dotnet/api/system.net.ipendpoint?view=net-5.0) 
+​	**`destination`** [IPEndPoint](https://docs.microsoft.com/en-us/dotnet/api/system.net.ipendpoint?view=net-5.0) 
 
 ​	The [IPEndPoint](https://docs.microsoft.com/en-us/dotnet/api/system.net.endpoint?view=net-5.0) that represents the destination for the data.
 
@@ -442,21 +442,21 @@ public UDP(IPEndPoint source, IPEndPoint destination, int internalBufferSize, in
 
 ​	**`sendTimeout`** Int32
 
-​	Specifies the amount of time in milliseconds after which a synchronous [Send](#1.3.2.1-send) call will time out.
+​	Specifies the amount of time in milliseconds after which a synchronous [Send](#1-3-2-1-send) call will time out.
 
 ​	**`receiveTimeout`** Int32
 
-​	Specifies the amount of time in milliseconds after which a synchronous [Receive](#1.3.2.2-receive) call will time out.
+​	Specifies the amount of time in milliseconds after which a synchronous [Receive](#1-3-2-2-receive) call will time out.
 
 ​	**Exceptions**
 
-​	[SLMPException](#1.7-slmpexception)
+​	[SLMPException](#1-7-slmpexception)
 
 ​	
 
-##### 1.4.2 Methods
+##### 1-4-2 Methods
 
-###### 1.4.2.1 Send
+###### 1-4-2-1 Send
 
 Sends the specified number of bytes of data to a socket interface, starting at the specified offset, and using the specified [SocketFlags](https://docs.microsoft.com/en-us/dotnet/api/system.net.sockets.socketflags?view=net-5.0).
 
@@ -490,17 +490,17 @@ public int Send(byte[] buffer, int offset, int size, SocketFlags socketFlags = S
 
 ​	**Exceptions**
 
-​	[SLMPException](#1.7-slmpexception)
+​	[SLMPException](#1-7-slmpexception)
 
 ​	**Remarks**
 
 ​	The method will block until the requested number of bytes are sent. 
 
-​	If the time-out value was exceeded, the method will throw a [SLMPException](#1.7-slmpexception).
+​	If the time-out value was exceeded, the method will throw a [SLMPException](#1-7-slmpexception).
 
 
 
-###### 1.4.2.2 Receive
+###### 1-4-2-2 Receive
 
 Receives the specified number of bytes from a bound socket into the specified offset position of the receive buffer, using the specified [SocketFlags](https://docs.microsoft.com/en-us/dotnet/api/system.net.sockets.socketflags?view=net-5.0).
 
@@ -508,7 +508,7 @@ Receives the specified number of bytes from a bound socket into the specified of
 public int Receive(byte[] buffer, int offset, int size, SocketFlags socketFlags = SocketFlags.None)
 ```
 
-**Parameters**
+​	**Parameters**
 
 ​	**`buffer`** Byte[]
 
@@ -534,7 +534,7 @@ public int Receive(byte[] buffer, int offset, int size, SocketFlags socketFlags 
 
 ​	**Exceptions**
 
-​	[SLMPException](#1.7-slmpexception)
+​	[SLMPException](#1-7-slmpexception)
 
 ​	**Remarks**
 
@@ -542,11 +542,11 @@ public int Receive(byte[] buffer, int offset, int size, SocketFlags socketFlags 
 
 ​	If no data is available for reading, the method will block until data is available. 
 
-​	If the time-out value was exceeded, the [Receive](https://docs.microsoft.com/en-us/dotnet/api/system.net.sockets.socket.receive?view=net-5.0) call will throw a [SLMPException](#1.7-slmpexception).
+​	If the time-out value was exceeded, the [Receive](https://docs.microsoft.com/en-us/dotnet/api/system.net.sockets.socket.receive?view=net-5.0) call will throw a [SLMPException](#1-7-slmpexception).
 
 
 
-###### 1.4.2.3 Name
+###### 1-4-2-3 Name
 
 Returns the name of the socket interface.
 
@@ -562,7 +562,7 @@ public string Name()
 
 
 
-#### 1.5 DeviceAccessMaster
+#### 1-5 DeviceAccessMaster
 
 Namespace: AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Master
 
@@ -585,11 +585,11 @@ Supported device access commands:
 
 
 
-##### 1.5.1 Constructors
+##### 1-5-1 Constructors
 
 **DeviceAccessMaster(MESSAGE_FRAME_TYPE_T, MESSAGE_DATA_CODE_T, Boolean, SocketInterface, ref DESTINATION_ADDRESS_T, Int32, Int32, Object)**
 
-Initializes a new instance of the [DeviceAccessMaster](#1.5-deviceaccessmaster) class.
+Initializes a new instance of the [DeviceAccessMaster](#1-5-deviceaccessmaster) class.
 
 ```c#
 public DeviceAccessMaster(MESSAGE_FRAME_TYPE_T frameType, 
@@ -602,13 +602,13 @@ public DeviceAccessMaster(MESSAGE_FRAME_TYPE_T frameType,
 
 ​	**Parameters**
 
-​	**`frameType`** [MESSAGE_FRAME_TYPE_T](#1.2.1-message_frame_type_t)
+​	**`frameType`** [MESSAGE_FRAME_TYPE_T](#1-2-1-message_frame_type_t)
 
-​	Specifies the frame type that the [DeviceAccessMaster](#1.5-deviceaccessmaster) adopts.
+​	Specifies the frame type that the [DeviceAccessMaster](#1-5-deviceaccessmaster) adopts.
 
-​	**`dataCode`** [MESSAGE_DATA_CODE_T](#1.2.2-message_data_code_t)
+​	**`dataCode`** [MESSAGE_DATA_CODE_T](#1-2-2-message_data_code_t)
 
-​	Specifies the communication data code that the [DeviceAccessMaster](#1.5-deviceaccessmaster) adopts.
+​	Specifies the communication data code that the [DeviceAccessMaster](#1-5-deviceaccessmaster) adopts.
 
 ​	**`dedicationR`** bool
 
@@ -618,11 +618,11 @@ public DeviceAccessMaster(MESSAGE_FRAME_TYPE_T frameType,
 
 ​	`false`: Q/L compatible message format.
 
-​	**`sc`** [SocketInterface](#1.2.4-socketinterface)
+​	**`sc`** [SocketInterface](#1-2-4-socketinterface)
 
-​	Specifies the communication interface that the [DeviceAccessMaster](#1.5-deviceaccessmaster) associates with.
+​	Specifies the communication interface that the [DeviceAccessMaster](#1-5-deviceaccessmaster) associates with.
 
-​	**`destination`** [DESTINATION_ADDRESS_T](#1.2.3-destination_address_t)
+​	**`destination`** [DESTINATION_ADDRESS_T](#1-2-3-destination_address_t)
 
 ​	Specifies  the remote controller station.
 
@@ -642,15 +642,15 @@ public DeviceAccessMaster(MESSAGE_FRAME_TYPE_T frameType,
 
 ​	**Exceptions**
 
-​	[SLMPException](#1.7-slmpexception)
+​	[SLMPException](#1-7-slmpexception)
 
 
 
-##### 1.5.2 Properties
+##### 1-5-2 Properties
 
-###### 1.5.2.1 COM
+###### 1-5-2-1 COM
 
-Set a socket interface that the [DeviceAccessMaster](#1.5-deviceaccessmaster) associates with.
+Set a socket interface that the [DeviceAccessMaster](#1-5-deviceaccessmaster) associates with.
 
 ```c#
 public SocketInterface COM {set;}
@@ -658,13 +658,13 @@ public SocketInterface COM {set;}
 
 ​	**Property Value**
 
-​	[SocketInterface](#1.2.4-socketinterface)
+​	[SocketInterface](#1-2-4-socketinterface)
 
 
 
-##### 1.5.3 Methods
+##### 1-5-3 Methods
 
-###### 1.5.3.1 ReadLocalDeviceInWord
+###### 1-5-3-1 ReadLocalDeviceInWord
 
 **Overloads**
 
@@ -692,7 +692,7 @@ public void ReadLocalDeviceInWord(ushort monitoringTimer, string deviceCode, uin
 
 ​	**`deviceCode`** [String](https://docs.microsoft.com/en-us/dotnet/api/system.string?view=net-5.0)
 
-​	Specify the type of the target device of reading. Refer to [Device Code for Local Device Access](#1.8.1-device-code-for-local-device-access) for details.
+​	Specify the type of the target device of reading. Refer to [Device Code for Local Device Access](#1-8-1-device-code-for-local-device-access) for details.
 
 ​	**`headDevice`** UInt32
 
@@ -714,7 +714,7 @@ public void ReadLocalDeviceInWord(ushort monitoringTimer, string deviceCode, uin
 
 ​	**Exceptions**
 
-​	[SLMPException](#1.7-slmpexception)
+​	[SLMPException](#1-7-slmpexception)
 
 ​	
 
@@ -749,7 +749,7 @@ public void ReadLocalDeviceInWord(ushort monitoringTimer,
 
 ​			**`deviceCode`** [String](https://docs.microsoft.com/en-us/dotnet/api/system.string?view=net-5.0)
 
-​			Specify the type of the target device of reading. Refer to [Device Code for Local Device Access](#1.8.1-device-code-for-local-device-access) for details.
+​			Specify the type of the target device of reading. Refer to [Device Code for Local Device Access](#1-8-1-device-code-for-local-device-access) for details.
 
 ​			**`headDevice`** UInt32
 
@@ -769,7 +769,7 @@ public void ReadLocalDeviceInWord(ushort monitoringTimer,
 
 ​	**Exceptions**
 
-​	[SLMPException](#1.7-slmpexception)
+​	[SLMPException](#1-7-slmpexception)
 
 
 
@@ -802,7 +802,7 @@ public void ReadLocalDeviceInWord(ushort monitoringTimer,
 
 ​		**`deviceCode`** [String](https://docs.microsoft.com/en-us/dotnet/api/system.string?view=net-5.0)
 
-​		Specify the type of the target device of reading. Refer to [Device Code for Local Device Access](#1.8.1-device-code-for-local-device-access) for details.
+​		Specify the type of the target device of reading. Refer to [Device Code for Local Device Access](#1-8-1-device-code-for-local-device-access) for details.
 
 ​		**`headDevice`** UInt32
 
@@ -826,11 +826,11 @@ public void ReadLocalDeviceInWord(ushort monitoringTimer,
 
 ​	**Exceptions**
 
-​	[SLMPException](#1.7-slmpexception)
+​	[SLMPException](#1-7-slmpexception)
 
 
 
-###### 1.5.3.2 ReadLocalDeviceInBit
+###### 1-5-3-2 ReadLocalDeviceInBit
 
 Reads value from the bit devices (consecutive device No.) in 1-point units.
 
@@ -850,7 +850,7 @@ public void ReadLocalDeviceInBit(ushort monitoringTimer, string deviceCode, uint
 
 ​	**`deviceCode`** [String](https://docs.microsoft.com/en-us/dotnet/api/system.string?view=net-5.0)
 
-​	Specify the type of the target device of reading. Refer to [Device Code for Local Device Access](#1.8.1-device-code-for-local-device-access) for details.
+​	Specify the type of the target device of reading. Refer to [Device Code for Local Device Access](#1-8-1-device-code-for-local-device-access) for details.
 
 ​	**`headDevice`** UInt32
 
@@ -876,11 +876,11 @@ public void ReadLocalDeviceInBit(ushort monitoringTimer, string deviceCode, uint
 
 ​	**Exceptions**
 
-​	[SLMPException](#1.7-slmpexception)
+​	[SLMPException](#1-7-slmpexception)
 
 
 
-###### 1.5.3.3 ReadModuleAccessDeviceInWord
+###### 1-5-3-3 ReadModuleAccessDeviceInWord
 
 **Overloads**
 
@@ -928,7 +928,7 @@ public void ReadModuleAccessDeviceInWord(ushort monitoringTimer, string extensio
 
 ​	**Exceptions**
 
-​	[SLMPException](#1.7-slmpexception)
+​	[SLMPException](#1-7-slmpexception)
 
 
 
@@ -983,7 +983,7 @@ public void ReadModuleAccessDeviceInWord(ushort monitoringTimer,
 
 ​	**Exceptions**
 
-​	[SLMPException](#1.7-slmpexception)
+​	[SLMPException](#1-7-slmpexception)
 
 
 
@@ -1035,11 +1035,11 @@ public void ReadModuleAccessDeviceInWord(ushort monitoringTimer,
 
 ​	**Exceptions**
 
-​	[SLMPException](#1.7-slmpexception)
+​	[SLMPException](#1-7-slmpexception)
 
 
 
-###### 1.5.3.4 WriteLocalDeviceInWord
+###### 1-5-3-4 WriteLocalDeviceInWord
 
 **Overloads**
 
@@ -1066,7 +1066,7 @@ public void WriteLocalDeviceInWord(ushort monitoringTimer, string deviceCode, ui
 
 ​	**`deviceCode`** [String](https://docs.microsoft.com/en-us/dotnet/api/system.string?view=net-5.0)
 
-​	Specify the type of the target device of writing. Refer to [Device Code for Local Device Access](#1.8.1-device-code-for-local-device-access) for details.
+​	Specify the type of the target device of writing. Refer to [Device Code for Local Device Access](#1-8-1-device-code-for-local-device-access) for details.
 
 ​	**`headDevice`** UInt32
 
@@ -1088,7 +1088,7 @@ public void WriteLocalDeviceInWord(ushort monitoringTimer, string deviceCode, ui
 
 ​	**Exceptions**
 
-​	[SLMPException](#1.7-slmpexception)
+​	[SLMPException](#1-7-slmpexception)
 
 ​	
 
@@ -1123,7 +1123,7 @@ public void WriteLocalDeviceInWord(ushort monitoringTimer,
 
 ​			**`deviceCode`** [String](https://docs.microsoft.com/en-us/dotnet/api/system.string?view=net-5.0)
 
-​			Specify the type of the target device of writing. Refer to [Device Code for Local Device Access](#1.8.1-device-code-for-local-device-access) for details.
+​			Specify the type of the target device of writing. Refer to [Device Code for Local Device Access](#1-8-1-device-code-for-local-device-access) for details.
 
 ​			**`headDevice`** UInt32
 
@@ -1141,7 +1141,7 @@ public void WriteLocalDeviceInWord(ushort monitoringTimer,
 
 ​	**Exceptions**
 
-​	[SLMPException](#1.7-slmpexception)
+​	[SLMPException](#1-7-slmpexception)
 
 
 
@@ -1174,7 +1174,7 @@ Writes data by treating n points of word devices or bit devices (one point is eq
 
 ​		**`deviceCode`** [String](https://docs.microsoft.com/en-us/dotnet/api/system.string?view=net-5.0)
 
-​		Specify the type of the target device of writing. Refer to [Device Code for Local Device Access](#1.8.1-device-code-for-local-device-access) for details.
+​		Specify the type of the target device of writing. Refer to [Device Code for Local Device Access](#1-8-1-device-code-for-local-device-access) for details.
 
 ​		**`headDevice`** UInt32
 
@@ -1194,11 +1194,11 @@ Writes data by treating n points of word devices or bit devices (one point is eq
 
 ​	**Exceptions**
 
-​	[SLMPException](#1.7-slmpexception)
+​	[SLMPException](#1-7-slmpexception)
 
 
 
-###### 1.5.3.5 WriteLocalDeviceInBit
+###### 1-5-3-5 WriteLocalDeviceInBit
 
 **Overloads**
 
@@ -1224,7 +1224,7 @@ public void WriteLocalDeviceInBit(ushort monitoringTimer, string deviceCode, uin
 
 ​	**`deviceCode`** [String](https://docs.microsoft.com/en-us/dotnet/api/system.string?view=net-5.0)
 
-​	Specify the type of the target device of writing. Refer to [Device Code for Local Device Access](#1.8.1-device-code-for-local-device-access) for details.
+​	Specify the type of the target device of writing. Refer to [Device Code for Local Device Access](#1-8-1-device-code-for-local-device-access) for details.
 
 ​	**`headDevice`** UInt32
 
@@ -1250,7 +1250,7 @@ public void WriteLocalDeviceInBit(ushort monitoringTimer, string deviceCode, uin
 
 ​	**Exceptions**
 
-​	[SLMPException](#1.7-slmpexception)
+​	[SLMPException](#1-7-slmpexception)
 
 
 
@@ -1280,7 +1280,7 @@ public void WriteLocalDeviceInBit(ushort monitoringTimer,
 
 ​			**`deviceCode`** [String](https://docs.microsoft.com/en-us/dotnet/api/system.string?view=net-5.0)
 
-​			Specify the type of the target device of writing. Refer to [Device Code for Local Device Access](#1.8.1-device-code-for-local-device-access) for details.
+​			Specify the type of the target device of writing. Refer to [Device Code for Local Device Access](#1-8-1-device-code-for-local-device-access) for details.
 
 ​			**`headDevice`** UInt32
 
@@ -1300,11 +1300,11 @@ public void WriteLocalDeviceInBit(ushort monitoringTimer,
 
 ​	**Exceptions**
 
-​	[SLMPException](#1.7-slmpexception)
+​	[SLMPException](#1-7-slmpexception)
 
 
 
-###### 1.5.3.6 WriteModuleAccessDeviceInWord
+###### 1-5-3-6 WriteModuleAccessDeviceInWord
 
 **Overloads**
 
@@ -1352,7 +1352,7 @@ public void WriteModuleAccessDeviceInWord(ushort monitoringTimer, string extensi
 
 ​	**Exceptions**
 
-​	[SLMPException](#1.7-slmpexception)
+​	[SLMPException](#1-7-slmpexception)
 
 ​	
 
@@ -1405,7 +1405,7 @@ public void WriteModuleAccessDeviceInWord(ushort monitoringTimer,
 
 ​	**Exceptions**
 
-​	[SLMPException](#1.7-slmpexception)
+​	[SLMPException](#1-7-slmpexception)
 
 
 
@@ -1454,11 +1454,11 @@ IEnumerable<(string extensionSpecification, uint headDevice, ushort devicePoints
 
 ​	**Exceptions**
 
-​	[SLMPException](#1.7-slmpexception)
+​	[SLMPException](#1-7-slmpexception)
 
 
 
-#### 1.6 RemoteOperationMaster
+#### 1-6 RemoteOperationMaster
 
 Namespace: AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Master
 
@@ -1481,11 +1481,11 @@ Supported remote operation commands:
 
 
 
-##### 1.6.1 Constructors
+##### 1-6.1 Constructors
 
 **RemoteOperationMaster(MESSAGE_FRAME_TYPE_T, MESSAGE_DATA_CODE_T, Boolean, SocketInterface, ref DESTINATION_ADDRESS_T, Int32, Int32, Object)**
 
-Initializes a new instance of the [RemoteOperationMaster](#1.6-remoteoperationmaster) class.
+Initializes a new instance of the [RemoteOperationMaster](#1-6-remoteoperationmaster) class.
 
 ```c#
 public RemoteOperationMaster(MESSAGE_FRAME_TYPE_T frameType, MESSAGE_DATA_CODE_T dataCode, bool dedicationR, SocketInterface sc, ref DESTINATION_ADDRESS_T destination, int sendBufferSize = 4096, int receiveBufferSize = 4096, object sync = null)
@@ -1493,13 +1493,13 @@ public RemoteOperationMaster(MESSAGE_FRAME_TYPE_T frameType, MESSAGE_DATA_CODE_T
 
 ​	**Parameters**
 
-​	**`frameType`** [MESSAGE_FRAME_TYPE_T](#1.2.1-message_frame_type_t)
+​	**`frameType`** [MESSAGE_FRAME_TYPE_T](#1-2-1-message_frame_type_t)
 
-​	Specifies the frame type that the [DeviceAccessMaster](#1.5-deviceaccessmaster) adopts.
+​	Specifies the frame type that the [DeviceAccessMaster](#1-5-deviceaccessmaster) adopts.
 
-​	**`dataCode`** [MESSAGE_DATA_CODE_T](#1.2.2-message_data_code_t)
+​	**`dataCode`** [MESSAGE_DATA_CODE_T](#1-2-2-message_data_code_t)
 
-​	Specifies the communication data code that the [DeviceAccessMaster](#1.5-deviceaccessmaster) adopts.
+​	Specifies the communication data code that the [DeviceAccessMaster](#1-5-deviceaccessmaster) adopts.
 
 ​	**`dedicationR`** Boolean
 
@@ -1509,11 +1509,11 @@ public RemoteOperationMaster(MESSAGE_FRAME_TYPE_T frameType, MESSAGE_DATA_CODE_T
 
 ​	`false`: Q/L compatible message format.
 
-​	**`sc`** [SocketInterface](#1.2.4-socketinterface)
+​	**`sc`** [SocketInterface](#1-2-4-socketinterface)
 
-​	Specifies the communication interface that the [DeviceAccessMaster](#1.5-deviceaccessmaster) associates with.
+​	Specifies the communication interface that the [DeviceAccessMaster](#1-5-deviceaccessmaster) associates with.
 
-​	**`destination`** [DESTINATION_ADDRESS_T](#1.2.3-destination_address_t)
+​	**`destination`** [DESTINATION_ADDRESS_T](#1-2-3-destination_address_t)
 
 ​	Specifies  the remote controller station.
 
@@ -1533,15 +1533,15 @@ public RemoteOperationMaster(MESSAGE_FRAME_TYPE_T frameType, MESSAGE_DATA_CODE_T
 
 ​	**Exceptions**
 
-​	[SLMPException](#1.7-slmpexception)
+​	[SLMPException](#1-7-slmpexception)
 
 
 
-##### 1.6.2 Properties
+##### 1-6-2 Properties
 
-###### 1.6.2.1 COM
+###### 1-6-2-1 COM
 
-Set a socket interface that the [RemoteOperationMaster](#1.6-remoteoperationmaster) associates with.
+Set a socket interface that the [RemoteOperationMaster](#1-6-remoteoperationmaster) associates with.
 
 ```c#
 public SocketInterface COM {set;}
@@ -1549,13 +1549,13 @@ public SocketInterface COM {set;}
 
 ​	**Property Value**
 
-​	[SocketInterface](#1.2.4-socketinterface)
+​	[SocketInterface](#1-2-4-socketinterface)
 
 
 
-##### 1.6.3 Methods
+##### 1-6-3 Methods
 
-###### 1.6.3.1 Run
+###### 1-6-3-1 Run
 
 Executes the remote RUN to the access destination module.
 
@@ -1573,7 +1573,7 @@ public void Run(ushort monitoringTimer, REMOTE_CONTROL_MODE_T controlMode, REMOT
 
 ​	0001H to FFFFH (1 to 65535): Waiting time (Unit: 250ms)
 
-​	**`controlMode`** [REMOTE_CONTROL_MODE_T](#1.2.6-remote_control_mode_t)
+​	**`controlMode`** [REMOTE_CONTROL_MODE_T](#1-2-6-remote_control_mode_t)
 
 ​	Specify whether the remote RUN can be executed forcibly by the device other than the external device which performed the remote STOP/remote 	PAUSE. 
 
@@ -1581,7 +1581,7 @@ public void Run(ushort monitoringTimer, REMOTE_CONTROL_MODE_T controlMode, REMOT
 
 ​	Forced execution is used when the external device which performed the remote operation cannot execute the remote RUN because of a trouble on the device.
 
-​	**`clearMode`** [REMOTE_CLEAR_MODE_T](#1.2.7-remote_clear_mode_t)
+​	**`clearMode`** [REMOTE_CLEAR_MODE_T](#1-2-7-remote_clear_mode_t)
 
 ​	Specify whether the clear (initialization) processing of device is executed or not when starting the calculation for the remote RUN. 
 
@@ -1597,11 +1597,11 @@ public void Run(ushort monitoringTimer, REMOTE_CONTROL_MODE_T controlMode, REMOT
 
 ​	**Exceptions**
 
-​	[SLMPException](#1.7-slmpexception)
+​	[SLMPException](#1-7-slmpexception)
 
 
 
-###### 1.6.3.2 Stop
+###### 1-6-3-2 Stop
 
 Executes the remote STOP to the access destination module.
 
@@ -1627,11 +1627,11 @@ public void Stop(ushort monitoringTimer, out ushort endCode)
 
 ​	**Exceptions**
 
-​	[SLMPException](#1.7-slmpexception)
+​	[SLMPException](#1-7-slmpexception)
 
 
 
-###### 1.6.3.3 Pause
+###### 1-6-3-3 Pause
 
 Executes the remote PAUSE to the access destination module.
 
@@ -1649,7 +1649,7 @@ public void Pause(ushort monitoringTimer, REMOTE_CONTROL_MODE_T controlMode, out
 
 ​	0001H to FFFFH (1 to 65535): Waiting time (Unit: 250ms)
 
-​	**`controlMode`** [REMOTE_CONTROL_MODE_T](#1.2.6-remote_control_mode_t)
+​	**`controlMode`** [REMOTE_CONTROL_MODE_T](#1-2-6-remote_control_mode_t)
 
 ​	Specify whether the remote RUN can be executed forcibly by the device other than the external device which performed the remote STOP/remote 	PAUSE. 
 
@@ -1665,11 +1665,11 @@ public void Pause(ushort monitoringTimer, REMOTE_CONTROL_MODE_T controlMode, out
 
 ​	**Exceptions**
 
-​	[SLMPException](#1.7-slmpexception)
+​	[SLMPException](#1-7-slmpexception)
 
 
 
-###### 1.6.3.4 LatchClear
+###### 1-6-3-4 LatchClear
 
  Executes the remote latch clear to the access destination module.
 
@@ -1695,11 +1695,11 @@ public void LatchClear(ushort monitoringTimer, out ushort endCode)
 
 ​	**Exceptions**
 
-​	[SLMPException](#1.7-slmpexception)
+​	[SLMPException](#1-7-slmpexception)
 
 
 
-###### 1.6.3.5 Reset
+###### 1-6-3-5 Reset
 
 Executes the remote RESET to the access destination module. Remote RESET is used to restore when an error occurred in the module.
 
@@ -1725,11 +1725,11 @@ public void Reset(ushort monitoringTimer, out ushort endCode)
 
 ​	**Exceptions**
 
-​	[SLMPException](#1.7-slmpexception)
+​	[SLMPException](#1-7-slmpexception)
 
 
 
-###### 1.6.3.6 ReadTypeName
+###### 1-6-3-6 ReadTypeName
 
 Reads the model name and model code of the access destination module.
 
@@ -1765,11 +1765,11 @@ public void ReadTypeName(ushort monitoringTimer, out ushort endCode, out string 
 
 ​	**Exceptions**
 
-​	[SLMPException](#1.7-slmpexception)
+​	[SLMPException](#1-7-slmpexception)
 
 
 
-#### 1.7 SLMPException
+#### 1-7 SLMPException
 
 Namespace: AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP
 
@@ -1781,17 +1781,17 @@ public class SLMPException : Exception
 
 
 
-##### 1.7.1 Constructors
+##### 1-7-1 Constructors
 
-Initializes a new instance of the [SLMPException](#1.7-slmpexception) class.
+Initializes a new instance of the [SLMPException](#1-7-slmpexception) class.
 
 **Overloads**
 
 ------
 
-**SLMPException([SLMP_EXCEPTION_CODE_T](#1.2.5-slmp_exception_code_t))**
+**SLMPException([SLMP_EXCEPTION_CODE_T](#1-2-5-slmp_exception_code_t))**
 
-Initializes a new instance of the [SLMPException](#1.7-slmpexception) class with a specified [SLMP_EXCEPTION_CODE_T](#1.2.5-slmp_exception_code_t) code.
+Initializes a new instance of the [SLMPException](#1-7-slmpexception) class with a specified [SLMP_EXCEPTION_CODE_T](#1-2-5-slmp_exception_code_t) code.
 
 ```c#
 public SLMPException(SLMP_EXCEPTION_CODE_T code)
@@ -1799,7 +1799,7 @@ public SLMPException(SLMP_EXCEPTION_CODE_T code)
 
 ​	**Parameters**
 
-​	**`code`** [SLMP_EXCEPTION_CODE_T](#1.2.5-slmp_exception_code_t)
+​	**`code`** [SLMP_EXCEPTION_CODE_T](#1-2-5-slmp_exception_code_t)
 
 ​	The code that explains the reason for the exception.
 
@@ -1807,7 +1807,7 @@ public SLMPException(SLMP_EXCEPTION_CODE_T code)
 
 **SLMPException([Exception](https://docs.microsoft.com/en-us/dotnet/api/system.exception?view=net-5.0))**
 
-Initializes a new instance of the [SLMPException](#1.7-slmpexception) class with a reference to the inner runtime exception that is the cause of this exception.
+Initializes a new instance of the [SLMPException](#1-7-slmpexception) class with a reference to the inner runtime exception that is the cause of this exception.
 
 ```c#
 public SLMPException(Exception exp)
@@ -1821,11 +1821,11 @@ public SLMPException(Exception exp)
 
 
 
-##### 1.7.2 Properties
+##### 1-7-2 Properties
 
-###### 1.7.2.1 ExceptionCode
+###### 1-7-2-1 ExceptionCode
 
-Gets the [SLMP_EXCEPTION_CODE_T](#1.2.5-slmp_exception_code_t) code that describes the current exception.
+Gets the [SLMP_EXCEPTION_CODE_T](#1-2-5-slmp_exception_code_t) code that describes the current exception.
 
 ```c#
  public SLMP_EXCEPTION_CODE_T ExceptionCode { get; private set; }
@@ -1833,13 +1833,13 @@ Gets the [SLMP_EXCEPTION_CODE_T](#1.2.5-slmp_exception_code_t) code that describ
 
 ​	**Property Value**
 
-​	[SLMP_EXCEPTION_CODE_T](#1.2.5-slmp_exception_code_t) 
+​	[SLMP_EXCEPTION_CODE_T](#1-2-5-slmp_exception_code_t) 
 
 ​	The code that explains the reason for the exception.
 
 
 
-###### 1.7.2.2 RuntimeException
+###### 1-7-2-2 RuntimeException
 
 If ExceptionCode returns ***RUNTIME_ERROR***, this property will return the [Exception](https://docs.microsoft.com/en-us/dotnet/api/system.exception?view=net-5.0) instance that caused the current runtime exception, otherwise, it returns null.
 
@@ -1855,9 +1855,9 @@ If ExceptionCode returns ***RUNTIME_ERROR***, this property will return the [Exc
 
 
 
-##### 1.7.3 Methods
+##### 1-7-3 Methods
 
-###### 1.7.3.1 ToString
+###### 1-7-3-1 ToString
 
 Creates and returns a string representation of the current exception.
 
@@ -1873,9 +1873,9 @@ Creates and returns a string representation of the current exception.
 
 
 
-#### 1.8 Reference
+#### 1-8 Reference
 
-##### 1.8.1 Device Code for Local Device Access
+##### 1-8-1 Device Code for Local Device Access
 
 | Device                             | Device Code | Type        | Remarks                                  |
 | ---------------------------------- | ----------- | ----------- | ---------------------------------------- |
