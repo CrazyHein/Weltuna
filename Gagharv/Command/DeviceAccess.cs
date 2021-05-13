@@ -1650,8 +1650,11 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Command
                     }
                     break;
                 case MESSAGE_DATA_CODE_T.BINARY:
-                    for (int i = 0; i < wordpoints; ++i)
-                        data[i] = (ushort)(source[i * 2] + (source[i * 2 + 1] << 8));
+                    if (Message.Message.BIG_ENDIAN == true)
+                        for (int i = 0; i < wordpoints; ++i)
+                            data[i] = (ushort)(source[i * 2] + (source[i * 2 + 1] << 8));
+                    else
+                        source.Slice(0, length).CopyTo(MemoryMarshal.AsBytes(data));
                     break;
                 default:
                     throw new SLMPException(SLMP_EXCEPTION_CODE_T.INVALID_DATA_CODE);
@@ -1683,8 +1686,11 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Command
                     }
                     break;
                 case MESSAGE_DATA_CODE_T.BINARY:
-                    for (int i = 0; i < dwordpoints; ++i)
-                        data[i] = (uint)(source[i * 4] + (source[i * 4 + 1] << 8) + (source[i * 4 + 2] << 16) + (source[i * 4 + 3] << 24));
+                    if (Message.Message.BIG_ENDIAN == true)
+                        for (int i = 0; i < dwordpoints; ++i)
+                            data[i] = (uint)(source[i * 4] + (source[i * 4 + 1] << 8) + (source[i * 4 + 2] << 16) + (source[i * 4 + 3] << 24));
+                    else
+                        source.Slice(0, length).CopyTo(MemoryMarshal.AsBytes(data));
                     break;
                 default:
                     throw new SLMPException(SLMP_EXCEPTION_CODE_T.INVALID_DATA_CODE);
@@ -1758,13 +1764,18 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Command
                     }
                     break;
                 case MESSAGE_DATA_CODE_T.BINARY:
-                    for (int i = 0; i < length; ++i)
+                    if (Message.Message.BIG_ENDIAN == true)
                     {
-                        if (i % 2 == 0)
-                            data[i] = (byte)(source[i / 2] & 0x00FF);
-                        else
-                            data[i] = (byte)((source[i / 2] & 0xFF00) >> 8);
+                        for (int i = 0; i < length; ++i)
+                        {
+                            if (i % 2 == 0)
+                                data[i] = (byte)(source[i / 2] & 0x00FF);
+                            else
+                                data[i] = (byte)((source[i / 2] & 0xFF00) >> 8);
+                        }
                     }
+                    else
+                        MemoryMarshal.AsBytes(source.Slice(0, wordpoints)).CopyTo(data);
                     break;
                 default:
                     throw new SLMPException(SLMP_EXCEPTION_CODE_T.INVALID_DATA_CODE);
@@ -1791,13 +1802,18 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Command
                     }
                     break;
                 case MESSAGE_DATA_CODE_T.BINARY:
-                    for (int i = 0; i < length; i += 4)
+                    if (Message.Message.BIG_ENDIAN == true)
                     {
-                        data[i] = (byte)(source[i / 4] & 0x000000FF);
-                        data[i + 1] = (byte)((source[i / 4] >> 8) & 0x000000FF);
-                        data[i + 2] = (byte)((source[i / 4] >> 16) & 0x000000FF);
-                        data[i + 3] = (byte)((source[i / 4] >> 24) & 0x000000FF);
+                        for (int i = 0; i < length; i += 4)
+                        {
+                            data[i] = (byte)(source[i / 4] & 0x000000FF);
+                            data[i + 1] = (byte)((source[i / 4] >> 8) & 0x000000FF);
+                            data[i + 2] = (byte)((source[i / 4] >> 16) & 0x000000FF);
+                            data[i + 3] = (byte)((source[i / 4] >> 24) & 0x000000FF);
+                        }
                     }
+                    else
+                        MemoryMarshal.AsBytes(source.Slice(0, dwordpoints)).CopyTo(data);
                     break;
                 default:
                     throw new SLMPException(SLMP_EXCEPTION_CODE_T.INVALID_DATA_CODE);

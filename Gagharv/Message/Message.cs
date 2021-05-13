@@ -90,13 +90,13 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Message
 
     class Message
     {
-        private static bool __BIG_ENDIAN = false;
+        public static bool BIG_ENDIAN { get; private set; } = false;
         static Message()
         {
             int i = 1;
             byte[] buf = BitConverter.GetBytes(i);
             if (buf[0] != 1)
-                __BIG_ENDIAN = true;
+                BIG_ENDIAN = true;
         }
         
         public static int BINARY_TO_ASCII_ARRAY(byte data, byte[] dataArray, int startIndex)
@@ -238,7 +238,7 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Message
 
         public static ushort SMALL_ENDIAN_MODE(ushort data)
         {
-            if (__BIG_ENDIAN)
+            if (BIG_ENDIAN)
                 return (ushort)(((data&0x00FF) << 8) + (data >> 8));
             else
                 return data;
@@ -246,7 +246,7 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Message
 
         public static uint SMALL_ENDIAN_MODE(uint data)
         {
-            if (__BIG_ENDIAN)
+            if (BIG_ENDIAN)
                 return  ((data & 0x000000FF) << 24) + 
                         ((data & 0x0000FF00) << 8)  +
                         ((data & 0x00FF0000) >> 8)  +
