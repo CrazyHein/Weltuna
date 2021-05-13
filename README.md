@@ -9,7 +9,7 @@
 - [Usage](#usage)
   - [1 Gagharv](#1-gagharv)
     - [1-1 Introduction](#1-1-introduction)
-    - [1-2 Data Structure & Socket Interface](#1-2-data-structure-&-socket-interface)
+    - [1-2 Data Structure and Socket Interface](#1-2-data-structure-and-socket-interface)
       - [1-2-1 MESSAGE_FRAME_TYPE_T](#1-2-1-message_frame_type_t)
       - [1-2-2 MESSAGE_DATA_CODE_T](#1-2-2-message_data_code_t)
       - [1-2-3 DESTINATION_ADDRESS_T](#1-2-3-destination_address_t)
@@ -37,6 +37,7 @@
       - [1-7-3 Methods](#1-7-3-methods)
     - [1-8 Reference](#1-8-reference)
       - [1-8-1 Device Code for Local Device Access](#1-8-1-device-code-for-local-device-access)
+      - [1-8-2 Example](#1-8-2-example)
 
 ## License
 
@@ -52,7 +53,7 @@ TBD
 
 
 
-#### 1-2 Data Structure & Socket Interface
+#### 1-2 Data Structure and Socket Interface
 
 ##### 1-2-1 MESSAGE_FRAME_TYPE_T
 
@@ -1913,4 +1914,213 @@ Creates and returns a string representation of the current exception.
 | Refresh data register              | RD          | Word        | Only apply to R dedicated message format |
 | Extended data register             | D           | Word        | Only apply to R dedicated message format |
 | Extended link register             | W           | Word        | Only apply to R dedicated message format |
+
+
+
+##### 1-8-2 Example
+
+###### 1-8-2-1 Device Access
+
+The following code example demonstrates how to create a  [DeviceAccessMaster](#1-5-deviceaccessmaster) instance and how to read devices with it.
+
+```c#
+var destination = DESTINATION_ADDRESS_T.CONNECTED_OWN_STATION();//get the access address of the connected station
+ushort end = 0;
+try
+{
+    var sc = new UDP(new IPEndPoint(IPAddress.Any, 5010), //bind to local UDP port 5010
+                     new IPEndPoint(IPAddress.Parse("192.168.2.250"), 5010), //remote destination 192.168.2.250:5011
+                     4096,
+                     200, 200);
+    var deviceAccessMaster = new DeviceAccessMaster(MESSAGE_FRAME_TYPE_T.MC_3E, 
+                                                    MESSAGE_DATA_CODE_T.BINARY, 
+                                                    false, //Q/L-Compatible message format
+                                                    sc, 
+                                                    ref destination, 4096, 4096);
+    
+    //Read value from the bit devices (consecutive device No.) in 1-point units.
+    byte[] bitbuffer = new byte[64];
+	deviceAccessMaster.ReadLocalDeviceInBit(1, "M", 32, 64, out end, bitbuffer); //Read M[32] - M[95]
+    
+    //Read value from the bit devices (consecutive device No.) in 16-point units.
+    ushort[] wordbuffer = new ushort[4];
+    deviceAccessMaster.ReadLocalDeviceInWord(1, "M", 32, 4, out end, wordbuffer); //Read M[32] - M[95]
+    
+    //Read value from the word devices (consecutive device No.) in one-word units.
+    deviceAccessMaster.ReadLocalDeviceInWord(1, "D", 32, 4, out end, wordbuffer); //Read D[32] - M[35]
+    
+    //Read value from the word devices in one-word units or two-word units(inconsecutive device No.).
+	var worddevices = new ValueTuple<string, uint>[] {("D", 100),
+                                                      ("D", 101),
+                                                      ("M", 100),
+                                                      ("M", 116)};
+	var dworddevices = new ValueTuple<string, uint>[] {("D", 200),
+                                                       ("D", 202),
+                                                       ("M", 200),
+                                                       ("M", 232)};
+    uint[] dwordbuffer = new uint[4];
+    //Read D[100], D[101], M[100-115], M[116-131], D[200-201], D[202-203], M[200-231], M[232-263]
+    deviceAccessMaster.ReadLocalDeviceInWord(1, worddevices, dworddevices, out end, wordbuffer, dwordbuffer);
+    
+    //Read data by treating n points of word devices or bit devices (one point is equivalent to 16 bits) as one block
+    //and specifying multiple blocks.
+    var worddeviceblocks = new ValueTuple<string, uint, ushort>[] {("D", 32, 2),
+                                                                   ("W", 48, 2)};
+	var bitbdevicelocks = new ValueTuple<string, uint, ushort>[] {("M", 16, 2),
+                                                                  ("B", 32, 2)};
+    var wordbufferblocks = new Memory<ushort>[2] { new ushort[2], new ushort[2] };
+	var bitbufferblocks = new Memory<ushort>[2] { new ushort[2], new ushort[2] };
+    //Read D[32-33] W[30-31] M[16-47] B[20-3F]
+    deviceAccessMaster.ReadLocalDeviceInWord(1, worddeviceblocks, bitbdevicelocks, out end, wordbufferblocks, bitbufferblocks);
+    
+    //Read value from the buffer memory of intelligent function modules (consecutive device No.) in one-word units.
+    deviceAccessMaster.ReadModuleAccessDeviceInWord(1, "U000", 0, 4, out end, wordbuffer); //Read U0000\G0 - Read U0000\G3
+    
+    //Read value from the buffer memory of intelligent function modules 
+    //in one-word units or two-word units(inconsecutive device No.).
+	var wordbuffermemorys = new ValueTuple<string, uint>[] {("U000", 1), ("U000", 2)};
+    var dwordbuffermemorys = new ValueTuple<string, uint>[] {("U000", 10), ("U000", 12)};
+    //Read U0000\G1, U0000\G2, U0000\G10-11, U0000\G12-13
+    deviceAccessMaster.ReadModuleAccessDeviceInWord(1, wordbuffermemorys, dwordbuffermemorys, out end, wordbuffer, dwordbuffer);
+    
+    //Read the buffer memory of intelligent function modules by treating n points of word devices as one block
+    //and specifying multiple blocks.
+    var buffermemoryblocks = new ValueTuple<string, uint, ushort>[] {("U000", 0, 2), ("U000", 16, 2)};
+    //Read U0000\G0-1, U0000\G16-17
+    deviceAccessMaster.ReadModuleAccessDeviceInWord(1, buffermemoryblocks, out end, wordbufferblocks);
+}
+catch(SLMPException e)
+{
+    Console.WriteLine(e.ToString());
+}
+```
+
+
+
+The following code example demonstrates how to create a  [DeviceAccessMaster](#1-5-deviceaccessmaster) instance and how to write devices with it.
+
+```c#
+var destination = DESTINATION_ADDRESS_T.CONNECTED_OWN_STATION();//get the access address of the connected station
+ushort end = 0;
+try
+{
+    var sc = new UDP(new IPEndPoint(IPAddress.Any, 5010), //bind to local UDP port 5010
+                     new IPEndPoint(IPAddress.Parse("192.168.2.250"), 5010), //remote destination 192.168.2.250:5011
+                     4096,
+                     200, 200);
+    var deviceAccessMaster = new DeviceAccessMaster(MESSAGE_FRAME_TYPE_T.MC_3E, 
+                                                    MESSAGE_DATA_CODE_T.BINARY, 
+                                                    false, //Q/L-Compatible message format
+                                                    sc, 
+                                                    ref destination, 4096, 4096);
+    
+    //Write value to the bit devices (consecutive device No.) in 1-point units.
+    byte[] bitbuffer = new byte[64];
+	deviceAccessMaster.WriteLocalDeviceInBit(1, "M", 32, 64, out end, bitbuffer); //Write M[32] - M[95]
+    
+    //Write value to the word devices in 1-point units(inconsecutive device No.).
+    var bitdevices = new ValueTuple<string, uint, byte>[] {("M", 0, 1),
+                                                           ("M", 100, 0),
+                                                           ("M", 200, 1),
+                                                           ("M", 300, 0) };
+    deviceAccessMaster.WriteLocalDeviceInBit(1, bitdevices, out end); //Write M[0] M[100] M[200] M[300]
+    
+     //Write value to the bit devices (consecutive device No.) in 16-point units.
+	ushort[] wordbuffer = new ushort[4];
+	deviceAccessMaster.WriteLocalDeviceInWord(1, "M", 32, 4, out end, wordbuffer); //Write M[32] - M[95]
+
+    //Write value to the word devices (consecutive device No.) in one-word units.
+    deviceAccessMaster.WriteLocalDeviceInWord(1, "D", 32, 4, out end, wordbuffer); //Write D[32] - M[35]
+
+    //Write value to the word devices in one-word units or two-word units(inconsecutive device No.).
+    var worddevices = new ValueTuple<string, uint, ushort>[] {("D", 100, 100),
+                                                              ("D", 101, 200),
+                                                              ("M", 100, 300),
+                                                              ("M", 116, 400)};
+    var dworddevices = new ValueTuple<string, uint, uint>[] {("D", 200, 1000000),
+                                                             ("D", 202, 2000000),
+                                                             ("M", 200, 3000000),
+                                                             ("M", 232, 4000000)};
+    uint[] dwordbuffer = new uint[4];
+    //Write D[100], D[101], M[100-115], M[116-131], D[200-201], D[202-203], M[200-231], M[232-263]
+    deviceAccessMaster.WriteLocalDeviceInWord(1, worddevices, dworddevices, out end);
+
+    //Write data by treating n points of word devices or bit devices (one point is equivalent to 16 bits) as one block
+    //and specifying multiple blocks.
+    var wordbufferblocks = new Memory<ushort>[2] { new ushort[2], new ushort[2] };
+    var bitbufferblocks = new Memory<ushort>[2] { new ushort[2], new ushort[2] };
+    var worddeviceblocks = new ValueTuple<string, uint, ushort, ReadOnlyMemory<ushort>>[] {("D", 32, 2, wordbufferblocks[0]),
+                                                                                           ("W", 48, 2, wordbufferblocks[1])};
+    var bitbdevicelocks = new ValueTuple<string, uint, ushort, ReadOnlyMemory<ushort>>[] {("M", 16, 2, bitbufferblocks[0]),
+                                                                                          ("B", 32, 2, bitbufferblocks[1])};
+
+    //Write D[32-33] W[30-31] M[16-47] B[20-3F]
+    deviceAccessMaster.WriteLocalDeviceInWord(1, worddeviceblocks, bitbdevicelocks, out end);
+
+     //Write value from the buffer memory of intelligent function modules (consecutive device No.) in one-word units.
+    deviceAccessMaster.WriteModuleAccessDeviceInWord(1, "U000", 0, 4, out end, wordbuffer); //Write U0000\G0 - Read U0000\G3
+
+    //Write value to the buffer memory of intelligent function modules 
+    //in one-word units or two-word units(inconsecutive device No.).
+    var wordbuffermemorys = new ValueTuple<string, uint, ushort>[] { ("U000", 1, 100), ("U000", 2, 200) };
+    var dwordbuffermemorys = new ValueTuple<string, uint, uint>[] { ("U000", 10, 1000000), ("U000", 12, 2000000) };
+    //Write U0000\G1, U0000\G2, U0000\G10-11, U0000\G12-13
+    deviceAccessMaster.WriteModuleAccessDeviceInWord(1, wordbuffermemorys, dwordbuffermemorys, out end);
+
+    //Write the buffer memory of intelligent function modules by treating n points of word devices as one block
+    //and specifying multiple blocks.
+    var buffermemoryblocks = new ValueTuple<string, uint, ushort, ReadOnlyMemory<ushort>>[] { 
+        ("U000", 0, 2, wordbufferblocks[0]), 
+        ("U000", 16, 2, wordbufferblocks[1]) };
+    //Write U0000\G0-1, U0000\G16-17
+    deviceAccessMaster.WriteModuleAccessDeviceInWord(1, buffermemoryblocks, out end);
+}
+catch(SLMPException e)
+{
+    Console.WriteLine(e.ToString());
+}
+```
+
+
+
+###### 1-8-2-2 Remote Operation
+
+The following code example demonstrates how to create a  [RemoteOperationMaster](#1-6-remoteoperationmaster) instance and how to execute remote operation with it.
+
+```c#
+var destination = DESTINATION_ADDRESS_T.CONNECTED_OWN_STATION();//get the access address of the connected station
+ushort end = 0;
+try
+{
+    var sc = new UDP(new IPEndPoint(IPAddress.Any, 5010), //bind to local UDP port 5010
+                     new IPEndPoint(IPAddress.Parse("192.168.2.250"), 5010), //remote destination 192.168.2.250:5011
+                     4096,
+                     200, 200);
+    var remoteOperationMaster = new RemoteOperationMaster(MESSAGE_FRAME_TYPE_T.MC_3E,
+                                                          MESSAGE_DATA_CODE_T.BINARY,
+                                                          false, //Q/L-Compatible message format
+                                                          sc,
+                                                          ref destination, 4096, 4096);
+	
+    //Remote Run
+    remoteOperationMaster.Run(1, REMOTE_CONTROL_MODE_T.FORCED_EXECUTION_ALLOWED, 
+                              REMOTE_CLEAR_MODE_T.DO_NOT_CLEAR_DEVICE, out end);
+    //Remote Stop
+    remoteOperationMaster.Stop(1, out end);
+    //Remote Pause
+    remoteOperationMaster.Pause(1, REMOTE_CONTROL_MODE_T.FORCED_EXECUTION_ALLOWED, out end);
+    //Remote Latch Clear
+    remoteOperationMaster.LatchClear(1, out end);
+    //Remote Reset
+    remoteOperationMaster.Reset(1, out end);
+    //Read Type Name
+    string modelName;
+    ushort modelCode = 0;
+    remoteOperationMaster.ReadTypeName(1, out end, out modelName, out modelCode);
+}
+catch(SLMPException e)
+{
+    Console.WriteLine(e.ToString());
+}
+```
 
