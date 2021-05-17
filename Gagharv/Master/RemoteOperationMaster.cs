@@ -195,9 +195,23 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Master
             __post_remote_operation_request(ref __destination, monitoringTimer, REMOTE_OPERATION_T.RUN, controlMode, clearMode, out endCode);
         }
 
+        public async Task<ushort> RunAsync(ushort monitoringTimer, REMOTE_CONTROL_MODE_T controlMode, REMOTE_CLEAR_MODE_T clearMode)
+        {
+            ushort end = 0;
+            await Task.Run(() => __post_remote_operation_request(ref __destination, monitoringTimer, REMOTE_OPERATION_T.RUN, controlMode, clearMode, out end));
+            return end;
+        }
+
         public void Stop(ushort monitoringTimer, out ushort endCode)
         {
             __post_remote_operation_request(ref __destination, monitoringTimer, REMOTE_OPERATION_T.STOP, 0, 0, out endCode);
+        }
+
+        public async Task<ushort> StopAsync(ushort monitoringTimer)
+        {
+            ushort end = 0;
+            await Task.Run(() => __post_remote_operation_request(ref __destination, monitoringTimer, REMOTE_OPERATION_T.STOP, 0, 0, out end));
+            return end;
         }
 
         public void Pause(ushort monitoringTimer, REMOTE_CONTROL_MODE_T controlMode, out ushort endCode)
@@ -205,14 +219,35 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Master
             __post_remote_operation_request(ref __destination, monitoringTimer, REMOTE_OPERATION_T.PAUSE, controlMode, 0, out endCode);
         }
 
+        public async Task<ushort> PauseAsync(ushort monitoringTimer, REMOTE_CONTROL_MODE_T controlMode)
+        {
+            ushort end = 0;
+            await Task.Run(() =>__post_remote_operation_request(ref __destination, monitoringTimer, REMOTE_OPERATION_T.PAUSE, controlMode, 0, out end));
+            return end;
+        }
+
         public void LatchClear(ushort monitoringTimer, out ushort endCode)
         {
             __post_remote_operation_request(ref __destination, monitoringTimer, REMOTE_OPERATION_T.LATCH_CLEAR, 0, 0, out endCode);
         }
 
+        public async Task<ushort> LatchClearAsync(ushort monitoringTimer)
+        {
+            ushort end = 0;
+            await Task.Run(() => __post_remote_operation_request(ref __destination, monitoringTimer, REMOTE_OPERATION_T.LATCH_CLEAR, 0, 0, out end));
+            return end;
+        }
+
         public void Reset(ushort monitoringTimer, out ushort endCode)
         {
             __post_remote_operation_request(ref __destination, monitoringTimer, REMOTE_OPERATION_T.RESET, 0, 0, out endCode);
+        }
+
+        public async Task<ushort> ResetAsync(ushort monitoringTimer)
+        {
+            ushort end = 0;
+            await Task.Run(() => __post_remote_operation_request(ref __destination, monitoringTimer, REMOTE_OPERATION_T.RESET, 0, 0, out end));
+            return end;
         }
 
         public void ReadTypeName(ushort monitoringTimer, out ushort endCode, out string modelName, out ushort modelCode)
@@ -270,6 +305,15 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Master
                     modelCode = 0;
                 }
             }
+        }
+
+        public async Task<ValueTuple<ushort, string, ushort>> ReadTypeNameAsync(ushort monitoringTimer)
+        {
+            ushort end = 0;
+            string name = null;
+            ushort code = 0;
+            await Task.Run(() => ReadTypeName(monitoringTimer, out end, out name, out code));
+            return (end, name, code);
         }
     }
 }

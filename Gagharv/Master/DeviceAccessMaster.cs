@@ -329,6 +329,15 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Master
 
         }
 
+        public async Task<ushort> ReadLocalDeviceInWordAsync(ushort monitoringTimer, string deviceCode, uint headDevice, ushort devicePoints, Memory<ushort> data)
+        {
+            ushort end = 0;
+            await Task.Run(() => __read_device(ref __destination, __subcommand,
+                            null, null, null, null,
+                            monitoringTimer, deviceCode, headDevice, devicePoints, out end, data.Span, null));
+            return end;
+        }
+
         public void ReadLocalDeviceInBit(ushort monitoringTimer, string deviceCode, uint headDevice, ushort devicePoints, out ushort endCode, Span<byte> data)
         {
             __read_device(ref __destination,
@@ -337,12 +346,32 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Master
                             monitoringTimer, deviceCode, headDevice, devicePoints, out endCode, null, data);
         }
 
+        public async Task<ushort> ReadLocalDeviceInBitAsync(ushort monitoringTimer, string deviceCode, uint headDevice, ushort devicePoints, Memory<byte> data)
+        {
+            ushort end = 0;
+            await Task.Run(() => __read_device(ref __destination,
+                            __subcommand | SUB_COMMANDS_T.DEVICE_COMMAND_ACCESS_IN_BIT_UNIT,
+                            null, null, null, null,
+                            monitoringTimer, deviceCode, headDevice, devicePoints, out end, null, data.Span));
+            return end;
+        }
+
         public void ReadModuleAccessDeviceInWord(ushort monitoringTimer, string extensionSepcification, uint headDevice, ushort devicePoints, out ushort endCode, Span<ushort> data)
         {
             __read_device(ref __destination,
                             __subcommand | SUB_COMMANDS_T.DEVICE_EXTENSION_SPECIFICATION,
                             extensionSepcification, null, null, null,
                             monitoringTimer, "G", headDevice, devicePoints, out endCode, data, null);
+        }
+
+        public async Task<ushort> ReadModuleAccessDeviceInWordAsync(ushort monitoringTimer, string extensionSepcification, uint headDevice, ushort devicePoints, Memory<ushort> data)
+        {
+            ushort end = 0;
+            await Task.Run(() => __read_device(ref __destination,
+                            __subcommand | SUB_COMMANDS_T.DEVICE_EXTENSION_SPECIFICATION,
+                            extensionSepcification, null, null, null,
+                            monitoringTimer, "G", headDevice, devicePoints, out end, data.Span, null));
+            return end;
         }
 
         public void ReadLocalDeviceInWord(ushort monitoringTimer, IEnumerable<(string deviceCode, uint headDevice)> wordDevice, IEnumerable<(string deviceCode, uint headDevice)> dwordDevice,
@@ -362,6 +391,25 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Master
                             out endCode, worddata, dworddata);
         }
 
+        public async Task<ushort> ReadLocalDeviceInWordAsync(ushort monitoringTimer, IEnumerable<(string deviceCode, uint headDevice)> wordDevice, IEnumerable<(string deviceCode, uint headDevice)> dwordDevice,
+            Memory<ushort> worddata, Memory<uint> dworddata)
+        {
+            IEnumerable<(string, string, string, string, string, uint)> word = null;
+            IEnumerable<(string, string, string, string, string, uint)> dword = null;
+            if (wordDevice != null)
+                word = wordDevice.Select(d => new ValueTuple<string, string, string, string, string, uint>(null, null, null, null, d.deviceCode, d.headDevice));
+            if (dwordDevice != null)
+                dword = dwordDevice.Select(d => new ValueTuple<string, string, string, string, string, uint>(null, null, null, null, d.deviceCode, d.headDevice));
+
+            ushort end = 0;
+            await Task.Run(() => __read_device_random(ref __destination,
+                            __subcommand,
+                            monitoringTimer,
+                            word, dword,
+                            out end, worddata.Span, dworddata.Span));
+            return end;
+        }
+
         public void ReadModuleAccessDeviceInWord(ushort monitoringTimer, IEnumerable<(string extensionSpecification, uint headDevice)> wordDevice, IEnumerable<(string extensionSpecification, uint headDevice)> dwordDevice, 
             out ushort endCode, Span<ushort> worddata, Span<uint> dworddata)
         {
@@ -378,6 +426,26 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Master
                             word, dword,
                             out endCode, worddata, dworddata);
         }
+
+        public async Task<ushort> ReadModuleAccessDeviceInWordAsync(ushort monitoringTimer, IEnumerable<(string extensionSpecification, uint headDevice)> wordDevice, IEnumerable<(string extensionSpecification, uint headDevice)> dwordDevice,
+            Memory<ushort> worddata, Memory<uint> dworddata)
+        {
+            IEnumerable<(string, string, string, string, string, uint)> word = null;
+            IEnumerable<(string, string, string, string, string, uint)> dword = null;
+            if (wordDevice != null)
+                word = wordDevice.Select(d => new ValueTuple<string, string, string, string, string, uint>(d.extensionSpecification, null, null, null, "G", d.headDevice));
+            if (dwordDevice != null)
+                dword = dwordDevice.Select(d => new ValueTuple<string, string, string, string, string, uint>(d.extensionSpecification, null, null, null, "G", d.headDevice));
+            
+            ushort end = 0;
+            await Task.Run(() => __read_device_random(ref __destination,
+                            __subcommand | SUB_COMMANDS_T.DEVICE_EXTENSION_SPECIFICATION,
+                            monitoringTimer,
+                            word, dword,
+                            out end, worddata.Span, dworddata.Span));
+            return end;
+        }
+            
 
         private void __read_device_block(ref DESTINATION_ADDRESS_T destination, SUB_COMMANDS_T subcommand,
             ushort monitoringTimer,
@@ -491,6 +559,25 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Master
                             out endCode, wordDataBlock, bitDataBlock);
         }
 
+        public async Task<ushort> ReadLocalDeviceInWordAsync(ushort monitoringTimer, IEnumerable<(string deviceCode, uint headDevice, ushort devicePoints)> wordDeviceBlock, IEnumerable<(string deviceCode, uint headDevice, ushort devicePoints)> bitDeviceBlock,
+            Memory<ushort>[] wordDataBlock, Memory<ushort>[] bitDataBlock)
+        {
+            IEnumerable<(string, string, string, string, string, uint, ushort)> word = null;
+            IEnumerable<(string, string, string, string, string, uint, ushort)> bit = null;
+            if (wordDeviceBlock != null)
+                word = wordDeviceBlock.Select(d => new ValueTuple<string, string, string, string, string, uint, ushort>(null, null, null, null, d.deviceCode, d.headDevice, d.devicePoints));
+            if (bitDeviceBlock != null)
+                bit = bitDeviceBlock.Select(d => new ValueTuple<string, string, string, string, string, uint, ushort>(null, null, null, null, d.deviceCode, d.headDevice, d.devicePoints));
+
+            ushort end = 0;
+            await Task.Run(() => __read_device_block(ref __destination,
+                            __subcommand,
+                            monitoringTimer,
+                            word, bit,
+                            out end, wordDataBlock, bitDataBlock));
+            return end;
+        }
+
         public void ReadModuleAccessDeviceInWord(ushort monitoringTimer, IEnumerable<(string extensionSpecification, uint headDevice, ushort devicePoints)> wordDeviceBlock,
             out ushort endCode, Memory<ushort>[] wordDataBlock)
         {
@@ -499,6 +586,18 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Master
                             monitoringTimer,
                             wordDeviceBlock.Select(d => new ValueTuple<string, string, string, string, string, uint, ushort>(d.extensionSpecification, null, null, null, "G", d.headDevice, d.devicePoints)), null,
                             out endCode, wordDataBlock, null);
+        }
+
+        public async Task<ushort> ReadModuleAccessDeviceInWordAsync(ushort monitoringTimer, IEnumerable<(string extensionSpecification, uint headDevice, ushort devicePoints)> wordDeviceBlock,
+            Memory<ushort>[] wordDataBlock)
+        {
+            ushort end = 0;
+            await Task.Run(() => __read_device_block(ref __destination,
+                            __subcommand | SUB_COMMANDS_T.DEVICE_EXTENSION_SPECIFICATION,
+                            monitoringTimer,
+                            wordDeviceBlock.Select(d => new ValueTuple<string, string, string, string, string, uint, ushort>(d.extensionSpecification, null, null, null, "G", d.headDevice, d.devicePoints)), null,
+                            out end, wordDataBlock, null));
+            return end;
         }
 
         private void __write_device(ref DESTINATION_ADDRESS_T destination, SUB_COMMANDS_T subcommand,
@@ -581,6 +680,16 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Master
                             monitoringTimer, deviceCode, headDevice, devicePoints, out endCode, data, null);
         }
 
+        public async Task<ushort> WriteLocalDeviceInWordAsync(ushort monitoringTimer, string deviceCode, uint headDevice, ushort devicePoints, ReadOnlyMemory<ushort> data)
+        {
+            ushort end = 0;
+            await Task.Run(() => __write_device(ref __destination,
+                            __subcommand,
+                            null, null, null, null,
+                            monitoringTimer, deviceCode, headDevice, devicePoints, out end, data.Span, null));
+            return end;
+        }
+
         public void WriteLocalDeviceInBit(ushort monitoringTimer, string deviceCode, uint headDevice, ushort devicePoints, out ushort endCode, ReadOnlySpan<byte> data)
         {
             __write_device(ref __destination,
@@ -589,12 +698,32 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Master
                             monitoringTimer, deviceCode, headDevice, devicePoints, out endCode, null, data);
         }
 
+        public async Task<ushort> WriteLocalDeviceInBitAsync(ushort monitoringTimer, string deviceCode, uint headDevice, ushort devicePoints, ReadOnlyMemory<byte> data)
+        {
+            ushort end = 0;
+            await Task.Run(() => __write_device(ref __destination,
+                            __subcommand | SUB_COMMANDS_T.DEVICE_COMMAND_ACCESS_IN_BIT_UNIT,
+                            null, null, null, null,
+                            monitoringTimer, deviceCode, headDevice, devicePoints, out end, null, data.Span));
+            return end;
+        }
+
         public void WriteModuleAccessDeviceInWord(ushort monitoringTimer, string extensionSepcification, uint headDevice, ushort devicePoints, out ushort endCode, ReadOnlySpan<ushort> data)
         {
             __write_device(ref __destination,
                             __subcommand | SUB_COMMANDS_T.DEVICE_EXTENSION_SPECIFICATION,
                             extensionSepcification, null, null, null,
                             monitoringTimer, "G", headDevice, devicePoints, out endCode, data, null);
+        }
+
+        public async Task<ushort> WriteModuleAccessDeviceInWordAsync(ushort monitoringTimer, string extensionSepcification, uint headDevice, ushort devicePoints, ReadOnlyMemory<ushort> data)
+        {
+            ushort end = 0;
+            await Task.Run(() => __write_device(ref __destination,
+                            __subcommand | SUB_COMMANDS_T.DEVICE_EXTENSION_SPECIFICATION,
+                            extensionSepcification, null, null, null,
+                            monitoringTimer, "G", headDevice, devicePoints, out end, data.Span, null));
+            return end;
         }
 
         private void __write_device_random(ref DESTINATION_ADDRESS_T destination, SUB_COMMANDS_T subcommand,
@@ -765,6 +894,25 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Master
                 out endCode);
         }
 
+        public async Task<ushort> WriteLocalDeviceInWordAsync(ushort monitoringTimer, IEnumerable<(string deviceCode, uint headDevice, ushort value)> wordDevice, IEnumerable<(string deviceCode, uint headDevice, uint value)> dwordDevice)
+        {
+            IEnumerable<(string, string, string, string, string, uint, ushort)> word = null;
+            IEnumerable<(string, string, string, string, string, uint, uint)> dword = null;
+
+            if (wordDevice != null)
+                word = wordDevice.Select(d => new ValueTuple<string, string, string, string, string, uint, ushort>(null, null, null, null, d.deviceCode, d.headDevice, d.value));
+            if (dwordDevice != null)
+                dword = dwordDevice.Select(d => new ValueTuple<string, string, string, string, string, uint, uint>(null, null, null, null, d.deviceCode, d.headDevice, d.value));
+
+            ushort end = 0;
+            await Task.Run(() => __write_device_random(ref __destination,
+                __subcommand,
+                monitoringTimer,
+                word, dword,
+                out end));
+            return end;
+        }
+
         public void WriteLocalDeviceInBit(ushort monitoringTimer, IEnumerable<(string deviceCode, uint headDevice, byte value)> bitDevice,
             out ushort endCode)
         {
@@ -773,6 +921,17 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Master
                 monitoringTimer,
                 bitDevice.Select(d => new ValueTuple<string, string, string, string, string, uint, byte>(null, null, null, null, d.deviceCode, d.headDevice, d.value)),
                 out endCode);
+        }
+
+        public async Task<ushort> WriteLocalDeviceInBitAsync(ushort monitoringTimer, IEnumerable<(string deviceCode, uint headDevice, byte value)> bitDevice)
+        {
+            ushort end = 0;
+            await Task.Run(() => __write_device_random(ref __destination,
+                __subcommand | SUB_COMMANDS_T.DEVICE_COMMAND_ACCESS_IN_BIT_UNIT,
+                monitoringTimer,
+                bitDevice.Select(d => new ValueTuple<string, string, string, string, string, uint, byte>(null, null, null, null, d.deviceCode, d.headDevice, d.value)),
+                out end));
+            return end;
         }
 
         public void WriteModuleAccessDeviceInWord(ushort monitoringTimer, IEnumerable<(string extensionSpecification, uint headDevice, ushort value)> wordDevice, IEnumerable<(string extensionSpecification, uint headDevice, uint value)> dwordDevice,
@@ -790,6 +949,24 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Master
                             monitoringTimer,
                             word, dword,
                             out endCode);
+        }
+
+        public async Task<ushort> WriteModuleAccessDeviceInWordAsync(ushort monitoringTimer, IEnumerable<(string extensionSpecification, uint headDevice, ushort value)> wordDevice, IEnumerable<(string extensionSpecification, uint headDevice, uint value)> dwordDevice)
+        {
+            IEnumerable<(string, string, string, string, string, uint, ushort)> word = null;
+            IEnumerable<(string, string, string, string, string, uint, uint)> dword = null;
+            if (wordDevice != null)
+                word = wordDevice.Select(d => new ValueTuple<string, string, string, string, string, uint, ushort>(d.extensionSpecification, null, null, null, "G", d.headDevice, d.value));
+            if (dwordDevice != null)
+                dword = dwordDevice.Select(d => new ValueTuple<string, string, string, string, string, uint, uint>(d.extensionSpecification, null, null, null, "G", d.headDevice, d.value));
+
+            ushort end = 0;
+            await Task.Run(() => __write_device_random(ref __destination,
+                            __subcommand | SUB_COMMANDS_T.DEVICE_EXTENSION_SPECIFICATION,
+                            monitoringTimer,
+                            word, dword,
+                            out end));
+            return end;
         }
 
         private void __write_device_block(ref DESTINATION_ADDRESS_T destination, SUB_COMMANDS_T subcommand,
@@ -904,6 +1081,26 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Master
                 out endCode);
         }
 
+        public async Task<ushort> WriteLocalDeviceInWordAsync(ushort monitoringTimer, IEnumerable<(string deviceCode, uint headDevice, ushort devicePoints, ReadOnlyMemory<ushort> data)> wordDeviceBlock,
+            IEnumerable<(string deviceCode, uint headDevice, ushort devicePoints, ReadOnlyMemory<ushort> data)> bitDeviceBlock)
+        {
+            IEnumerable<(string, string, string, string, string, uint, ushort, ReadOnlyMemory<ushort>)> word = null;
+            IEnumerable<(string, string, string, string, string, uint, ushort, ReadOnlyMemory<ushort>)> bit = null;
+
+            if (wordDeviceBlock != null)
+                word = wordDeviceBlock.Select<(string deviceCode, uint headDevice, ushort devicePoints, ReadOnlyMemory<ushort> data), (string, string, string, string, string, uint, ushort, ReadOnlyMemory<ushort>)>(d => new(null, null, null, null, d.deviceCode, d.headDevice, d.devicePoints, new ValueTuple<ReadOnlyMemory<ushort>>(d.data)));
+            if (bitDeviceBlock != null)
+                bit = bitDeviceBlock.Select<(string deviceCode, uint headDevice, ushort devicePoints, ReadOnlyMemory<ushort> data), (string, string, string, string, string, uint, ushort, ReadOnlyMemory<ushort>)>(d => new(null, null, null, null, d.deviceCode, d.headDevice, d.devicePoints, new ValueTuple<ReadOnlyMemory<ushort>>(d.data)));
+
+            ushort end = 0;
+            await Task.Run(() => __write_device_block(ref __destination,
+                __subcommand,
+                monitoringTimer,
+                word, bit,
+                out end));
+            return end;
+        }
+
         public void WriteModuleAccessDeviceInWord(ushort monitoringTimer, IEnumerable<(string extensionSpecification, uint headDevice, ushort devicePoints, ReadOnlyMemory<ushort> data)> wordDeviceBlock, out ushort endCode)
         {
             __write_device_block(ref __destination,
@@ -912,6 +1109,18 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Master
                 wordDeviceBlock.Select<(string extensionSpecification, uint headDevice, ushort devicePoints, ReadOnlyMemory<ushort> data), (string, string, string, string, string, uint, ushort, ReadOnlyMemory<ushort>)>(d => new(d.extensionSpecification, null, null, null, "G", d.headDevice, d.devicePoints, new ValueTuple<ReadOnlyMemory<ushort>>(d.data))),
                 null,
                 out endCode);
+        }
+
+        public async Task<ushort> WriteModuleAccessDeviceInWordAsync(ushort monitoringTimer, IEnumerable<(string extensionSpecification, uint headDevice, ushort devicePoints, ReadOnlyMemory<ushort> data)> wordDeviceBlock)
+        {
+            ushort end = 0;
+            await Task.Run(() => __write_device_block(ref __destination,
+                __subcommand | SUB_COMMANDS_T.DEVICE_EXTENSION_SPECIFICATION,
+                monitoringTimer,
+                wordDeviceBlock.Select<(string extensionSpecification, uint headDevice, ushort devicePoints, ReadOnlyMemory<ushort> data), (string, string, string, string, string, uint, ushort, ReadOnlyMemory<ushort>)>(d => new(d.extensionSpecification, null, null, null, "G", d.headDevice, d.devicePoints, new ValueTuple<ReadOnlyMemory<ushort>>(d.data))),
+                null,
+                out end));
+            return end;
         }
     }
 }
