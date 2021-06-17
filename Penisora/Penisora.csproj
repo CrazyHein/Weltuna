@@ -1,0 +1,49 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool.Penisora</RootNamespace>
+    <PackageId>CrazyHein.Tool.Penisora</PackageId>
+    <Authors>CrazyHein</Authors>
+    <Company>AMEC</Company>
+    <AssemblyName>Tool.Penisora</AssemblyName>
+    <Version>0.0.1</Version>
+    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath></OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="imgs\switch_off.png" />
+    <None Remove="imgs\switch_on.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Gagharv\Gagharv.csproj" />
+    <ProjectReference Include="..\Una\Una.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="icon.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="imgs\switch_off.png" />
+    <Resource Include="imgs\switch_on.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="UserControl\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="HandyControl" Version="3.1.0" />
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy &quot;$(TargetDir)&quot; &quot;$(SolutionDir)Mcvein\bin\Debug\net5.0-windows\toolkit\$(ProjectName)\&quot; /y" />
+  </Target>
+
+</Project>

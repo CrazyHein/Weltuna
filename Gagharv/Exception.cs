@@ -65,5 +65,19 @@ namespace AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP
             else
                 return "UNDEFINED_RUNTIME_ERROR";
         }
+
+        public override string Message
+        {
+            get
+            {
+                if (ExceptionCode != SLMP_EXCEPTION_CODE_T.RUNTIME_ERROR)
+                    return ExceptionCode.ToString();
+                else if (RuntimeException != null)
+                    return RuntimeException.Message;
+                else
+                    return "UNDEFINED_RUNTIME_ERROR";
+            }
+        }
+      
     }
 }

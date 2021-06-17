@@ -1,0 +1,73 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <RootNamespace>AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks</RootNamespace>
+    <PackageId>CrazyHein.Mcvein</PackageId>
+    <Authors>CrazyHein</Authors>
+    <Company>AMEC</Company>
+    <Version>1.0.0</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="imgs\add_target.png" />
+    <None Remove="imgs\add_tool.png" />
+    <None Remove="imgs\checked.png" />
+    <None Remove="imgs\connect.png" />
+    <None Remove="imgs\connection_target.png" />
+    <None Remove="imgs\dirty.png" />
+    <None Remove="imgs\disconnect.png" />
+    <None Remove="imgs\edit_target.png" />
+    <None Remove="imgs\fonts.png" />
+    <None Remove="imgs\instruction.png" />
+    <None Remove="imgs\navigation.png" />
+    <None Remove="imgs\new_project.png" />
+    <None Remove="imgs\offline_state.png" />
+    <None Remove="imgs\online_state.png" />
+    <None Remove="imgs\open_project.png" />
+    <None Remove="imgs\plugin.png" />
+    <None Remove="imgs\remote_control.png" />
+    <None Remove="imgs\remove_target.png" />
+    <None Remove="imgs\save_project.png" />
+    <None Remove="imgs\save_project_as.png" />
+    <None Remove="imgs\theme.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="4.1.0" />
+    <PackageReference Include="HandyControl" Version="3.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Gagharv\Gagharv.csproj" />
+    <ProjectReference Include="..\Una\Una.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="imgs\add_target.png" />
+    <Resource Include="imgs\add_tool.png" />
+    <Resource Include="imgs\checked.png" />
+    <Resource Include="imgs\connection_target.png" />
+    <Resource Include="imgs\dirty.png" />
+    <Resource Include="imgs\edit_target.png" />
+    <Resource Include="imgs\fonts.png" />
+    <Resource Include="imgs\instruction.png" />
+    <Resource Include="imgs\navigation.png" />
+    <Resource Include="imgs\new_project.png" />
+    <Resource Include="imgs\disconnect.png" />
+    <Resource Include="imgs\offline_state.png" />
+    <Resource Include="imgs\connect.png" />
+    <Resource Include="imgs\online_state.png" />
+    <Resource Include="imgs\open_project.png" />
+    <Resource Include="imgs\plugin.png" />
+    <Resource Include="imgs\remote_control.png" />
+    <Resource Include="imgs\remove_target.png" />
+    <Resource Include="imgs\save_project.png" />
+    <Resource Include="imgs\save_project_as.png" />
+    <Resource Include="imgs\theme.png" />
+  </ItemGroup>
+
+</Project>

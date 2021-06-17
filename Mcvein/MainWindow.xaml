@@ -1,0 +1,225 @@
+﻿<Window
+    x:Class="AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib" Width="800" Height="450" WindowState="Maximized"
+    mc:Ignorable="d" Closing="Window_Closing">
+    <Window.CommandBindings>
+        <CommandBinding Command="local:ConsoleControl.SetGenericTheme" Executed="Switch_Main_Console_Themme" />
+        <CommandBinding Command="local:ConsoleControl.SetMetroTheme" Executed="Switch_Main_Console_Themme" />
+        <CommandBinding Command="local:ConsoleControl.SetAeroTheme" Executed="Switch_Main_Console_Themme" />
+        <CommandBinding Command="local:ConsoleControl.SetVS2010Theme" Executed="Switch_Main_Console_Themme" />
+
+        <CommandBinding Command="local:ConsoleControl.ActivateTarget" CanExecute="ActivateTarget_CanExecute" Executed="ActivateTarget_Executed" />
+        <CommandBinding Command="local:ConsoleControl.AddTarget" CanExecute="AddTarget_CanExecute" Executed="AddTarget_Executed" />
+        <CommandBinding Command="local:ConsoleControl.RemoveTarget" CanExecute="RemoveTarget_CanExecute" Executed="RemoveTarget_Executed" />
+        <CommandBinding Command="local:ConsoleControl.TargetProperty" CanExecute="TargetProperty_CanExecute" Executed="TargetProperty_Executed" />
+
+        <CommandBinding Command="local:ConsoleControl.NewProject" CanExecute="NewProject_CanExecute" Executed="NewProject_Executed" />
+        <CommandBinding Command="local:ConsoleControl.OpenProject" CanExecute="OpenProject_CanExecute" Executed="OpenProject_Executed" />
+        <CommandBinding Command="local:ConsoleControl.SaveProject" CanExecute="SaveProject_CanExecute" Executed="SaveProject_Executed" />
+        <CommandBinding Command="local:ConsoleControl.SaveProjectAs" CanExecute="SaveProjectAs_CanExecute" Executed="SaveProjectAs_Executed" />
+
+        <CommandBinding Command="local:ConsoleControl.AddTool" CanExecute="AddToolbox_CanExecute" Executed="AddToolbox_Executed" />
+
+        <CommandBinding Command="local:ConsoleControl.Connect" CanExecute="Connect_CanExecute" Executed="Connect_Executed" />
+        <CommandBinding Command="local:ConsoleControl.Disconnect" CanExecute="Disconnect_CanExecute" Executed="Disconnect_Executed" />
+    </Window.CommandBindings>
+    <Window.Resources>
+        <local:MainWindowTitleConverter x:Key="titleStringConverter" />
+        <local:BooleanValueVisibilityConverter x:Key="booleanValueVisibility" />
+        <local:ThemeCheckedIconVisibilityConverter x:Key="checkedIconVisibility" />
+    </Window.Resources>
+    <Window.Title>
+        <MultiBinding Converter="{StaticResource titleStringConverter}">
+            <Binding Path="ProjectPath" />
+            <Binding Path="IsDirty" />
+        </MultiBinding>
+    </Window.Title>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Menu Grid.Row="0" Margin="2">
+            <Menu.Resources>
+                <Style TargetType="MenuItem" BasedOn="{StaticResource MenuItemBaseStyle}">
+                    <Setter Property="Margin" Value="3" />
+                    <Setter Property="MinWidth" Value="60" />
+                </Style>
+            </Menu.Resources>
+            <MenuItem Header="_Project">
+                <MenuItem Command="local:ConsoleControl.NewProject">
+                    <MenuItem.Icon>
+                        <Image Source="imgs/new_project.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="local:ConsoleControl.OpenProject">
+                    <MenuItem.Icon>
+                        <Image Source="imgs/open_project.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="local:ConsoleControl.SaveProject">
+                    <MenuItem.Icon>
+                        <Image Source="imgs/save_project.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="local:ConsoleControl.SaveProjectAs">
+                    <MenuItem.Icon>
+                        <Image Source="imgs/save_project_as.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="_Target">
+                <MenuItem Command="local:ConsoleControl.ActivateTarget">
+                    <MenuItem.Icon>
+                        <Image Source="imgs/checked.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="local:ConsoleControl.AddTarget">
+                    <MenuItem.Icon>
+                        <Image Source="imgs/add_target.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="local:ConsoleControl.RemoveTarget">
+                    <MenuItem.Icon>
+                        <Image Source="imgs/remove_target.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="local:ConsoleControl.TargetProperty">
+                    <MenuItem.Icon>
+                        <Image Source="imgs/edit_target.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="_Online">
+                <MenuItem Command="local:ConsoleControl.Connect">
+                    <MenuItem.Icon>
+                        <Image Source="imgs/connect.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="local:ConsoleControl.Disconnect">
+                    <MenuItem.Icon>
+                        <Image Source="imgs/disconnect.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="_View">
+                <MenuItem Header="Theme">
+                    <MenuItem.Icon>
+                        <Image Source="imgs/theme.png" />
+                    </MenuItem.Icon>
+                    <MenuItem Command="local:ConsoleControl.SetGenericTheme" CommandParameter="{x:Static local:MainDataModel.GENERIC_THEME}">
+                        <MenuItem.Icon>
+                            <Image Source="imgs/checked.png" Visibility="{Binding CurrentTheme, Converter={StaticResource checkedIconVisibility}, ConverterParameter={x:Static local:MainDataModel.GENERIC_THEME}}" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Command="local:ConsoleControl.SetMetroTheme" CommandParameter="{x:Static local:MainDataModel.METRO_THEME}">
+                        <MenuItem.Icon>
+                            <Image Source="imgs/checked.png" Visibility="{Binding CurrentTheme, Converter={StaticResource checkedIconVisibility}, ConverterParameter={x:Static local:MainDataModel.METRO_THEME}}" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Command="local:ConsoleControl.SetAeroTheme" CommandParameter="{x:Static local:MainDataModel.AERO_THEME}">
+                        <MenuItem.Icon>
+                            <Image Source="imgs/checked.png" Visibility="{Binding CurrentTheme, Converter={StaticResource checkedIconVisibility}, ConverterParameter={x:Static local:MainDataModel.AERO_THEME}}" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Command="local:ConsoleControl.SetVS2010Theme" CommandParameter="{x:Static local:MainDataModel.VS2010_THEME}">
+                        <MenuItem.Icon>
+                            <Image Source="imgs/checked.png" Visibility="{Binding CurrentTheme, Converter={StaticResource checkedIconVisibility}, ConverterParameter={x:Static local:MainDataModel.VS2010_THEME}}" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="_About">
+            </MenuItem>
+        </Menu>
+        <xcad:DockingManager Grid.Row="1" Margin="2" AllowMixedOrientation="True" BorderBrush="Black" BorderThickness="1" Theme="{Binding CurrentTheme}" x:Name="_AppDockingManager">
+            <xcad:DockingManager.AnchorableHeaderTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" ToolTip="{Binding Title}">
+                        <Image Width="36" Height="36" Margin="2,2,4,2" Source="{Binding IconSource}" />
+                        <TextBlock Width="72" VerticalAlignment="Center" FontWeight="Bold" Text="{Binding Title}" />
+                    </StackPanel>
+                </DataTemplate>
+            </xcad:DockingManager.AnchorableHeaderTemplate>
+            <xcad:DockingManager.DocumentHeaderTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" ToolTip="{Binding Title}">
+                        <Image Width="24" Height="24" Margin="2,2,4,2" Source="{Binding IconSource}" />
+                        <TextBlock Width="120" VerticalAlignment="Center" FontStyle="Italic" Text="{Binding Title}" />
+                    </StackPanel>
+                </DataTemplate>
+            </xcad:DockingManager.DocumentHeaderTemplate>
+            <xcad:LayoutRoot x:Name="_AppContainer">
+                <xcad:LayoutPanel Orientation="Horizontal" x:Name="_RootContainer" DockHeight="Auto" DockWidth="Auto">
+                    <xcad:LayoutAnchorablePane DockWidth="*">
+                        <xcad:LayoutAnchorable
+                            x:Name="_ConnectionTargetsContainer" Title="Target" AutoHideMinWidth="460" CanAutoHide="True"
+                            CanClose="False" CanDockAsTabbedDocument="False" CanHide="False" CanFloat="False"
+                            IconSource="imgs/connection_target.png">
+                            <TextBlock />
+                        </xcad:LayoutAnchorable>
+                        <xcad:LayoutAnchorable
+                            x:Name="_CabinetContainer" Title="Navigation" AutoHideMinWidth="460" CanAutoHide="True"
+                            CanClose="False" CanDockAsTabbedDocument="False" CanHide="False" CanFloat="False"
+                            IconSource="imgs/navigation.png">
+                            <TextBlock />
+                        </xcad:LayoutAnchorable>
+                    </xcad:LayoutAnchorablePane>
+                    <xcad:LayoutDocumentPaneGroup ChildrenCollectionChanged="ToolContainer_ChildrenCollectionChanged" ChildrenTreeChanged="ToolContainer_ChildrenTreeChanged" DockWidth="3*" x:Name="_ToolboxContainer">
+
+                    </xcad:LayoutDocumentPaneGroup>
+                </xcad:LayoutPanel>
+            </xcad:LayoutRoot>
+        </xcad:DockingManager>
+        <StatusBar Grid.Row="2" Margin="2">
+            <StackPanel Orientation="Horizontal">
+                <StackPanel.Resources>
+                    <Style TargetType="Image">
+                        <Setter Property="Height" Value="24" />
+                        <Setter Property="Width" Value="24" />
+                        <Setter Property="Margin" Value="2" />
+                    </Style>
+                </StackPanel.Resources>
+                <Image Source="imgs/dirty.png">
+                    <Image.Visibility>
+                        <Binding Path="IsDirty" Converter="{StaticResource booleanValueVisibility}">
+                            <Binding.ConverterParameter>
+                                <sys:Boolean>true</sys:Boolean>
+                            </Binding.ConverterParameter>
+                        </Binding>
+                    </Image.Visibility>
+                </Image>
+                <Image Source="imgs/offline_state.png">
+                    <Image.Visibility>
+                        <Binding Path="IsOnline" Converter="{StaticResource booleanValueVisibility}">
+                            <Binding.ConverterParameter>
+                                <sys:Boolean>false</sys:Boolean>
+                            </Binding.ConverterParameter>
+                        </Binding>
+                    </Image.Visibility>
+                </Image>
+                <Image Source="imgs/online_state.png">
+                    <Image.Visibility>
+                        <Binding Path="IsOnline" Converter="{StaticResource booleanValueVisibility}">
+                            <Binding.ConverterParameter>
+                                <sys:Boolean>true</sys:Boolean>
+                            </Binding.ConverterParameter>
+                        </Binding>
+                    </Image.Visibility>
+                </Image>
+            </StackPanel>
+            <Separator Width="2" Margin="2" />
+            <TextBlock Text="{Binding DataPollingInterval}" MinWidth="50" />
+            <TextBlock x:Name="_SynchronizeCounter" Margin="4,0,0,0" Width="5" HorizontalAlignment="Center" />
+            <Separator Width="2" Margin="2" />
+            <TextBlock Text="{Binding DataSyncState}" MinWidth="200" />
+            <Separator Width="2" Margin="2" />
+            <TextBlock Text="{Binding DataSyncExceptionMessage}" MinWidth="300" />
+        </StatusBar>
+        <xctk:BusyIndicator IsBusy="True" x:Name="_BusyIndicator" Grid.RowSpan="3" Visibility="Hidden">
+        </xctk:BusyIndicator>
+    </Grid>
+</Window>

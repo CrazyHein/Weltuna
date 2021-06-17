@@ -1,0 +1,161 @@
+﻿<Window
+    x:Class="AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.TargetPropertyControl" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks" xmlns:slmp="clr-namespace:AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Message;assembly=Gagharv" xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" mc:Ignorable="d" Title="Target Property" Height="740"
+    Width="800">
+    <DockPanel LastChildFill="True">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,4,16" DockPanel.Dock="Bottom">
+            <Button Content="Communication Test" Margin="0,0,10,0" Width="200" Click="CommunicationTest_Click" x:Name="_CommunicationTestButton" IsEnabled="{Binding EnableRemoteOperation}" />
+            <Button Content="OK" Width="100" Click="OK_Click" />
+        </StackPanel>
+        <Grid Validation.Error="TargetProperty_Error" DockPanel.Dock="Top">
+            <Grid.Resources>
+                <Style TargetType="TextBlock" BasedOn="{StaticResource TextBlockBaseStyle}">
+                    <Setter Property="Margin" Value="2" />
+                    <Setter Property="TextWrapping" Value="Wrap" />
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                    <Setter Property="HorizontalAlignment" Value="Left" />
+                </Style>
+                <Style TargetType="RadioButton" BasedOn="{StaticResource RadioButtonBaseStyle}">
+                    <Setter Property="Margin" Value="2" />
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                </Style>
+                <Style TargetType="TextBox" BasedOn="{StaticResource TextBoxBaseStyle}">
+                    <Setter Property="Margin" Value="2" />
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                    <Setter Property="HorizontalContentAlignment" Value="Left" />
+                    <Style.Triggers>
+                        <Trigger Property="Validation.HasError" Value="true">
+                            <Setter Property="ToolTip" Value="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=(Validation.Errors)[0].ErrorContent}" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+                <Style TargetType="ComboBox" BasedOn="{StaticResource ComboBoxBaseStyle}">
+                    <Setter Property="Margin" Value="2" />
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                </Style>
+                <ObjectDataProvider ObjectType="{x:Type sys:Enum}" MethodName="GetValues" x:Key="datacodes">
+                    <ObjectDataProvider.MethodParameters>
+                        <x:Type TypeName="slmp:MESSAGE_DATA_CODE_T" />
+                    </ObjectDataProvider.MethodParameters>
+                </ObjectDataProvider>
+                <ObjectDataProvider ObjectType="{x:Type sys:Enum}" MethodName="GetValues" x:Key="frametypes">
+                    <ObjectDataProvider.MethodParameters>
+                        <x:Type TypeName="slmp:MESSAGE_FRAME_TYPE_T" />
+                    </ObjectDataProvider.MethodParameters>
+                </ObjectDataProvider>
+            </Grid.Resources>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+            <GroupBox Header="Basic Information" Margin="4" Padding="4">
+                <DockPanel>
+                    <TextBlock Text="Name :" Width="48" DockPanel.Dock="Left" />
+                    <TextBox Text="{Binding Name, ValidatesOnExceptions=True, NotifyOnValidationError=True}" />
+                </DockPanel>
+            </GroupBox>
+            <GroupBox Header="Source Endpoint" Grid.Row="1" Margin="4" Padding="4,6">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="IPv4 :" Width="48" />
+                    <TextBox Width="120" Text="{Binding SourceIPv4String, ValidatesOnExceptions=True, NotifyOnValidationError=True}" />
+                    <TextBlock Text="Port (dec) : " Width="80" Margin="20,0,0,0" />
+                    <TextBox Width="60" Text="{Binding SourcePort, ValidatesOnExceptions=True, NotifyOnValidationError=True}" IsEnabled="{Binding ElementName=_UDPIsChecked, Path=IsChecked}" />
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Header="Destination Endpoint" Grid.Row="2" Margin="4" Padding="4,6">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="IPv4 :" Width="48" />
+                    <TextBox Width="120" Text="{Binding DestinationIPv4String, ValidatesOnExceptions=True, NotifyOnValidationError=True}" />
+                    <TextBlock Text="Port (dec) : " Width="80" Margin="20,0,0,0" />
+                    <TextBox Width="60" Text="{Binding DestinationPort, ValidatesOnExceptions=True, NotifyOnValidationError=True}" />
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Header="SLMP Protocol" Grid.Row="3" Margin="4" Padding="4,6">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="1.5*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="1.5*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Transport layer :" />
+                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+                        <RadioButton Content="UDP" MinWidth="80" GroupName="TLP" IsChecked="{Binding UDPTransportLayer}" x:Name="_UDPIsChecked" />
+                        <RadioButton Content="TCP" MinWidth="80" GroupName="TLP" IsChecked="True" />
+                    </StackPanel>
+
+                    <TextBlock Text="Message Format :" Grid.Column="2" />
+                    <StackPanel Grid.Column="3" Orientation="Horizontal">
+                        <RadioButton Content="Q / L" MinWidth="80" GroupName="MFT" IsChecked="True" />
+                        <RadioButton Content="R" MinWidth="80" GroupName="MFT" IsChecked="{Binding R_DedicatedMessageFormat}" />
+                    </StackPanel>
+
+                    <TextBlock Text="Data Code :" Grid.Row="1" />
+                    <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Source={StaticResource datacodes}}" SelectedItem="{Binding DataCode}" />
+
+                    <TextBlock Text="Frame Type :" Grid.Row="1" Grid.Column="2" />
+                    <ComboBox Grid.Row="1" Grid.Column="3" ItemsSource="{Binding Source={StaticResource frametypes}}" SelectedItem="{Binding FrameType}" />
+
+                    <TextBlock Text="Network (dec) :" Grid.Row="2" Grid.Column="0" />
+                    <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding NetworkNumber, ValidatesOnExceptions=True, NotifyOnValidationError=True}" />
+
+                    <TextBlock Text="Station (dec) :" Grid.Row="2" Grid.Column="2" />
+                    <TextBox Grid.Row="2" Grid.Column="3" Text="{Binding StationNumber, ValidatesOnExceptions=True, NotifyOnValidationError=True}" />
+
+                    <TextBlock Text="Module IO :" Grid.Row="3" Grid.Column="0" />
+                    <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{Binding Source={x:Static local:TargetPropertyDataModel.MODULE_IO_NAMES}}" SelectedItem="{Binding ModuleIOName, ValidatesOnExceptions=True, NotifyOnValidationError=True}" />
+
+                    <TextBlock Text="Multi-drop (dec) :" Grid.Row="3" Grid.Column="2" />
+                    <TextBox Grid.Row="3" Grid.Column="3" Text="{Binding MultidropNumber, ValidatesOnExceptions=True, NotifyOnValidationError=True}" />
+
+                    <TextBlock Text="ExStation (dec) :" Grid.Row="4" Grid.Column="0" />
+                    <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding ExtensionStationNumber, ValidatesOnExceptions=True, NotifyOnValidationError=True}" />
+                </Grid>
+            </GroupBox>
+            <GroupBox Header="User Configuration" Grid.Row="4" Margin="4" Padding="4,6">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="1.5*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="1.5*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Send Timeout (ms) :" Grid.Row="0" Grid.Column="0" />
+                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding SendTimeoutValue, ValidatesOnExceptions=True, NotifyOnValidationError=True}" />
+
+                    <TextBlock Text="Receive Timeout (ms) :" Grid.Row="0" Grid.Column="2" />
+                    <TextBox Grid.Row="0" Grid.Column="3" Text="{Binding ReceiveTimeoutValue, ValidatesOnExceptions=True, NotifyOnValidationError=True}" />
+
+                    <TextBlock Text="Send Buffer (bytes) :" Grid.Row="1" Grid.Column="0" />
+                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding SendBufferSize, ValidatesOnExceptions=True, NotifyOnValidationError=True}" />
+
+                    <TextBlock Text="Receive Buffer (byte) :" Grid.Row="1" Grid.Column="2" />
+                    <TextBox Grid.Row="1" Grid.Column="3" Text="{Binding ReceiveBufferSize, ValidatesOnExceptions=True, NotifyOnValidationError=True}" />
+
+                    <TextBlock Text="Polling Interval (ms) :" Grid.Row="2" Grid.Column="0" />
+                    <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding PollingInterval, ValidatesOnExceptions=True, NotifyOnValidationError=True}" />
+
+                    <TextBlock Text="Monitoring Timer (ms) :" Grid.Row="2" Grid.Column="2" />
+                    <TextBox Grid.Row="2" Grid.Column="3" Text="{Binding MonitoringTimer, ValidatesOnExceptions=True, NotifyOnValidationError=True}" />
+                </Grid>
+            </GroupBox>
+            <xctk:BusyIndicator IsBusy="True" Grid.RowSpan="5" Visibility="Hidden" x:Name="_BusyIndicator" />
+        </Grid>
+    </DockPanel>
+</Window>

@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <RootNamespace>AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool</RootNamespace>
+    <PackageId>CrazyHein.Una</PackageId>
+    <Authors>CrazyHein</Authors>
+    <Company>AMEC</Company>
+    <AssemblyName>Tool.Una</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Gagharv\Gagharv.csproj" />
+  </ItemGroup>
+
+</Project>

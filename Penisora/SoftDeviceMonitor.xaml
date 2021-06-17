@@ -1,0 +1,121 @@
+﻿<UserControl
+    x:Class="AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool.Penisora.SoftDeviceMonitor" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool.Penisora" mc:Ignorable="d" d:DesignHeight="450"
+    d:DesignWidth="850">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/SkinDefault.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/Theme.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <DockPanel Margin="4" LastChildFill="True">
+        <Grid Margin="2" DockPanel.Dock="Top" Keyboard.KeyDown="OnDeviceSettings_KeyDown" IsEnabled="{Binding Online}">
+            <Grid.Resources>
+                <Style TargetType="TextBox" BasedOn="{StaticResource TextBoxBaseStyle}">
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                    <Setter Property="HorizontalContentAlignment" Value="Left" />
+                    <Style.Triggers>
+                        <Trigger Property="Validation.HasError" Value="true">
+                            <Setter Property="ToolTip" Value="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=(Validation.Errors)[0].ErrorContent}" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+                <local:SwitchStateToImageConverter x:Key="SwitchStateToImage" />
+            </Grid.Resources>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" MaxWidth="240" />
+                <ColumnDefinition Width="*" MaxWidth="120" />
+                <ColumnDefinition Width="2*" MaxWidth="240" />
+                <ColumnDefinition Width="*" MaxWidth="120" />
+                <ColumnDefinition Width="*" MaxWidth="100" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+            <RadioButton Content="Local Device Name :" x:Name="_LocalDeviceSelected" IsChecked="{Binding SelectLocalDevice, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="4" />
+            <TextBox Grid.Column="1" IsEnabled="{Binding ElementName=_LocalDeviceSelected, Path=IsChecked}" Text="{Binding LocalDeviceName, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}" x:Name="_LocalDeviceName" Margin="4" />
+            <RadioButton Content="Module Access Device Name : " Grid.Column="2" x:Name="_ModuleAccessDeviceSelected" HorizontalAlignment="Left" Margin="4" />
+            <TextBox Grid.Column="3" IsEnabled="{Binding ElementName=_ModuleAccessDeviceSelected, Path=IsChecked}" Text="{Binding ModuleAccessDeviceName, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}" x:Name="_ModuleAccessDeviceName" Margin="4" />
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Head Device (In Words) : " VerticalAlignment="Center" Margin="28,4,4,4" />
+            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding HeadDevice, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}" x:Name="_HeadDevice" Margin="4" />
+            <TextBlock Grid.Row="1" Grid.Column="2" Text="Device Points (In Words) : " VerticalAlignment="Center" Margin="28,4,4,4" />
+            <TextBox Grid.Row="1" Grid.Column="3" Text="{Binding DevicePoints, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}" x:Name="_DevicePoint" Margin="4" />
+
+            <Button Grid.Column="4" Margin="30,4,4,4" Grid.RowSpan="2" Padding="6" Height="64" Width="64" Click="Power_Click" IsEnabled="{Binding Power}">
+                <Image Source="{Binding Power, Converter={StaticResource SwitchStateToImage}}" />
+            </Button>
+        </Grid>
+        <Expander DockPanel.Dock="Bottom" Margin="2" Header="Exception Information" IsExpanded="False">
+            <ListBox  Height="100" ItemsSource="{Binding ExceptionInfoCollection}"/>
+        </Expander>
+        <ListView Margin="2" ItemsSource="{Binding RowDataCollection}" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem" BasedOn="{StaticResource ListViewItemBaseStyle}">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    <EventSetter Event="UIElement.KeyDown" Handler="CommitUpdates" />
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.Resources>
+                <local:WordToHexConverter x:Key="WordToHex" />
+                <local:WordToBinConverter x:Key="WordToBin" />
+                <local:WordToASCIIConverter x:Key="WordToASCII" />
+                <Style TargetType="TextBox" BasedOn="{StaticResource TextBoxBaseStyle}">
+                    <Setter Property="Margin" Value="4,2,4,2" />
+                    <Setter Property="HorizontalAlignment" Value="Stretch" />
+                    <Style.Triggers>
+                        <Trigger Property="Validation.HasError" Value="true">
+                            <Setter Property="ToolTip" Value="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=(Validation.Errors)[0].ErrorContent}" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+                <Style TargetType="TextBlock" BasedOn="{StaticResource TextBlockBaseStyle}">
+                    <Setter Property="Margin" Value="4,2,4,2" />
+                </Style>
+
+                <DataTemplate x:Key="NameHeadTemplate">
+                    <TextBlock FontWeight="Bold" Text="Soft Device Name" />
+                </DataTemplate>
+                <DataTemplate x:Key="DecHeadTemplate">
+                    <TextBlock FontWeight="Bold" Text="Decimal" />
+                </DataTemplate>
+                <DataTemplate x:Key="HexHeadTemplate">
+                    <TextBlock FontWeight="Bold" Text="Hexadecimal" />
+                </DataTemplate>
+                <DataTemplate x:Key="BinHeadTemplate">
+                    <TextBlock FontWeight="Bold" Text="Binary" />
+                </DataTemplate>
+                <DataTemplate x:Key="StrHeadTemplate">
+                    <TextBlock FontWeight="Bold" Text="String" />
+                </DataTemplate>
+
+                <DataTemplate x:Key="NameContentTemplate">
+                    <TextBlock Text="{Binding Path=WordName}" />
+                </DataTemplate>
+                <DataTemplate x:Key="DecContentTemplate">
+                    <TextBox Text="{Binding Path=WordValue, UpdateSourceTrigger=Explicit, StringFormat={}{0:D5}, ValidatesOnExceptions=True}" KeyDown="CommitUpdates" LostFocus="CancelUpdates" />
+                </DataTemplate>
+                <DataTemplate x:Key="HexContentTemplate">
+                    <TextBox Text="{Binding Path=WordValue, UpdateSourceTrigger=Explicit, Converter={StaticResource WordToHex}, ValidatesOnExceptions=True}" KeyDown="CommitUpdates" LostFocus="CancelUpdates" />
+                </DataTemplate>
+                <DataTemplate x:Key="BinContentTemplate">
+                    <TextBox Text="{Binding Path=WordValue, UpdateSourceTrigger=Explicit, Converter={StaticResource WordToBin}, ValidatesOnExceptions=True}" KeyDown="CommitUpdates" LostFocus="CancelUpdates" />
+                </DataTemplate>
+                <DataTemplate x:Key="StrContentTemplate">
+                    <TextBlock Text="{Binding Path=WordValue, Converter={StaticResource WordToASCII}}" />
+                </DataTemplate>
+            </ListView.Resources>
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Width="150" HeaderTemplate="{StaticResource NameHeadTemplate}" CellTemplate="{StaticResource NameContentTemplate}" />
+                    <GridViewColumn Width="150" HeaderTemplate="{StaticResource DecHeadTemplate}" CellTemplate="{StaticResource DecContentTemplate}" />
+                    <GridViewColumn Width="150" HeaderTemplate="{StaticResource HexHeadTemplate}" CellTemplate="{StaticResource HexContentTemplate}" />
+                    <GridViewColumn Width="150" HeaderTemplate="{StaticResource BinHeadTemplate}" CellTemplate="{StaticResource BinContentTemplate}" />
+                    <GridViewColumn Width="150" HeaderTemplate="{StaticResource StrHeadTemplate}" CellTemplate="{StaticResource StrContentTemplate}" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </DockPanel>
+</UserControl>
