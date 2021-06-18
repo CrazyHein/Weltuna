@@ -315,14 +315,14 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
                             if (writecmd.local_device)
                             {
                                 master.WriteLocalDeviceInWord(monitoring, writecmd.device_name, writecmd.head_device * __bit_access, 1, out endcode, readback);
-                                if (endcode == 0)
-                                    master.ReadLocalDeviceInWord(monitoring, writecmd.device_name, writecmd.head_device * __bit_access, 1, out endcode, readback);
+                                //if (endcode == 0)
+                                    //master.ReadLocalDeviceInWord(monitoring, writecmd.device_name, writecmd.head_device * __bit_access, 1, out endcode, readback);
                             }
                             else
                             {
                                 master.WriteModuleAccessDeviceInWord(monitoring, writecmd.device_name, writecmd.head_device, 1, out endcode, readback);
-                                if (endcode == 0)
-                                    master.ReadModuleAccessDeviceInWord(monitoring, writecmd.device_name, writecmd.head_device, 1, out endcode, readback);
+                                //if (endcode == 0)
+                                    //master.ReadModuleAccessDeviceInWord(monitoring, writecmd.device_name, writecmd.head_device, 1, out endcode, readback);
                             }
                             lock(_synchronizer)
                             {
