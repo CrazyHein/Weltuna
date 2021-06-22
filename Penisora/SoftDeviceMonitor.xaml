@@ -49,7 +49,7 @@
             </Button>
         </Grid>
         <Expander DockPanel.Dock="Bottom" Margin="2" Header="Exception Information" IsExpanded="False">
-            <ListBox  Height="100" ItemsSource="{Binding ExceptionInfoCollection}"/>
+            <ListBox Height="100" ItemsSource="{Binding ExceptionInfoCollection}" />
         </Expander>
         <ListView Margin="2" ItemsSource="{Binding RowDataCollection}" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling">
             <ListView.ItemContainerStyle>

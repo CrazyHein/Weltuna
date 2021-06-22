@@ -83,8 +83,6 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
             {"R",       (DEVICE_ACCESS_RANGE_T.DECIMAL,      DEVICE_ACCESS_TYPE_T.WORD) },
             {"ZR",      (DEVICE_ACCESS_RANGE_T.HEXADECIMAL,  DEVICE_ACCESS_TYPE_T.WORD) }
         };
-        private static Regex __EXTENSION_SPECIFICATION_PATTERN = new Regex(@"^[UJ][0-9,A-F]{3}$", RegexOptions.Compiled);
-
 
         public ObservableCollection<SoftDeviceRowDataModel> RowDataCollection { get; private set; } = new ObservableCollection<SoftDeviceRowDataModel>();
         public ObservableCollection<string> ExceptionInfoCollection { get; private set; } = new ObservableCollection<string>();
@@ -125,7 +123,7 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
             get { return __module_access_device_name; }
             set 
             {
-                if (__EXTENSION_SPECIFICATION_PATTERN.IsMatch(value))
+                if (_MODULE_ACCESS_EXTENSION_PATTERN.IsMatch(value))
                 {
                     if (__module_access_device_name != value)
                         SetProperty(ref __module_access_device_name, value);
@@ -333,6 +331,7 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
                         }
                         catch (SLMPException ex)
                         {
+                            writecmd.op_end_code = 0;
                             writecmd.op_slmp_exception = ex.ExceptionCode;
                             if (ex.ExceptionCode == SLMP_EXCEPTION_CODE_T.RUNTIME_ERROR)
                                 throw;
@@ -361,6 +360,7 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
                 }
                 catch (SLMPException ex)
                 {
+                    __process_in_data_device.end_code = 0;
                     __process_in_data_device.slmp_exception = ex.ExceptionCode;
                     if (ex.ExceptionCode == SLMP_EXCEPTION_CODE_T.RUNTIME_ERROR)
                         throw;

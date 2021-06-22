@@ -1,4 +1,5 @@
 ﻿using AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Master;
+using AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Control;
 using AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool;
 using HandyControl.Controls;
 using System;
@@ -531,6 +532,8 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks
             if (assemblyName.Name == typeof(LayoutDocument).Assembly.GetName().Name)
                 return null;
             if (assemblyName.Name == typeof(Notification).Assembly.GetName().Name)
+                return null;
+            if (assemblyName.Name == typeof(BitIndicator).Assembly.GetName().Name)
                 return null;
             string target = __resolver.ResolveAssemblyToPath(assemblyName);
             if (target != null)

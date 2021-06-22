@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 
 namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
 {
@@ -59,6 +60,8 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
         public abstract void ExchangeDataWithDevice(DeviceAccessMaster master, ushort monitoringTimer);
 
         protected object _synchronizer = new object();
+
+        protected static Regex _MODULE_ACCESS_EXTENSION_PATTERN = new Regex(@"^[UJ][0-9,A-F]{3}$", RegexOptions.Compiled);
     }
 
     public interface ICabinet

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool</RootNamespace>
-    <PackageId>CrazyHein.Una</PackageId>
+    <PackageId>CrazyHein.Tool.Una</PackageId>
     <Authors>CrazyHein</Authors>
     <Company>AMEC</Company>
     <AssemblyName>Tool.Una</AssemblyName>
