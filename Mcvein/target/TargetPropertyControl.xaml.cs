@@ -4,6 +4,7 @@ using AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Master;
 using AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Message;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -45,14 +46,14 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks
         private void OK_Click(object sender, RoutedEventArgs e)
         {
             if (__property_error_counter != 0)
-                MessageBox.Show("At least one user input field is invalid.", "Error Message", MessageBoxButton.OK, MessageBoxImage.Error);
+                HandyControl.Controls.MessageBox.Show(this, "At least one user input field is invalid.", "Error Message", MessageBoxButton.OK, MessageBoxImage.Error);
             else
             {
                 if (__original_name == null || __original_name != (DataContext as TargetPropertyDataModel).Name)
                 {
                     if (__host.Find((DataContext as TargetPropertyDataModel).Name) != null)
                     {
-                        MessageBox.Show("A target with the same name already exists.", "Error Message", MessageBoxButton.OK, MessageBoxImage.Error);
+                        HandyControl.Controls.MessageBox.Show(this, "A target with the same name already exists.", "Error Message", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
                     }
                 }
@@ -64,7 +65,7 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks
         private async void CommunicationTest_Click(object sender, RoutedEventArgs e)
         {
             if (__property_error_counter != 0)
-                MessageBox.Show("At least one user input field is invalid.", "Error Message", MessageBoxButton.OK, MessageBoxImage.Error);
+                HandyControl.Controls.MessageBox.Show(this, "At least one user input field is invalid.", "Error Message", MessageBoxButton.OK, MessageBoxImage.Error);
             else
             {
                 var property = DataContext as TargetPropertyDataModel;
@@ -99,14 +100,14 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks
                     (ushort end, string name, ushort code) = await master.ReadTypeNameAsync(property.MonitoringTimer);
                     
                     if(end == (ushort)RESPONSE_MESSAGE_ENDCODE_T.NO_ERROR)
-                        MessageBox.Show($"Communication success, the destination device is { name.Trim()} (0x{code:X4}).", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                        HandyControl.Controls.MessageBox.Show(this, $"Communication success, the destination device is { name.Trim()} (0x{code:X4}).", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
                     else
-                        MessageBox.Show($"The destination device returns end code 0x{end:X4}.", "Warning Message", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        HandyControl.Controls.MessageBox.Show(this, $"The destination device returns end code 0x{end:X4}.", "Warning Message", MessageBoxButton.OK, MessageBoxImage.Warning);
 
                 }
                 catch(SLMPException ex)
                 {
-                    MessageBox.Show("At least one unexpected error occured while doing communication test.\n" + ex.Message , "Error Message", MessageBoxButton.OK, MessageBoxImage.Error);
+                    HandyControl.Controls.MessageBox.Show(this, "At least one unexpected error occured while doing communication test.\n" + ex.Message , "Error Message", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 finally
                 {

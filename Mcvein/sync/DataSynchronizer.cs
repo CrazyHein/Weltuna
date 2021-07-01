@@ -84,12 +84,13 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks
                 __data_sync_thread = new Thread(new ParameterizedThreadStart(__data_sync_routine));
                 __data_sync_thread.Start(Tuple.Create(master, (ushort)(target.MonitoringTimer / 250), target.PollingInterval));
                 State = DATA_SYNCHRONIZER_STATE_T.CONNECTED;
+                ExceptionMessage = "";
                 return DATA_SYNCHRONIZER_STATE_T.CONNECTED;
             }
             catch (SLMPException ex)
             {
                 State = DATA_SYNCHRONIZER_STATE_T.EXCEPTION;
-                ExceptionMessage = ex.ToString();
+                ExceptionMessage = ex.Message;
                 return DATA_SYNCHRONIZER_STATE_T.EXCEPTION;
             }
             finally

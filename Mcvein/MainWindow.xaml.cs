@@ -51,7 +51,7 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks
             }
             catch(Exception ex)
             {
-                MessageBox.Show($"At least one unexpected error occured during the boot process.\n{ex.Message}", "Error Message", MessageBoxButton.OK, MessageBoxImage.Error);
+                HandyControl.Controls.MessageBox.Show(this, $"At least one unexpected error occured during the boot process.\n{ex.Message}", "Error Message", MessageBoxButton.OK, MessageBoxImage.Error);
                 Close();
             }
         }
@@ -101,7 +101,7 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks
 
         private void RemoveTarget_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            if (MessageBox.Show($"Do you want to remove {__target_manager_data_model.SelectedTarget.Name} ?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            if (HandyControl.Controls.MessageBox.Show(this, $"Do you want to remove {__target_manager_data_model.SelectedTarget.Name} ?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 __target_manager_data_model.Remove(__target_manager_data_model.SelectedTarget);
                 __main_wnd_data_model.IsDirty = true;
@@ -136,7 +136,7 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks
         {
             if (__main_wnd_data_model.IsDirty == true || __docking_layout_comparison(_ToolboxContainer, __docking_documents_layout) == false)
             {
-                if (MessageBox.Show($"Discard the changes you have made ?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
+                if (HandyControl.Controls.MessageBox.Show(this, $"Discard the changes you have made ?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
                     return;
             }
 
@@ -156,7 +156,7 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"At least one unexpected error occured while opening the project.\n{ex.Message}", "Error Message", MessageBoxButton.OK, MessageBoxImage.Error);
+                    HandyControl.Controls.MessageBox.Show(this, $"At least one unexpected error occured while opening the project.\n{ex.Message}", "Error Message", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
 
                 if (__target_manager_data_model == null)
@@ -188,7 +188,7 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks
         {
             if (__main_wnd_data_model.IsDirty == true || __docking_layout_comparison(_ToolboxContainer, __docking_documents_layout) == false)
             {
-                if (MessageBox.Show($"Discard the changes you have made ?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
+                if (HandyControl.Controls.MessageBox.Show(this, $"Discard the changes you have made ?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
                     return;
             }
             __target_manager_data_model = new TargetManagerDataModel();
@@ -217,7 +217,7 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"At least one unexpected error occured while saving the project.\n{ex.Message}", "Error Message", MessageBoxButton.OK, MessageBoxImage.Error);
+                HandyControl.Controls.MessageBox.Show(this, $"At least one unexpected error occured while saving the project.\n{ex.Message}", "Error Message", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -246,7 +246,7 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"At least one unexpected error occured while saving the project.\n{ex.Message}", "Error Message", MessageBoxButton.OK, MessageBoxImage.Error);
+                HandyControl.Controls.MessageBox.Show(this, $"At least one unexpected error occured while saving the project.\n{ex.Message}", "Error Message", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -265,7 +265,7 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"The plug-in ({(e.Parameter as CabinetShortcut).Cabinet.GetType().Assembly.FullName}) is not compatible with this framework.\n{ex.Message}", "Error Message", MessageBoxButton.OK, MessageBoxImage.Error);
+                HandyControl.Controls.MessageBox.Show(this, $"The plug-in ({(e.Parameter as CabinetShortcut).Cabinet.GetType().Assembly.FullName}) is not compatible with this framework.\n{ex.Message}", "Error Message", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -303,7 +303,7 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks
             IsEnabled = true;
 
             if (state == DATA_SYNCHRONIZER_STATE_T.EXCEPTION)
-                MessageBox.Show($"At least one unexpected error occured while connecting to target.\n{__data_synchronizer.ExceptionMessage}", "Error Message", MessageBoxButton.OK, MessageBoxImage.Error);
+                HandyControl.Controls.MessageBox.Show(this, $"At least one unexpected error occured while connecting to target.\n{__data_synchronizer.ExceptionMessage}", "Error Message", MessageBoxButton.OK, MessageBoxImage.Error);
             else
             {
                 __main_wnd_data_model.IsOnline = true;
@@ -366,7 +366,7 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks
         {
             if (__main_wnd_data_model.IsDirty == true || (__docking_documents_layout != null &&__docking_layout_comparison(_ToolboxContainer, __docking_documents_layout) == false))
             {
-                if (MessageBox.Show($"Discard the changes you have made ?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
+                if (HandyControl.Controls.MessageBox.Show(this, $"Discard the changes you have made ?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
                 {
                     e.Cancel = true;
                     return;
@@ -619,7 +619,7 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks
 
                 foreach (var m in __cabinets_navigation_data_model.ToolDataCollection)
                     m.Online = false;
-                MessageBox.Show(info, "Error Message", MessageBoxButton.OK, MessageBoxImage.Stop);
+                HandyControl.Controls.MessageBox.Show(this, info, "Error Message", MessageBoxButton.OK, MessageBoxImage.Stop);
             }
         }
     }

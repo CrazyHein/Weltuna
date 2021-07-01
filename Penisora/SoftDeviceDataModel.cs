@@ -464,29 +464,29 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
                             if (reader.Read() && (reader.TokenType == JsonTokenType.True || reader.TokenType == JsonTokenType.False))
                                 SetProperty(ref __select_local_device, reader.GetBoolean(), false, nameof(SelectLocalDevice));
                             else
-                                new ArgumentException($"{this.GetType().Assembly.FullName} : The property value of {property} in given JSON object is not a valid boolean value.");
+                                throw new ArgumentException($"{this.GetType().Assembly.FullName} : The property value of {property} in given JSON object is not a valid boolean value.");
                             break;
                         case "Local Device Name":
                             if (reader.Read() && reader.TokenType == JsonTokenType.String)
                                 SetProperty(ref __loacal_device_name, reader.GetString(), false, nameof(LocalDeviceName));
                             else
-                                new ArgumentException($"{this.GetType().Assembly.FullName} : The property value of {property} in given JSON object is not a valid string.");
+                                throw new ArgumentException($"{this.GetType().Assembly.FullName} : The property value of {property} in given JSON object is not a valid string.");
                             break;
                         case "Module Access Device Name":
                             if (reader.Read() && reader.TokenType == JsonTokenType.String)
                                 SetProperty(ref __module_access_device_name, reader.GetString(), false, nameof(ModuleAccessDeviceName));
                             else
-                                new ArgumentException($"{this.GetType().Assembly.FullName} : The property value of {property} in given JSON object is not a valid string.");
+                                throw new ArgumentException($"{this.GetType().Assembly.FullName} : The property value of {property} in given JSON object is not a valid string.");
                             break;
                         case "Head Device":
                             if ((reader.Read() && reader.TokenType == JsonTokenType.Number && reader.TryGetUInt32(out __head_device)) == false)
-                                new ArgumentException($"{this.GetType().Assembly.FullName} : The property value of {property} in given JSON object is not a valid uint32 number.");
+                                throw new ArgumentException($"{this.GetType().Assembly.FullName} : The property value of {property} in given JSON object is not a valid uint32 number.");
                             else
                                 SetProperty(ref __head_device, __head_device, false, nameof(HeadDevice));
                             break;
                         case "Device Points":
                             if ((reader.Read() && reader.TokenType == JsonTokenType.Number && reader.TryGetUInt16(out __device_points)) == false)
-                                new ArgumentException($"{this.GetType().Assembly.FullName} : The property value of {property} in given JSON object is not a valid uint16 number.");
+                                throw new ArgumentException($"{this.GetType().Assembly.FullName} : The property value of {property} in given JSON object is not a valid uint16 number.");
                             else
                                 SetProperty(ref __device_points, __device_points, false, nameof(DevicePoints));
                             break;

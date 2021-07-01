@@ -1,12 +1,307 @@
-<UserControl x:Class="AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool.Ohestren.DeviceNetUtilityControl"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool.Ohestren"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
-    </Grid>
+<UserControl
+    x:Class="AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool.Ohestren.DeviceNetUtilityControl" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool.Ohestren" xmlns:control="clr-namespace:AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Control;assembly=Control.Fort" xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    d:DataContext="{d:DesignInstance Type=local:DeviceNetUtilityDataModel}"
+    mc:Ignorable="d" d:DesignHeight="1500" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/SkinDefault.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/Theme.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <Style TargetType="TextBox" BasedOn="{StaticResource TextBoxExtendBaseStyle}">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="HorizontalContentAlignment" Value="Left" />
+                <Style.Triggers>
+                    <Trigger Property="Validation.HasError" Value="true">
+                        <Setter Property="ToolTip" Value="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=(Validation.Errors)[0].ErrorContent}" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+            <ObjectDataProvider ObjectType="{x:Type sys:Enum}" MethodName="GetValues" x:Key="models">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="local:DN_DEVICE_MODEL_TYPE_T" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <local:UnshortLowerByte x:Key="UshortLowerByte" />
+            <local:UnshortUpperByte x:Key="UshortUpperByte" />
+            <local:MasterFunctionStatus x:Key="MasterFunctionStatus" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <DockPanel LastChildFill="True" Margin="4">
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="2" IsEnabled="{Binding Online}">
+            <TextBlock Text="Device Address : " VerticalAlignment="Center" />
+            <TextBox Width="100" Text="{Binding DeviceAddress, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}" x:Name="_DeviceAddress" />
+            <ComboBox Width="120" Margin="8,0,0,0" ItemsSource="{Binding Source={StaticResource models}}" SelectedIndex="0" SelectedItem="{Binding Model}" />
+            <StackPanel Orientation="Horizontal" IsEnabled="{Binding CommandPending, Converter={StaticResource Boolean2BooleanReConverter}}">
+                <Button Margin="8,0,0,0" Content="Enable" Width="100" IsEnabled="{Binding IsEnabled, Converter={StaticResource Boolean2BooleanReConverter}}" Click="Enable_Click" />
+                <Button Margin="8,0,0,0" Content="Disable" Width="100" IsEnabled="{Binding IsEnabled}" Click="Disable_Click" />
+            </StackPanel>
+        </StackPanel>
+        <Expander DockPanel.Dock="Bottom" Margin="2" Header="Exception Information" IsExpanded="False">
+            <ListBox Height="100" ItemsSource="{Binding ExceptionInfoCollection}" />
+        </Expander>
+        <TabControl Margin="2,8,2,2" TabControl.TabStripPlacement="Bottom" Style="{StaticResource TabControlCapsuleSolid}" Visibility="{Binding IsEnabled, Converter={StaticResource Boolean2VisibilityConverter}}">
+            <TabItem Header="Master Information &amp; Diagnostic">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Visible">
+                    <StackPanel Orientation="Vertical">
+                        <GroupBox Header="Module Information" Padding="8" Margin="2">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="24" />
+                                    <RowDefinition Height="24" />
+                                    <RowDefinition Height="24" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="160" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Model Name : " VerticalAlignment="Center" />
+                                <TextBlock Text="Master Node Address : " Grid.Row="1" VerticalAlignment="Center" />
+                                <TextBlock Text="Master Node Mode : " Grid.Row="2" VerticalAlignment="Center" />
+
+                                <TextBlock Grid.Column="1" Text="{Binding Path=ModelName}" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding Path=NodeAddress}" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding Path=NodeMode}" VerticalAlignment="Center" />
+                            </Grid>
+                        </GroupBox>
+                        <GroupBox Header="Diagnostic Information" Padding="8" Margin="2">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,8,0,8">
+                                    <TextBlock Text="IO Communication : " VerticalAlignment="Center" Width="130" />
+                                    <TextBlock Text="{Binding MasterCommunicationStatus, Converter={StaticResource MasterFunctionStatus}}" FontWeight="Bold" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,8,0,8">
+                                    <TextBlock Text="Master Error Code : " VerticalAlignment="Center" Width="130" />
+                                    <TextBlock Text="{Binding MasterErrorCode, StringFormat=0x{0:X4}}" VerticalAlignment="Center" Width="80" Margin="8,0,8,0" />
+                                    <TextBlock Text="Bus Error Counter : " VerticalAlignment="Center" Width="130" />
+                                    <TextBlock Text="{Binding BusErrorCounter}" VerticalAlignment="Center" Width="80" Margin="8,0,8,0" />
+                                    <TextBlock Text="Bus Off Counter : " VerticalAlignment="Center" Width="130" />
+                                    <TextBlock Text="{Binding BusOffCounter}" VerticalAlignment="Center" Width="80" Margin="8,0,8,0" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,8,0,8">
+                                    <TextBlock Text="Current LinkScan : " VerticalAlignment="Center" Width="130" />
+                                    <TextBlock Text="{Binding CurrentLinkScanTime}" VerticalAlignment="Center" Width="80" Margin="8,0,8,0" />
+                                    <TextBlock Text="Minimum LinkScan : " VerticalAlignment="Center" Width="130" />
+                                    <TextBlock Text="{Binding MinimumLinkScanTime}" VerticalAlignment="Center" Width="80" Margin="8,0,8,0" />
+                                    <TextBlock Text="Maximum LinkScan : " VerticalAlignment="Center" Width="130" />
+                                    <TextBlock Text="{Binding MaximumLinkScanTime}" VerticalAlignment="Center" Width="80" Margin="8,0,8,0" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,8,0,8">
+                                    <TextBlock Text="X Status : " VerticalAlignment="Center" Width="130" />
+                                    <control:BitIndicator x:Name="XStatusIndicator0" IndicatorValue="{Binding Path=XStatus, Converter={StaticResource UshortLowerByte}}" />
+                                    <control:BitIndicator x:Name="XStatusIndicator1" IndicatorValue="{Binding Path=XStatus, Converter={StaticResource UshortUpperByte}}" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,8,0,8">
+                                    <TextBlock Text="Network Status : " VerticalAlignment="Center" Width="130" />
+                                    <control:BitIndicator x:Name="NetworkStatusIndicator" IndicatorValue="{Binding Path=MasterCommunicationStatus, Converter={StaticResource UshortLowerByte}}" />
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Margin="0,8,0,8">
+                                    <TextBlock Text="Node Configuration : " VerticalAlignment="Center" Width="130" />
+                                    <UniformGrid Columns="4">
+                                        <control:BitIndicator IndicatorValue="{Binding Path=NodeConfigurationStatus0015, Converter={StaticResource UshortLowerByte}}" />
+                                        <control:BitIndicator IndicatorValue="{Binding Path=NodeConfigurationStatus0015, Converter={StaticResource UshortUpperByte}}" StartIndex="8" />
+                                        <control:BitIndicator IndicatorValue="{Binding Path=NodeConfigurationStatus1631, Converter={StaticResource UshortLowerByte}}" StartIndex="16" />
+                                        <control:BitIndicator IndicatorValue="{Binding Path=NodeConfigurationStatus1631, Converter={StaticResource UshortUpperByte}}" StartIndex="24" />
+                                        <control:BitIndicator IndicatorValue="{Binding Path=NodeConfigurationStatus3247, Converter={StaticResource UshortLowerByte}}" StartIndex="32" />
+                                        <control:BitIndicator IndicatorValue="{Binding Path=NodeConfigurationStatus3247, Converter={StaticResource UshortUpperByte}}" StartIndex="40" />
+                                        <control:BitIndicator IndicatorValue="{Binding Path=NodeConfigurationStatus4863, Converter={StaticResource UshortLowerByte}}" StartIndex="48" />
+                                        <control:BitIndicator IndicatorValue="{Binding Path=NodeConfigurationStatus4863, Converter={StaticResource UshortUpperByte}}" StartIndex="56" />
+                                    </UniformGrid>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,8,0,8">
+                                    <TextBlock Text="Node IO COM : " VerticalAlignment="Center" Width="130" />
+                                    <UniformGrid Columns="4">
+                                        <control:BitIndicator IndicatorValue="{Binding Path=NodeIOCommunicationStatus0015, Converter={StaticResource UshortLowerByte}}" />
+                                        <control:BitIndicator IndicatorValue="{Binding Path=NodeIOCommunicationStatus0015, Converter={StaticResource UshortUpperByte}}" StartIndex="8" />
+                                        <control:BitIndicator IndicatorValue="{Binding Path=NodeIOCommunicationStatus1631, Converter={StaticResource UshortLowerByte}}" StartIndex="16" />
+                                        <control:BitIndicator IndicatorValue="{Binding Path=NodeIOCommunicationStatus1631, Converter={StaticResource UshortUpperByte}}" StartIndex="24" />
+                                        <control:BitIndicator IndicatorValue="{Binding Path=NodeIOCommunicationStatus3247, Converter={StaticResource UshortLowerByte}}" StartIndex="32" />
+                                        <control:BitIndicator IndicatorValue="{Binding Path=NodeIOCommunicationStatus3247, Converter={StaticResource UshortUpperByte}}" StartIndex="40" />
+                                        <control:BitIndicator IndicatorValue="{Binding Path=NodeIOCommunicationStatus4863, Converter={StaticResource UshortLowerByte}}" StartIndex="48" />
+                                        <control:BitIndicator IndicatorValue="{Binding Path=NodeIOCommunicationStatus4863, Converter={StaticResource UshortUpperByte}}" StartIndex="56" />
+                                    </UniformGrid>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,8,0,8">
+                                    <TextBlock Text="Node IO ERR : " VerticalAlignment="Center" Width="130" />
+                                    <UniformGrid Columns="4">
+                                        <control:BitIndicator IndicatorValue="{Binding Path=NodeIOErrorStatus0015, Converter={StaticResource UshortLowerByte}}" />
+                                        <control:BitIndicator IndicatorValue="{Binding Path=NodeIOErrorStatus0015, Converter={StaticResource UshortUpperByte}}" StartIndex="8" />
+                                        <control:BitIndicator IndicatorValue="{Binding Path=NodeIOErrorStatus1631, Converter={StaticResource UshortLowerByte}}" StartIndex="16" />
+                                        <control:BitIndicator IndicatorValue="{Binding Path=NodeIOErrorStatus1631, Converter={StaticResource UshortUpperByte}}" StartIndex="24" />
+                                        <control:BitIndicator IndicatorValue="{Binding Path=NodeIOErrorStatus3247, Converter={StaticResource UshortLowerByte}}" StartIndex="32" />
+                                        <control:BitIndicator IndicatorValue="{Binding Path=NodeIOErrorStatus3247, Converter={StaticResource UshortUpperByte}}" StartIndex="40" />
+                                        <control:BitIndicator IndicatorValue="{Binding Path=NodeIOErrorStatus4863, Converter={StaticResource UshortLowerByte}}" StartIndex="48" />
+                                        <control:BitIndicator IndicatorValue="{Binding Path=NodeIOErrorStatus4863, Converter={StaticResource UshortUpperByte}}" StartIndex="56" />
+                                    </UniformGrid>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,8,0,8">
+                                    <TextBlock Text="Node Diag Info : " VerticalAlignment="Center" Width="130" />
+                                    <UniformGrid Columns="4">
+                                        <control:BitIndicator IndicatorValue="{Binding Path=NodeDiagnosticInfoStatus0015, Converter={StaticResource UshortLowerByte}}" />
+                                        <control:BitIndicator IndicatorValue="{Binding Path=NodeDiagnosticInfoStatus0015, Converter={StaticResource UshortUpperByte}}" StartIndex="8" />
+                                        <control:BitIndicator IndicatorValue="{Binding Path=NodeDiagnosticInfoStatus1631, Converter={StaticResource UshortLowerByte}}" StartIndex="16" />
+                                        <control:BitIndicator IndicatorValue="{Binding Path=NodeDiagnosticInfoStatus1631, Converter={StaticResource UshortUpperByte}}" StartIndex="24" />
+                                        <control:BitIndicator IndicatorValue="{Binding Path=NodeDiagnosticInfoStatus3247, Converter={StaticResource UshortLowerByte}}" StartIndex="32" />
+                                        <control:BitIndicator IndicatorValue="{Binding Path=NodeDiagnosticInfoStatus3247, Converter={StaticResource UshortUpperByte}}" StartIndex="40" />
+                                        <control:BitIndicator IndicatorValue="{Binding Path=NodeDiagnosticInfoStatus4863, Converter={StaticResource UshortLowerByte}}" StartIndex="48" />
+                                        <control:BitIndicator IndicatorValue="{Binding Path=NodeDiagnosticInfoStatus4863, Converter={StaticResource UshortUpperByte}}" StartIndex="56" />
+                                    </UniformGrid>
+                                </StackPanel>
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox Header="Master Node Control" Padding="8" Margin="2">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,8,0,8">
+                                    <TextBlock Text="Control Timeout : " VerticalAlignment="Center" Width="120" />
+                                    <TextBox Text="{Binding MasterControlTimeout, ValidatesOnExceptions=True}" Width="80" TextAlignment="Right" x:Name="_MasterControlTimeout"/>
+                                    <TextBlock Text="ms" VerticalAlignment="Center" Margin="8,0,16,0" />
+                                    <hc:LoadingCircle Height="30" DotDiameter="5" Visibility="{Binding CommandPending, Converter={StaticResource Boolean2VisibilityConverter}}" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,8,0,4" IsEnabled="{Binding CommandPending, Converter={StaticResource Boolean2BooleanReConverter}}">
+                                    <Button Content="Start IO Communication" Margin="0,4,4,4" Width="200" Click="StartIO_Click"/>
+                                    <Button Content="Stop IO Communication" Margin="4" Width="200" Click="StopIO_Click"/>
+                                    <Button Content="Reset Master Function Error" Margin="4" Width="200" Click="ResetError_Click"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </GroupBox>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="Slave Diagnostic">
+                <Grid Margin="2"  Validation.Error="ExplicitMessageFieldBinding_Error">
+                    <Grid.Resources>
+                        <Style TargetType="TextBlock" BasedOn="{StaticResource TextBlockBaseStyle}" x:Key="TextBlockStyle">
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="HorizontalAlignment" Value="Left"/>
+                            <Setter Property="Margin" Value="2"/>
+                        </Style>
+                        <Style TargetType="TextBox" BasedOn="{StaticResource TextBoxBaseBaseStyle}" x:Key="TextBoxStyle">
+                            <Setter Property="Margin" Value="2"/>
+                            <Setter Property="TextAlignment" Value="Right"/>
+                            <Style.Triggers>
+                                <Trigger Property="Validation.HasError" Value="true">
+                                    <Setter Property="ToolTip" Value="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=(Validation.Errors)[0].ErrorContent}" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                        <Style TargetType="TextBlock" BasedOn="{StaticResource TextBlockStyle}"/>
+                        <Style TargetType="TextBox" BasedOn="{StaticResource TextBoxStyle}"/>
+                        <ObjectDataProvider ObjectType="{x:Type sys:Enum}" MethodName="GetValues" x:Key="ExplicitMessageType">
+                            <ObjectDataProvider.MethodParameters>
+                                <x:Type TypeName="local:EXPLICIT_MESSAGE_TYPE_T" />
+                            </ObjectDataProvider.MethodParameters>
+                        </ObjectDataProvider>
+                        <local:IsExplicitMessageField x:Key="IsExplicitMessageField"/>
+                        <local:ExplicitMessageDataConverter x:Key="ExplicitMessageDataConverter"/>
+                    </Grid.Resources>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="160"/>
+                        <ColumnDefinition Width="260"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Explicit Message Type :"/>
+                    <ComboBox Grid.Column="1" ItemsSource="{Binding Source={StaticResource ExplicitMessageType}}" SelectedIndex="0" Margin="2" x:Name="_ExplicitMessageType"/>
+
+                    <TextBlock Text="Operation Timeout : " Grid.Row="1"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding ExplicitMessageProcessTimeout, NotifyOnValidationError=True, ValidatesOnExceptions=True}"/>
+
+                    <TextBlock Text="Message Execution Error : " Grid.Row="2"/>
+                    <TextBox Grid.Column="1" Grid.Row="2" IsReadOnly="True" Text="{Binding Path=ExplicitMessageExecutionErrorCode, Mode=OneWay, StringFormat=0x{0:X4}}"/>
+
+                    <TextBlock Text="Slave Node Address : " Grid.Row="3"/>
+                    <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding Path=ExplicitMessageSlaveNodeAddress, NotifyOnValidationError=True, ValidatesOnExceptions=True}"/>
+
+                    <Grid Grid.Row="4" Grid.ColumnSpan="3">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="160"/>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Command Number : " Grid.Row="0" 
+                                   Visibility="{Binding ElementName=_ExplicitMessageType, Path=SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=4}"/>
+                        <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding Path=ExplicitMessageCommandNumber, NotifyOnValidationError=True, ValidatesOnExceptions=True}" 
+                                 Visibility="{Binding ElementName=_ExplicitMessageType, Path=SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=4}"/>
+                        <TextBlock Text="Class ID : " Grid.Row="1"
+                                   Visibility="{Binding ElementName=_ExplicitMessageType, Path=SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=7}"/>
+                        <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Path=ExplicitMessageClassID, NotifyOnValidationError=True, ValidatesOnExceptions=True}"
+                                 Visibility="{Binding ElementName=_ExplicitMessageType, Path=SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=7}"/>
+                        <TextBlock Text="Instance ID : " Grid.Row="2"
+                                   Visibility="{Binding ElementName=_ExplicitMessageType, Path=SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=7}"/>
+                        <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Path=ExplicitMessageInstanceID, NotifyOnValidationError=True, ValidatesOnExceptions=True}"
+                                 Visibility="{Binding ElementName=_ExplicitMessageType, Path=SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=7}"/>
+                        <TextBlock Text="Attribute ID : " Grid.Row="3"
+                                   Visibility="{Binding ElementName=_ExplicitMessageType, Path=SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=7}"/>
+                        <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding Path=ExplicitMessageAttributeID, NotifyOnValidationError=True, ValidatesOnExceptions=True}"
+                                 Visibility="{Binding ElementName=_ExplicitMessageType, Path=SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=7}"/>
+                        <TextBlock Text="Write/Read Data Size : " Grid.Row="4"
+                                   Visibility="{Binding ElementName=_ExplicitMessageType, Path=SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=7}"/>
+                        <TextBox Grid.Column="1" Grid.Row="4" IsReadOnly="True" Text="{Binding Path=ExplicitMessageSizeInByte, Mode=OneWay}"
+                                 Visibility="{Binding ElementName=_ExplicitMessageType, Path=SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=7}"/>
+                        <TextBlock Text="Data : " Grid.Row="5"
+                                   Visibility="{Binding ElementName=_ExplicitMessageType, Path=SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=7}"/>
+                        <TextBox Grid.Column="1" Grid.Row="5" TextAlignment="Left" Grid.ColumnSpan="2" Text="{Binding Path=ExplicitMessageData, Converter={StaticResource ExplicitMessageDataConverter}, NotifyOnValidationError=True, ValidatesOnExceptions=True}"
+                                 Visibility="{Binding ElementName=_ExplicitMessageType, Path=SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=7}"/>
+                        <TextBlock Text="Slave Status : "  Grid.Row="6"
+                                   Visibility="{Binding ElementName=_ExplicitMessageType, Path=SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=8}"/>
+                        <StackPanel Grid.Column="1" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="2" Grid.Row="6" 
+                                    Visibility="{Binding ElementName=_ExplicitMessageType, Path=SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=8}">
+                            <control:BitIndicator  x:Name="SlaveNodeStatusIndicator" IndicatorValue="{Binding SlaveNodeStatus, Converter={StaticResource UshortLowerByte}}"/>
+                        </StackPanel>
+                        <TextBlock Text="Communication Error : "  Grid.Row="7"
+                                   Visibility="{Binding ElementName=_ExplicitMessageType, Path=SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=8}"/>
+                        <TextBox Grid.Column="1" Grid.Row="7" IsReadOnly="True" Text="{Binding SlaveMessageCommunicationErrorCode, StringFormat=0x{0:X4}, Mode=OneWay}"
+                                 Visibility="{Binding ElementName=_ExplicitMessageType, Path=SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=8}"/>
+                        <TextBlock Text="General DNet Error : "  Grid.Row="8"
+                                   Visibility="{Binding ElementName=_ExplicitMessageType, Path=SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=8}"/>
+                        <TextBox Grid.Column="1" Grid.Row="8" IsReadOnly="True" Text="{Binding SlaveGeneralDNetErrorCode, StringFormat=0x{0:X4}, Mode=OneWay}"
+                                 Visibility="{Binding ElementName=_ExplicitMessageType, Path=SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=8}"/>
+                        <TextBlock Text="Additional DNet Error : "  Grid.Row="9" 
+                                   Visibility="{Binding ElementName=_ExplicitMessageType, Path=SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=8}"/>
+                        <TextBox Grid.Column="1" Grid.Row="9" IsReadOnly="True" Text="{Binding SlaveAdditionalDNetErrorCode, StringFormat=0x{0:X4}, Mode=OneWay}"
+                                 Visibility="{Binding ElementName=_ExplicitMessageType, Path=SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=8}"/>
+                        <TextBlock Text="Number of Down : "  Grid.Row="10"
+                                   Visibility="{Binding ElementName=_ExplicitMessageType, Path=SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=8}"/>
+                        <TextBox Grid.Column="1" Grid.Row="10" IsReadOnly="True" Text="{Binding NumberOfSlaveDown, Mode=OneWay}"
+                                 Visibility="{Binding ElementName=_ExplicitMessageType, Path=SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=8}"/>
+                        <TextBlock Text="Production Instance : " Grid.Row="11"
+                                   Visibility="{Binding ElementName=_ExplicitMessageType, Path=SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=16}"/>
+                        <TextBox Grid.Column="1" Grid.Row="11" Text="{Binding Path=SlaveProducedInstance, NotifyOnValidationError=True, ValidatesOnExceptions=True}"
+                                 Visibility="{Binding ElementName=_ExplicitMessageType, Path=SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=16}"/>
+                        <TextBlock Text="Consume Instance : " Grid.Row="12"
+                                   Visibility="{Binding ElementName=_ExplicitMessageType, Path=SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=16}"/>
+                        <TextBox Grid.Column="1" Grid.Row="12" Text="{Binding Path=SlaveConsumedInstance, NotifyOnValidationError=True, ValidatesOnExceptions=True}"
+                                 Visibility="{Binding ElementName=_ExplicitMessageType, Path=SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=16}"/>
+                    </Grid>
+                    <Button Grid.Column="1" Grid.Row="5" Content="Execute Explicit Message" Margin="2" Click="ExecuteExplicitMessage" HorizontalAlignment="Stretch" IsEnabled="{Binding CommandPending, Converter={StaticResource Boolean2BooleanReConverter}}"/>
+                    <hc:LoadingCircle HorizontalAlignment="Left" Grid.Column="2" Grid.Row="5" Height="30" DotDiameter="5" Visibility="{Binding CommandPending, Converter={StaticResource Boolean2VisibilityConverter}}" />
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </DockPanel>
 </UserControl>

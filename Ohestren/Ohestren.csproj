@@ -21,12 +21,30 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="HandyControl" Version="3.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Fort\Fort.csproj" />
     <ProjectReference Include="..\Gagharv\Gagharv.csproj" />
     <ProjectReference Include="..\Una\Una.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="ExceptionNotification.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="ExceptionNotification.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
 
 </Project>
