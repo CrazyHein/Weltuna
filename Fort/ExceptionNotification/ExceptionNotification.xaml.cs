@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool.Ohestren
+namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Control
 {
     /// <summary>
     /// ExceptionNotification.xaml 的交互逻辑

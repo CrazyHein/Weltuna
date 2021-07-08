@@ -11,7 +11,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <DockPanel Margin="4" LastChildFill="True">
-        <Grid Margin="2" DockPanel.Dock="Top" Keyboard.KeyDown="OnDeviceSettings_KeyDown" IsEnabled="{Binding Online}">
+        <Grid Margin="2" DockPanel.Dock="Top" Keyboard.KeyDown="OnDeviceSettings_KeyDown" IsEnabled="{Binding Online}" Validation.Error="OnDataBindingError">
             <Grid.Resources>
                 <Style TargetType="TextBox" BasedOn="{StaticResource TextBoxBaseStyle}">
                     <Setter Property="VerticalAlignment" Value="Center" />
@@ -36,13 +36,13 @@
                 <RowDefinition Height="auto" />
             </Grid.RowDefinitions>
             <RadioButton Content="Local Device Name :" x:Name="_LocalDeviceSelected" IsChecked="{Binding SelectLocalDevice, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="4" />
-            <TextBox Grid.Column="1" IsEnabled="{Binding ElementName=_LocalDeviceSelected, Path=IsChecked}" Text="{Binding LocalDeviceName, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}" x:Name="_LocalDeviceName" Margin="4" />
+            <TextBox Grid.Column="1" IsEnabled="{Binding ElementName=_LocalDeviceSelected, Path=IsChecked}" Text="{Binding LocalDeviceName, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True, NotifyOnValidationError=True}" x:Name="_LocalDeviceName" Margin="4" />
             <RadioButton Content="Module Access Device Name : " Grid.Column="2" x:Name="_ModuleAccessDeviceSelected" HorizontalAlignment="Left" Margin="4" />
-            <TextBox Grid.Column="3" IsEnabled="{Binding ElementName=_ModuleAccessDeviceSelected, Path=IsChecked}" Text="{Binding ModuleAccessDeviceName, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}" x:Name="_ModuleAccessDeviceName" Margin="4" />
+            <TextBox Grid.Column="3" IsEnabled="{Binding ElementName=_ModuleAccessDeviceSelected, Path=IsChecked}" Text="{Binding ModuleAccessDeviceName, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True, NotifyOnValidationError=True}" x:Name="_ModuleAccessDeviceName" Margin="4" />
             <TextBlock Grid.Row="1" Grid.Column="0" Text="Head Device (In Words) : " VerticalAlignment="Center" Margin="28,4,4,4" />
-            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding HeadDevice, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}" x:Name="_HeadDevice" Margin="4" />
+            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding HeadDevice, ValidatesOnExceptions=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}" x:Name="_HeadDevice" Margin="4" />
             <TextBlock Grid.Row="1" Grid.Column="2" Text="Device Points (In Words) : " VerticalAlignment="Center" Margin="28,4,4,4" />
-            <TextBox Grid.Row="1" Grid.Column="3" Text="{Binding DevicePoints, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}" x:Name="_DevicePoint" Margin="4" />
+            <TextBox Grid.Row="1" Grid.Column="3" Text="{Binding DevicePoints, ValidatesOnExceptions=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}" x:Name="_DevicePoint" Margin="4" />
 
             <Button Grid.Column="4" Margin="30,4,4,4" Grid.RowSpan="2" Padding="6" Height="64" Width="64" Click="Power_Click" IsEnabled="{Binding Power}">
                 <Image Source="{Binding Power, Converter={StaticResource SwitchStateToImage}}" />

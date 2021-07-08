@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Penisora", "Penisora\Peniso
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ohestren", "Ohestren\Ohestren.csproj", "{D64D2C6E-F79C-4F03-8A33-30F516745467}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fort", "Fort\Fort.csproj", "{FE7608E5-C96F-49BF-8D1A-7888BCFA9256}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fort", "Fort\Fort.csproj", "{FE7608E5-C96F-49BF-8D1A-7888BCFA9256}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Numeros", "Numeros\Numeros.csproj", "{8A29D671-2D39-4EA0-A1F8-6531FF807E4B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{FE7608E5-C96F-49BF-8D1A-7888BCFA9256}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FE7608E5-C96F-49BF-8D1A-7888BCFA9256}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FE7608E5-C96F-49BF-8D1A-7888BCFA9256}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A29D671-2D39-4EA0-A1F8-6531FF807E4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A29D671-2D39-4EA0-A1F8-6531FF807E4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A29D671-2D39-4EA0-A1F8-6531FF807E4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A29D671-2D39-4EA0-A1F8-6531FF807E4B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

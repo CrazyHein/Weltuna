@@ -62,6 +62,8 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
         protected object _synchronizer = new object();
 
         protected static Regex _MODULE_ACCESS_EXTENSION_PATTERN = new Regex(@"^[UJ][0-9,A-F]{3}$", RegexOptions.Compiled);
+
+        public int BindingErrors { get; set; }
     }
 
     public interface ICabinet

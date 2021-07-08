@@ -3,18 +3,14 @@
   <PropertyGroup>
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
-    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
-    <RootNamespace>AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool.Ohestren</RootNamespace>
-    <AssemblyName>Tool.Ohestren</AssemblyName>
+    <AssemblyName>Tool.Numeros</AssemblyName>
+    <RootNamespace>AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool.Numeros</RootNamespace>
     <Version>0.0.1</Version>
-    <PackageId>CrazyHein.Tool.Ohestren</PackageId>
+    <PackageId>CrazyHein.Tool.Numeros</PackageId>
     <Authors>CrazyHein</Authors>
     <Company>AMEC</Company>
+    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
   </PropertyGroup>
-
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy &quot;$(TargetDir)&quot; &quot;$(SolutionDir)Mcvein\bin\Debug\net5.0-windows\toolkit\$(ProjectName)\&quot; /y" />
-  </Target>
 
   <ItemGroup>
     <None Remove="icon.png" />
@@ -26,12 +22,15 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Fort\Fort.csproj" />
-    <ProjectReference Include="..\Gagharv\Gagharv.csproj" />
     <ProjectReference Include="..\Una\Una.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="icon.png" />
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy &quot;$(TargetDir)&quot; &quot;$(SolutionDir)Mcvein\bin\Debug\net5.0-windows\toolkit\$(ProjectName)\&quot; /y" />
+  </Target>
 
 </Project>

@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Fort\Fort.csproj" />
     <ProjectReference Include="..\Gagharv\Gagharv.csproj" />
     <ProjectReference Include="..\Una\Una.csproj" />
   </ItemGroup>

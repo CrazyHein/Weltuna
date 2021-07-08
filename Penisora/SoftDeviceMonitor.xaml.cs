@@ -118,6 +118,14 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
         {
             (DataContext as SoftDeviceDataModel).PostStopCommand();
         }
+
+        private void OnDataBindingError(object sender, ValidationErrorEventArgs e)
+        {
+            if (e.Action == ValidationErrorEventAction.Added)
+                (DataContext as SoftDeviceDataModel).BindingErrors++;
+            else
+                (DataContext as SoftDeviceDataModel).BindingErrors--;
+        }
     }
 
     internal class WordToBinConverter : IValueConverter

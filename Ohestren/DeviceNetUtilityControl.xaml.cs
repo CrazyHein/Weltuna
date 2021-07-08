@@ -73,13 +73,14 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
                     __explicit_message_field_binding_error++;
                 else
                     __explicit_message_field_binding_error--;
+                e.Handled = true;
             }
         }
 
         private void Enable_Click(object sender, RoutedEventArgs e)
         {
             if(Validation.GetHasError(_DeviceAddress))
-                MessageBox.Show(this.Parent as Window, "The input string for 'Device Address' is not in correct format.", "Error Message", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("The input string for 'Device Address' is not in correct format.", "Error Message", MessageBoxButton.OK, MessageBoxImage.Error);
             else
                 (DataContext as DeviceNetUtilityDataModel).Enable();
         }
@@ -138,6 +139,14 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
                         break;
                 }
             }
+        }
+
+        private void OnDataBindingError(object sender, ValidationErrorEventArgs e)
+        {
+            if (e.Action == ValidationErrorEventAction.Added)
+                (DataContext as DeviceNetUtilityDataModel).BindingErrors++;
+            else
+                (DataContext as DeviceNetUtilityDataModel).BindingErrors--;
         }
     }
 

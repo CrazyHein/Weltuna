@@ -14,4 +14,17 @@
     <PackageReference Include="HandyControl" Version="3.1.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="ExceptionNotification\ExceptionNotification.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="ExceptionNotification\ExceptionNotification.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+
 </Project>

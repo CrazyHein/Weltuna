@@ -1,5 +1,6 @@
 ﻿using AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP;
 using AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Master;
+using AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Control;
 using HandyControl.Controls;
 using HandyControl.Data;
 using System;
@@ -983,7 +984,7 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
                                     case ASYNC_COMMAND_CODE_T.START_IO_COMMUNICATION:
                                         BLOCKING_RESULT blk = __process_in_data_device.control_in as BLOCKING_RESULT;
                                         if (blk.end_code != 0 || blk.exception_code != SLMP_EXCEPTION_CODE_T.NO_ERROR || blk.timeout == true)
-                                            master.WriteLocalDeviceInBit(monitoring, "Y", __device_sync_address + (uint)RJ71DN91_ADDRESS_TABLE.Y_IO_COMMUNICATION_REQUEST, 1, out end, new byte[] { 0 });
+                                            master.WriteLocalDeviceInBit(monitoring, "Y", __device_sync_address + (uint)RJ71DN91_ADDRESS_TABLE.Y_IO_COMMUNICATION_REQUEST, 1, out _, new byte[] { 0 });
                                         break;
                                 }
                             }
@@ -1011,6 +1012,8 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
                                     MemoryMarshal.AsBytes(__process_io_data[1].Span));
                             }
                         }
+                        if (__process_in_data_device.process_in.end_code != 0)
+                            __device_sync_control = false;
                         __process_in_data_device.process_in.exception_code = SLMP_EXCEPTION_CODE_T.NO_ERROR;
                     }
                 }
@@ -1204,7 +1207,7 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
                     switch (property)
                     {
                         case "Device Address":
-                            if (reader.Read() && reader.TokenType == JsonTokenType.String)
+                            if (reader.Read() && reader.TokenType == JsonTokenType.String && _MODULE_ACCESS_EXTENSION_PATTERN.IsMatch(reader.GetString()))
                                 SetProperty(ref __device_address, reader.GetString(), false, nameof(DeviceAddress));
                             else
                                 throw new ArgumentException($"{this.GetType().Assembly.FullName} : The property value of {property} in given JSON object is not a valid string.");

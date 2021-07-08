@@ -1,6 +1,7 @@
 ﻿using AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP;
 using AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Command;
 using AMEC.PCSoftware.CommunicationProtocol.CrazyHein.SLMP.Master;
+using AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Control;
 using HandyControl.Controls;
 using HandyControl.Data;
 using System;
@@ -473,7 +474,7 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
                                 throw new ArgumentException($"{this.GetType().Assembly.FullName} : The property value of {property} in given JSON object is not a valid string.");
                             break;
                         case "Module Access Device Name":
-                            if (reader.Read() && reader.TokenType == JsonTokenType.String)
+                            if (reader.Read() && reader.TokenType == JsonTokenType.String && _MODULE_ACCESS_EXTENSION_PATTERN.IsMatch(reader.GetString()))
                                 SetProperty(ref __module_access_device_name, reader.GetString(), false, nameof(ModuleAccessDeviceName));
                             else
                                 throw new ArgumentException($"{this.GetType().Assembly.FullName} : The property value of {property} in given JSON object is not a valid string.");

@@ -56,6 +56,16 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks
             }
         }
 
+        private DataModel __any_binding_error()
+        {
+            foreach(var m in __cabinets_navigation_data_model.ToolDataCollection)
+            {
+                if (m.BindingErrors != 0)
+                    return m;
+            }
+            return null;
+        }
+
         private void Switch_Main_Console_Themme(object sender, ExecutedRoutedEventArgs e)
         {
             var model = DataContext as MainDataModel;
@@ -207,6 +217,12 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks
 
         private void SaveProject_Executed(object sender, ExecutedRoutedEventArgs e)
         {
+            var m = __any_binding_error();
+            if(m != null)
+            {
+                HandyControl.Controls.MessageBox.Show(this, $"At least one data binding error was found in <{m.FriendlyName}>.", "Error Message", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
             try
             {
                 __docking_documents_layout = __save_documents_docking_layout(_ToolboxContainer);
@@ -228,6 +244,12 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks
 
         private void SaveProjectAs_Executed(object sender, ExecutedRoutedEventArgs e)
         {
+            var m = __any_binding_error();
+            if (m != null)
+            {
+                HandyControl.Controls.MessageBox.Show(this, $"At least one data binding error was found in <{m.FriendlyName}>.", "Error Message", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
             try
             {
                 System.Windows.Forms.SaveFileDialog save = new System.Windows.Forms.SaveFileDialog();
