@@ -101,7 +101,7 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks
             set { if (value != __data_polling_interval) SetProperty(ref __data_polling_interval, value); }
         }
 
-        public static string SAVE_TO_JSON(TargetManagerDataModel targets, ToolsNavigationDataModel<LayoutDocument> navigation, ToolLayout dockingLayout, IReadOnlyList<LayoutDocument> floatingLayout, string file)
+        public static string SAVE_TO_JSON(TargetManagerDataModel targets, ToolsNavigationDataModel<LayoutDocument> navigation, double navigationWidth, ToolLayout dockingLayout, IReadOnlyList<LayoutDocument> floatingLayout, string file)
         {
             using var ms = new MemoryStream();
             using var writer = new Utf8JsonWriter(ms, new JsonWriterOptions() { Indented = true });
@@ -110,6 +110,8 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks
 
             writer.WritePropertyName("Targets");
             TargetManagerDataModel.SAVE_TO_JSON(writer, targets);
+
+            writer.WriteNumber("Navigation", navigationWidth);
 
             writer.WritePropertyName("Docking");
             navigation.ExportDockingToolboxToJSON(writer, dockingLayout);
@@ -128,9 +130,10 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks
             return Encoding.UTF8.GetString(ms.ToArray());
         }
 
-        public static void RESTORE_FROM_JSON(string file, out TargetManagerDataModel targets, ToolsNavigationDataModel<LayoutDocument> navigation, out ToolLayout dockingLayout, out List<LayoutDocument> floatingLayout)
+        public static void RESTORE_FROM_JSON(string file, out TargetManagerDataModel targets, ToolsNavigationDataModel<LayoutDocument> navigation, out double navigationWidth, out ToolLayout dockingLayout, out List<LayoutDocument> floatingLayout)
         {
             targets = null;
+            navigationWidth = 0;
             dockingLayout = null;
             floatingLayout = null;
             ReadOnlySpan<byte> fs = File.ReadAllBytes(file);
@@ -148,6 +151,10 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks
                             {
                                 case "Targets":
                                     TargetManagerDataModel.RESTORE_FROM_JSON(ref reader, out targets);break;
+                                case "Navigation":
+                                    reader.Read();
+                                    navigationWidth =  reader.GetDouble();
+                                    break;
                                 case "Docking":
                                     dockingLayout = navigation.ImportDockingToolboxFromJSON(ref reader, fs);break;
                                 case "Floating":

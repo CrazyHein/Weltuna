@@ -154,7 +154,7 @@
             </xcad:DockingManager.DocumentHeaderTemplate>
             <xcad:LayoutRoot x:Name="_AppContainer">
                 <xcad:LayoutPanel Orientation="Horizontal" x:Name="_RootContainer" DockHeight="Auto" DockWidth="Auto">
-                    <xcad:LayoutAnchorablePane DockWidth="*">
+                    <xcad:LayoutAnchorablePane DockWidth="*" x:Name="_NavigationContainer">
                         <xcad:LayoutAnchorable
                             x:Name="_ConnectionTargetsContainer" Title="Target" AutoHideMinWidth="460" CanAutoHide="True"
                             CanClose="False" CanDockAsTabbedDocument="False" CanHide="False" CanFloat="False"

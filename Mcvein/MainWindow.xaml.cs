@@ -29,6 +29,7 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks
         private ToolsNavigationDataModel<LayoutDocument> __cabinets_navigation_data_model;
         private MainDataModel __main_wnd_data_model;
         private ToolLayout __docking_documents_layout;
+        private double __navigation_wnd_width;
         private readonly ToolLayout __docking_documents_layout_null;
         private DataSynchronizer __data_synchronizer;
         private UserInterfaceSynchronizer __user_interface_synchronizer;
@@ -44,6 +45,7 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks
                 _CabinetContainer.Content = new ToolsNavigationControl(__cabinets_navigation_data_model);
                 __docking_documents_layout = __save_documents_docking_layout(_ToolboxContainer);
                 __docking_documents_layout_null = __docking_documents_layout;
+                __navigation_wnd_width = _NavigationContainer.DockWidth.Value;
 
                 __data_synchronizer = new DataSynchronizer(__cabinets_navigation_data_model.ToolDataCollection);
                 __user_interface_synchronizer = new UserInterfaceSynchronizer(this, __ui_data_refresh_handler);
@@ -162,7 +164,7 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks
                 try
                 {
                     __cabinets_navigation_data_model.ClearToolbox((doc) => doc.Close());
-                    MainDataModel.RESTORE_FROM_JSON(open.FileName, out __target_manager_data_model, __cabinets_navigation_data_model, out __docking_documents_layout, out floatingLayout) ;
+                    MainDataModel.RESTORE_FROM_JSON(open.FileName, out __target_manager_data_model, __cabinets_navigation_data_model, out __navigation_wnd_width, out __docking_documents_layout, out floatingLayout) ;
                 }
                 catch (Exception ex)
                 {
@@ -172,17 +174,20 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks
                 if (__target_manager_data_model == null)
                     __target_manager_data_model = new TargetManagerDataModel();
                 _ConnectionTargetsContainer.Content = new TargetManagerControl(__target_manager_data_model);
+                _ToolboxContainer.Children.Clear();
 
-                if (__docking_documents_layout == null)
-                    __docking_documents_layout = __docking_documents_layout_null;
+                if (__navigation_wnd_width == 0)
+                    __navigation_wnd_width = 1;
+                _NavigationContainer.DockWidth = new GridLength(__navigation_wnd_width, GridUnitType.Star);
+
                 if (floatingLayout != null)
                     __restore_documents_floating_layout(floatingLayout);
+                
+                if (__docking_documents_layout == null)
+                    __docking_documents_layout = __docking_documents_layout_null;
+                    //_ToolboxContainer.Orientation = (__docking_documents_layout as LayoutGroup).Orientation == TOOL_LAYOUT_ORIENTATION_T.HORIZONTAL ? Orientation.Horizontal : Orientation.Vertical;
                 _ToolboxContainer.Children.Clear();
-                if (__docking_documents_layout != null)
-                {
-                    _ToolboxContainer.Orientation = (__docking_documents_layout as LayoutGroup).Orientation == TOOL_LAYOUT_ORIENTATION_T.HORIZONTAL ? Orientation.Horizontal : Orientation.Vertical;
-                    __restore_documents_docking_layout((__docking_documents_layout as LayoutGroup).SubLayout, _ToolboxContainer);
-                }
+                __restore_documents_docking_layout(__docking_documents_layout as LayoutGroup, _ToolboxContainer);
 
                 __main_wnd_data_model.ProjectPath = open.FileName;
                 __main_wnd_data_model.IsDirty = false;
@@ -228,7 +233,7 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks
                 __docking_documents_layout = __save_documents_docking_layout(_ToolboxContainer);
                 var floatingLayout = __save_documents_floating_layout();
 
-                MainDataModel.SAVE_TO_JSON(__target_manager_data_model, __cabinets_navigation_data_model, __docking_documents_layout, floatingLayout, __main_wnd_data_model.ProjectPath);
+                MainDataModel.SAVE_TO_JSON(__target_manager_data_model, __cabinets_navigation_data_model, __navigation_wnd_width, __docking_documents_layout, floatingLayout, __main_wnd_data_model.ProjectPath);
                 __main_wnd_data_model.IsDirty = false;
             }
             catch (Exception ex)
@@ -261,7 +266,7 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks
                     __docking_documents_layout = __save_documents_docking_layout(_ToolboxContainer);
                     var floatingLayout = __save_documents_floating_layout();
 
-                    MainDataModel.SAVE_TO_JSON(__target_manager_data_model, __cabinets_navigation_data_model, __docking_documents_layout, floatingLayout, save.FileName);
+                    MainDataModel.SAVE_TO_JSON(__target_manager_data_model, __cabinets_navigation_data_model, __navigation_wnd_width, __docking_documents_layout, floatingLayout, save.FileName);
                     __main_wnd_data_model.ProjectPath = save.FileName;
                     __main_wnd_data_model.IsDirty = false;
                 }
@@ -402,9 +407,13 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks
             }
         }
 
-        private void __restore_documents_docking_layout(IReadOnlyList<ToolLayout> dockingLayouts, LayoutDocumentPaneGroup root)
+        private void __restore_documents_docking_layout(LayoutGroup layoutGroup, LayoutDocumentPaneGroup root)
         {
-            foreach(var layout in dockingLayouts)
+            root.Orientation = layoutGroup.Orientation == TOOL_LAYOUT_ORIENTATION_T.HORIZONTAL ? Orientation.Horizontal : Orientation.Vertical;
+            root.DockHeight = new GridLength(layoutGroup.Height, GridUnitType.Star); 
+            root.DockWidth = new GridLength(layoutGroup.Width, GridUnitType.Star);
+
+            foreach (var layout in layoutGroup.SubLayout)
             {
                 if (layout.Type == TOOL_LAYOUT_TYPE_T.PANEL)
                 {
@@ -420,7 +429,7 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks
                     var group = new LayoutDocumentPaneGroup() { Orientation = layoutgroup.Orientation == TOOL_LAYOUT_ORIENTATION_T.HORIZONTAL ? Orientation.Horizontal : Orientation.Vertical };
                     group.DockHeight = new GridLength(layoutgroup.Height, GridUnitType.Star);
                     group.DockWidth = new GridLength(layoutgroup.Width, GridUnitType.Star);
-                    __restore_documents_docking_layout(layoutgroup.SubLayout, group);
+                    __restore_documents_docking_layout(layoutgroup, group);
                     root.Children.Add(group);
                 }
             }
