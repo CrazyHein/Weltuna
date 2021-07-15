@@ -41,7 +41,7 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
         BUF_MASTER_CONSTANT_SCAN = 471,
         BUF_1ST_SLAVE_NODE_PARAM = 472,
 
-        BUF_NODE0_COMMUNICATION_ERROR_CODE = 154,
+        BUF_NODE0_COMMUNICATION_ERROR_CODE = 1154,
 
         BUF_CURRENT_LINK_SCAN_TIME = 1532,
         BUF_MINIMUM_LINK_SCAN_TIME = 1533,
@@ -103,7 +103,7 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
         BUF_MASTER_CONSTANT_SCAN = 471,
         BUF_1ST_SLAVE_NODE_PARAM = 472,
 
-        BUF_NODE0_COMMUNICATION_ERROR_CODE = 154,
+        BUF_NODE0_COMMUNICATION_ERROR_CODE = 1154,
 
         BUF_CURRENT_LINK_SCAN_TIME = 1532,
         BUF_MINIMUM_LINK_SCAN_TIME = 1533,

@@ -170,67 +170,34 @@
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
-            <TabItem Header="Slave Diagnostic"/>
-            <Grid  Validation.Error="ExplicitMessageFieldBinding_Error" Height="1381" Width="782">
-                <Grid.Resources>
-                    <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource TextBlockBaseStyle}" x:Key="TextBlockStyle">
-                        <Setter Property="VerticalAlignment" Value="Center"/>
-                        <Setter Property="HorizontalAlignment" Value="Left"/>
-                        <Setter Property="Margin" Value="2"/>
-                    </Style>
-                    <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource TextBoxBaseBaseStyle}" x:Key="TextBoxStyle">
-                        <Setter Property="Margin" Value="2"/>
-                        <Setter Property="TextAlignment" Value="Right"/>
-                        <Style.Triggers>
-                            <Trigger Property="Validation.HasError" Value="true">
-                                <Setter Property="ToolTip" Value="{Binding (Validation.Errors)[0].ErrorContent, RelativeSource={x:Static RelativeSource.Self}}" />
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                    <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource TextBlockStyle}"/>
-                    <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource TextBoxStyle}"/>
-                    <ObjectDataProvider ObjectType="{x:Type sys:Enum}" MethodName="GetValues" x:Key="ExplicitMessageType">
-                        <ObjectDataProvider.MethodParameters>
-                            <x:Type TypeName="local:EXPLICIT_MESSAGE_TYPE_T" />
-                        </ObjectDataProvider.MethodParameters>
-                    </ObjectDataProvider>
-                    <local:IsExplicitMessageField x:Key="IsExplicitMessageField"/>
-                    <local:ExplicitMessageDataConverter x:Key="ExplicitMessageDataConverter"/>
-                </Grid.Resources>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="160"/>
-                    <ColumnDefinition Width="260"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Text="Explicit Message Type :"/>
-                <ComboBox Grid.Column="1" ItemsSource="{Binding Source={StaticResource ExplicitMessageType}}" SelectedIndex="0" Margin="2" x:Name="_ExplicitMessageType"/>
-
-                <TextBlock Text="Operation Timeout : " Grid.Row="1"/>
-                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding ExplicitMessageProcessTimeout, NotifyOnValidationError=True, ValidatesOnExceptions=True}"/>
-
-                <TextBlock Text="Message Execution Error : " Grid.Row="2"/>
-                <TextBox Grid.Column="1" Grid.Row="2" IsReadOnly="True" Text="{Binding ExplicitMessageExecutionErrorCode, Mode=OneWay, StringFormat=0x\{0:X4\}}"/>
-
-                <TextBlock Text="Slave Node Address : " Grid.Row="3"/>
-                <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding ExplicitMessageSlaveNodeAddress, NotifyOnValidationError=True, ValidatesOnExceptions=True}"/>
-
-                <Grid Grid.Row="4" Grid.ColumnSpan="3">
+            <TabItem Header="Slave Diagnostic">
+                <Grid Validation.Error="ExplicitMessageFieldBinding_Error" Margin="2">
+                    <Grid.Resources>
+                        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource TextBlockBaseStyle}" x:Key="TextBlockStyle">
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="HorizontalAlignment" Value="Left"/>
+                            <Setter Property="Margin" Value="2"/>
+                        </Style>
+                        <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource TextBoxBaseBaseStyle}" x:Key="TextBoxStyle">
+                            <Setter Property="Margin" Value="2"/>
+                            <Setter Property="TextAlignment" Value="Right"/>
+                            <Style.Triggers>
+                                <Trigger Property="Validation.HasError" Value="true">
+                                    <Setter Property="ToolTip" Value="{Binding (Validation.Errors)[0].ErrorContent, RelativeSource={x:Static RelativeSource.Self}}" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource TextBlockStyle}"/>
+                        <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource TextBoxStyle}"/>
+                        <ObjectDataProvider ObjectType="{x:Type sys:Enum}" MethodName="GetValues" x:Key="ExplicitMessageType">
+                            <ObjectDataProvider.MethodParameters>
+                                <x:Type TypeName="local:EXPLICIT_MESSAGE_TYPE_T" />
+                            </ObjectDataProvider.MethodParameters>
+                        </ObjectDataProvider>
+                        <local:IsExplicitMessageField x:Key="IsExplicitMessageField"/>
+                        <local:ExplicitMessageDataConverter x:Key="ExplicitMessageDataConverter"/>
+                    </Grid.Resources>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
@@ -240,67 +207,101 @@
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="160"/>
-                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="260"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Text="Command Number : " Grid.Row="0" 
+                    <TextBlock Text="Explicit Message Type :"/>
+                    <ComboBox Grid.Column="1" ItemsSource="{Binding Source={StaticResource ExplicitMessageType}}" SelectedIndex="0" Margin="2" x:Name="_ExplicitMessageType"/>
+
+                    <TextBlock Text="Operation Timeout : " Grid.Row="1"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding ExplicitMessageProcessTimeout, NotifyOnValidationError=True, ValidatesOnExceptions=True}"/>
+
+                    <TextBlock Text="Message Execution Error : " Grid.Row="2"/>
+                    <TextBox Grid.Column="1" Grid.Row="2" IsReadOnly="True" Text="{Binding ExplicitMessageExecutionErrorCode, Mode=OneWay, StringFormat=0x\{0:X4\}}"/>
+
+                    <TextBlock Text="Slave Node Address : " Grid.Row="3"/>
+                    <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding ExplicitMessageSlaveNodeAddress, NotifyOnValidationError=True, ValidatesOnExceptions=True}"/>
+
+                    <Grid Grid.Row="4" Grid.ColumnSpan="3">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="160"/>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Command Number : " Grid.Row="0" 
                                    Visibility="{Binding SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=4, ElementName=_ExplicitMessageType}"/>
-                    <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding ExplicitMessageCommandNumber, NotifyOnValidationError=True, ValidatesOnExceptions=True}" 
+                        <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding ExplicitMessageCommandNumber, NotifyOnValidationError=True, ValidatesOnExceptions=True}" 
                                  Visibility="{Binding SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=4, ElementName=_ExplicitMessageType}"/>
-                    <TextBlock Text="Class ID : " Grid.Row="1"
+                        <TextBlock Text="Class ID : " Grid.Row="1"
                                    Visibility="{Binding SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=7, ElementName=_ExplicitMessageType}"/>
-                    <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding ExplicitMessageClassID, NotifyOnValidationError=True, ValidatesOnExceptions=True}"
+                        <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding ExplicitMessageClassID, NotifyOnValidationError=True, ValidatesOnExceptions=True}"
                                  Visibility="{Binding SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=7, ElementName=_ExplicitMessageType}"/>
-                    <TextBlock Text="Instance ID : " Grid.Row="2"
+                        <TextBlock Text="Instance ID : " Grid.Row="2"
                                    Visibility="{Binding SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=7, ElementName=_ExplicitMessageType}"/>
-                    <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding ExplicitMessageInstanceID, NotifyOnValidationError=True, ValidatesOnExceptions=True}"
+                        <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding ExplicitMessageInstanceID, NotifyOnValidationError=True, ValidatesOnExceptions=True}"
                                  Visibility="{Binding SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=7, ElementName=_ExplicitMessageType}"/>
-                    <TextBlock Text="Attribute ID : " Grid.Row="3"
+                        <TextBlock Text="Attribute ID : " Grid.Row="3"
                                    Visibility="{Binding SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=7, ElementName=_ExplicitMessageType}"/>
-                    <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding ExplicitMessageAttributeID, NotifyOnValidationError=True, ValidatesOnExceptions=True}"
+                        <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding ExplicitMessageAttributeID, NotifyOnValidationError=True, ValidatesOnExceptions=True}"
                                  Visibility="{Binding SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=7, ElementName=_ExplicitMessageType}"/>
-                    <TextBlock Text="Write/Read Data Size : " Grid.Row="4"
+                        <TextBlock Text="Write/Read Data Size : " Grid.Row="4"
                                    Visibility="{Binding SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=7, ElementName=_ExplicitMessageType}"/>
-                    <TextBox Grid.Column="1" Grid.Row="4" IsReadOnly="True" Text="{Binding ExplicitMessageSizeInByte, Mode=OneWay}"
+                        <TextBox Grid.Column="1" Grid.Row="4" IsReadOnly="True" Text="{Binding ExplicitMessageSizeInByte, Mode=OneWay}"
                                  Visibility="{Binding SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=7, ElementName=_ExplicitMessageType}"/>
-                    <TextBlock Text="Data : " Grid.Row="5"
+                        <TextBlock Text="Data : " Grid.Row="5"
                                    Visibility="{Binding SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=7, ElementName=_ExplicitMessageType}"/>
-                    <TextBox Grid.Column="1" Grid.Row="5" TextAlignment="Left" Grid.ColumnSpan="2" Text="{Binding ExplicitMessageData, Converter={StaticResource ExplicitMessageDataConverter}, NotifyOnValidationError=True, ValidatesOnExceptions=True}"
+                        <TextBox Grid.Column="1" Grid.Row="5" TextAlignment="Left" Grid.ColumnSpan="2" Text="{Binding ExplicitMessageData, Converter={StaticResource ExplicitMessageDataConverter}, NotifyOnValidationError=True, ValidatesOnExceptions=True}"
                                  Visibility="{Binding SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=7, ElementName=_ExplicitMessageType}"/>
-                    <TextBlock Text="Slave Status : "  Grid.Row="6"
+                        <TextBlock Text="Slave Status : "  Grid.Row="6"
                                    Visibility="{Binding SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=8, ElementName=_ExplicitMessageType}"/>
-                    <StackPanel Grid.Column="1" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="2" Grid.Row="6" 
+                        <StackPanel Grid.Column="1" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="2" Grid.Row="6" 
                                     Visibility="{Binding SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=8, ElementName=_ExplicitMessageType}">
-                        <control:BitIndicator  x:Name="SlaveNodeStatusIndicator" IndicatorValue="{Binding SlaveNodeStatus, Converter={StaticResource UshortLowerByte}}"/>
-                    </StackPanel>
-                    <TextBlock Text="Communication Error : "  Grid.Row="7"
+                            <control:BitIndicator  x:Name="SlaveNodeStatusIndicator" IndicatorValue="{Binding SlaveNodeStatus, Converter={StaticResource UshortLowerByte}}"/>
+                        </StackPanel>
+                        <TextBlock Text="Communication Error : "  Grid.Row="7"
                                    Visibility="{Binding SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=8, ElementName=_ExplicitMessageType}"/>
-                    <TextBox Grid.Column="1" Grid.Row="7" IsReadOnly="True" Text="{Binding SlaveMessageCommunicationErrorCode, Mode=OneWay, StringFormat=0x\{0:X4\}}"
+                        <TextBox Grid.Column="1" Grid.Row="7" IsReadOnly="True" Text="{Binding SlaveMessageCommunicationErrorCode, Mode=OneWay, StringFormat=0x\{0:X4\}}"
                                  Visibility="{Binding SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=8, ElementName=_ExplicitMessageType}"/>
-                    <TextBlock Text="General DNet Error : "  Grid.Row="8"
+                        <TextBlock Text="General DNet Error : "  Grid.Row="8"
                                    Visibility="{Binding SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=8, ElementName=_ExplicitMessageType}"/>
-                    <TextBox Grid.Column="1" Grid.Row="8" IsReadOnly="True" Text="{Binding SlaveGeneralDNetErrorCode, Mode=OneWay, StringFormat=0x\{0:X4\}}"
+                        <TextBox Grid.Column="1" Grid.Row="8" IsReadOnly="True" Text="{Binding SlaveGeneralDNetErrorCode, Mode=OneWay, StringFormat=0x\{0:X4\}}"
                                  Visibility="{Binding SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=8, ElementName=_ExplicitMessageType}"/>
-                    <TextBlock Text="Additional DNet Error : "  Grid.Row="9" 
+                        <TextBlock Text="Additional DNet Error : "  Grid.Row="9" 
                                    Visibility="{Binding SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=8, ElementName=_ExplicitMessageType}"/>
-                    <TextBox Grid.Column="1" Grid.Row="9" IsReadOnly="True" Text="{Binding SlaveAdditionalDNetErrorCode, Mode=OneWay, StringFormat=0x\{0:X4\}}"
+                        <TextBox Grid.Column="1" Grid.Row="9" IsReadOnly="True" Text="{Binding SlaveAdditionalDNetErrorCode, Mode=OneWay, StringFormat=0x\{0:X4\}}"
                                  Visibility="{Binding SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=8, ElementName=_ExplicitMessageType}"/>
-                    <TextBlock Text="Number of Down : "  Grid.Row="10"
+                        <TextBlock Text="Number of Down : "  Grid.Row="10"
                                    Visibility="{Binding SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=8, ElementName=_ExplicitMessageType}"/>
-                    <TextBox Grid.Column="1" Grid.Row="10" IsReadOnly="True" Text="{Binding NumberOfSlaveDown, Mode=OneWay}"
+                        <TextBox Grid.Column="1" Grid.Row="10" IsReadOnly="True" Text="{Binding NumberOfSlaveDown, Mode=OneWay}"
                                  Visibility="{Binding SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=8, ElementName=_ExplicitMessageType}"/>
-                    <TextBlock Text="Production Instance : " Grid.Row="11"
+                        <TextBlock Text="Production Instance : " Grid.Row="11"
                                    Visibility="{Binding SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=16, ElementName=_ExplicitMessageType}"/>
-                    <TextBox Grid.Column="1" Grid.Row="11" Text="{Binding SlaveProducedInstance, NotifyOnValidationError=True, ValidatesOnExceptions=True}"
+                        <TextBox Grid.Column="1" Grid.Row="11" Text="{Binding SlaveProducedInstance, NotifyOnValidationError=True, ValidatesOnExceptions=True}"
                                  Visibility="{Binding SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=16, ElementName=_ExplicitMessageType}"/>
-                    <TextBlock Text="Consume Instance : " Grid.Row="12"
+                        <TextBlock Text="Consume Instance : " Grid.Row="12"
                                    Visibility="{Binding SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=16, ElementName=_ExplicitMessageType}"/>
-                    <TextBox Grid.Column="1" Grid.Row="12" Text="{Binding SlaveConsumedInstance, NotifyOnValidationError=True, ValidatesOnExceptions=True}"
+                        <TextBox Grid.Column="1" Grid.Row="12" Text="{Binding SlaveConsumedInstance, NotifyOnValidationError=True, ValidatesOnExceptions=True}"
                                  Visibility="{Binding SelectedItem, Converter={StaticResource IsExplicitMessageField}, ConverterParameter=16, ElementName=_ExplicitMessageType}"/>
+                    </Grid>
+                    <Button Grid.Column="1" Grid.Row="5" Content="Execute Explicit Message" Margin="2" Click="ExecuteExplicitMessage" HorizontalAlignment="Stretch" IsEnabled="{Binding CommandPending, Converter={StaticResource Boolean2BooleanReConverter}}"/>
+                    <hc:LoadingCircle HorizontalAlignment="Left" Grid.Column="2" Grid.Row="5" Height="30" DotDiameter="5" Visibility="{Binding CommandPending, Converter={StaticResource Boolean2VisibilityConverter}}" />
                 </Grid>
-                <Button Grid.Column="1" Grid.Row="5" Content="Execute Explicit Message" Margin="2" Click="ExecuteExplicitMessage" HorizontalAlignment="Stretch" IsEnabled="{Binding CommandPending, Converter={StaticResource Boolean2BooleanReConverter}}"/>
-                <hc:LoadingCircle HorizontalAlignment="Left" Grid.Column="2" Grid.Row="5" Height="30" DotDiameter="5" Visibility="{Binding CommandPending, Converter={StaticResource Boolean2VisibilityConverter}}" />
-            </Grid>
+            </TabItem>
         </TabControl>
     </DockPanel>
 </UserControl>
