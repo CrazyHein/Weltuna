@@ -146,7 +146,7 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks
 
         private void OpenProject_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            if (__main_wnd_data_model.IsDirty == true || __docking_layout_comparison(_ToolboxContainer, __docking_documents_layout) == false)
+            if (__main_wnd_data_model.ProjectPath != null && (__main_wnd_data_model.IsDirty == true || __docking_layout_comparison(_ToolboxContainer, __docking_documents_layout) == false))
             {
                 if (HandyControl.Controls.MessageBox.Show(this, $"Discard the changes you have made ?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
                     return;
@@ -201,7 +201,7 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks
 
         private void NewProject_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            if (__main_wnd_data_model.IsDirty == true || __docking_layout_comparison(_ToolboxContainer, __docking_documents_layout) == false)
+            if (__main_wnd_data_model.ProjectPath != null && (__main_wnd_data_model.IsDirty == true || __docking_layout_comparison(_ToolboxContainer, __docking_documents_layout) == false))
             {
                 if (HandyControl.Controls.MessageBox.Show(this, $"Discard the changes you have made ?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
                     return;
@@ -391,7 +391,7 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks
 
         private async void Window_Closing(object sender, CancelEventArgs e)
         {
-            if (__main_wnd_data_model.IsDirty == true || (__docking_documents_layout != null &&__docking_layout_comparison(_ToolboxContainer, __docking_documents_layout) == false))
+            if (__main_wnd_data_model.ProjectPath != null && (__main_wnd_data_model.IsDirty == true || __docking_layout_comparison(_ToolboxContainer, __docking_documents_layout) == false))
             {
                 if (HandyControl.Controls.MessageBox.Show(this, $"Discard the changes you have made ?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
                 {
