@@ -23,6 +23,8 @@
 
         <CommandBinding Command="local:ConsoleControl.Connect" CanExecute="Connect_CanExecute" Executed="Connect_Executed" />
         <CommandBinding Command="local:ConsoleControl.Disconnect" CanExecute="Disconnect_CanExecute" Executed="Disconnect_Executed" />
+
+        <CommandBinding Command="local:ConsoleControl.About" Executed="About_Executed" />
     </Window.CommandBindings>
     <Window.Resources>
         <local:MainWindowTitleConverter x:Key="titleStringConverter" />
@@ -133,6 +135,11 @@
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="_About">
+                <MenuItem Command="local:ConsoleControl.About">
+                    <MenuItem.Icon>
+                        <Image Source="imgs/about.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
         </Menu>
         <xcad:DockingManager Grid.Row="1" Margin="2" AllowMixedOrientation="True" BorderBrush="Black" BorderThickness="1" Theme="{Binding CurrentTheme}" x:Name="_AppDockingManager">

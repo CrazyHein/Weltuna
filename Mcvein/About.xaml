@@ -5,8 +5,39 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks"
         mc:Ignorable="d"
-        Title="about" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="About" Height="200" Width="700">
+    <DockPanel>
+        <Border DockPanel.Dock="Left" BorderBrush="Black" BorderThickness="1" VerticalAlignment="Center" Margin="8" Padding="8">
+            <Image Source="plc.png" Grid.RowSpan="2"   Width="128"/>
+        </Border>
+        <ScrollViewer>
+            <Grid Margin="8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.Resources>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="FontSize" Value="18"/>
+                        <Setter Property="VerticalAlignment" Value="Center"/>
+                        <Setter Property ="Margin" Value="8,4,8,4"/>
+                        <Setter Property="TextWrapping" Value="Wrap"/>
+                        <Setter Property="FontWeight" Value="Light"/>
+                    </Style>
+                </Grid.Resources>
+                <TextBlock Grid.Column="0" Text="Title : "/>
+                <TextBlock Grid.Column="0" Grid.Row="1" Text="Description : "/>
+                <TextBlock Grid.Column="0" Grid.Row="2" Text="Assembly Version : " />
+
+                <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding AssemblyTitle}"/>
+                <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding Description}"/>
+                <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding AssemblyVersion}" />
+            </Grid>
+        </ScrollViewer>
+    </DockPanel>
 </Window>

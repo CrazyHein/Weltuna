@@ -146,7 +146,7 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks
 
         private void OpenProject_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            if (__main_wnd_data_model.ProjectPath != null && (__main_wnd_data_model.IsDirty == true || __docking_layout_comparison(_ToolboxContainer, __docking_documents_layout) == false))
+            if (__main_wnd_data_model.IsDirty == true || (__main_wnd_data_model.ProjectPath != null && __docking_layout_comparison(_ToolboxContainer, __docking_documents_layout) == false))
             {
                 if (HandyControl.Controls.MessageBox.Show(this, $"Discard the changes you have made ?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
                     return;
@@ -201,7 +201,7 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks
 
         private void NewProject_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            if (__main_wnd_data_model.ProjectPath != null && (__main_wnd_data_model.IsDirty == true || __docking_layout_comparison(_ToolboxContainer, __docking_documents_layout) == false))
+            if (__main_wnd_data_model.IsDirty == true || (__main_wnd_data_model.ProjectPath != null && __docking_layout_comparison(_ToolboxContainer, __docking_documents_layout) == false))
             {
                 if (HandyControl.Controls.MessageBox.Show(this, $"Discard the changes you have made ?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
                     return;
@@ -363,6 +363,12 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks
             __main_wnd_data_model.DataPollingInterval = __data_synchronizer.PollingInterval;
         }
 
+        private void About_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            About about = new About();
+            about.ShowDialog();
+        }
+
         private void ToolDocument_Closed(object sender, EventArgs e)
         {
             __cabinets_navigation_data_model.TryRemoveToolbox(sender as LayoutDocument);
@@ -391,7 +397,7 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks
 
         private async void Window_Closing(object sender, CancelEventArgs e)
         {
-            if (__main_wnd_data_model.ProjectPath != null && (__main_wnd_data_model.IsDirty == true || __docking_layout_comparison(_ToolboxContainer, __docking_documents_layout) == false))
+            if (__main_wnd_data_model.IsDirty == true || (__main_wnd_data_model.ProjectPath != null && __docking_layout_comparison(_ToolboxContainer, __docking_documents_layout) == false))
             {
                 if (HandyControl.Controls.MessageBox.Show(this, $"Discard the changes you have made ?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
                 {
@@ -748,5 +754,9 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks
                 new InputGestureCollection { new KeyGesture(Key.D, ModifierKeys.Control | ModifierKeys.Shift, "Ctrl+Shift+D") });
         public static RoutedUICommand RemoteReset { get; private set; } =
             new RoutedUICommand("Remote Reset", "RemoteReset", typeof(ConsoleControl));
+
+        public static RoutedUICommand About { get; private set; } =
+            new RoutedUICommand("About", "About", typeof(ConsoleControl),
+                new InputGestureCollection { new KeyGesture(Key.A, ModifierKeys.Control, "Ctrl+A") });
     }
 }

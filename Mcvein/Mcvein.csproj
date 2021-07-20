@@ -9,10 +9,11 @@
     <PackageId>CrazyHein.Mcvein</PackageId>
     <Authors>CrazyHein</Authors>
     <Company>AMEC</Company>
-    <Version>1.0.0</Version>
+    <Version>0.1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="imgs\about.png" />
     <None Remove="imgs\add_target.png" />
     <None Remove="imgs\add_tool.png" />
     <None Remove="imgs\checked.png" />
@@ -34,6 +35,7 @@
     <None Remove="imgs\save_project.png" />
     <None Remove="imgs\save_project_as.png" />
     <None Remove="imgs\theme.png" />
+    <None Remove="plc.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -48,6 +50,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="imgs\about.png" />
     <Resource Include="imgs\add_target.png" />
     <Resource Include="imgs\add_tool.png" />
     <Resource Include="imgs\checked.png" />
@@ -69,6 +72,7 @@
     <Resource Include="imgs\save_project.png" />
     <Resource Include="imgs\save_project_as.png" />
     <Resource Include="imgs\theme.png" />
+    <Resource Include="plc.png" />
   </ItemGroup>
 
 </Project>

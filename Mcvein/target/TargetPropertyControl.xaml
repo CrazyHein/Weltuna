@@ -6,7 +6,7 @@
     <DockPanel LastChildFill="True">
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,4,16" DockPanel.Dock="Bottom">
             <Button Content="Communication Test" Margin="0,0,10,0" Width="200" Click="CommunicationTest_Click" x:Name="_CommunicationTestButton" IsEnabled="{Binding EnableRemoteOperation}" />
-            <Button Content="OK" Width="100" Click="OK_Click" />
+            <Button Content="OK" Width="100" Click="OK_Click" IsEnabled="{Binding EnableRemoteOperation}"/>
         </StackPanel>
         <Grid Validation.Error="TargetProperty_Error" DockPanel.Dock="Top">
             <Grid.Resources>

@@ -22,6 +22,12 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks
         public About()
         {
             InitializeComponent();
+            DataContext = this;
         }
+
+        public string AssemblyTitle { get; init; } = "Mcvein";
+        public string Description { get; init; } = "The container of SLMP based diagnostic tool for Mitsubishi PLC.";
+
+        public string AssemblyVersion { get; init; } = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
     }
 }

@@ -38,6 +38,34 @@
     - [1-8 Reference](#1-8-reference)
       - [1-8-1 Device Code for Local Device Access](#1-8-1-device-code-for-local-device-access)
       - [1-8-2 Example](#1-8-2-example)
+  - [2 Mcvein](#2-mcvein)
+    - [2-1 Introduction](#2-1-introduction)
+    - [2-2 Install Plug-in](#2-2-install-plug-in)
+    - [2-3 Project Management](#2-3-project-management)
+      - [2-3-1 New](#2-3-1-new)
+      - [2-3-2 Open](#2-3-2-open)
+      - [2-3-3 Save](#2-3-3-save)
+      - [2-3-4 Save As](#2-3-4-save-as)
+    - [2-4 Target Management](#2-4-target-management)
+      - [2-4-1 Add](#2-4-1-add)
+      - [2-4-2 Remove](#2-4-2-remove)
+      - [2-4-3 Property](#2-4-3-property)
+      - [2-4-4 Activate](#2-4-4-activate)
+    - [2-5 Tool Management](#2-5-tool-management)
+      - [2-5-1 Add](#2-5-1-add)
+      - [2-5-2 Remove](#2-5-2-remove)
+      - [2-5-3 Layout](#2-5-3-layout)
+    - [2-6 Operation](#2-6-operation)
+      - [2-6-1 Connect](#2-6-1-connect)
+      - [2-6-2 Disconnect](#2-6-2-disconnect)
+  - [3 Numeros](#3-numeros)
+    - [3-1 Introduction](#3-1-introduction)
+    - [3-2 Enable](#3-2-enable)
+    - [3-3 Device Control](#3-3-device-control)
+    - [3-4 Channel Control Panel](#3-4-channel-control-panel)
+      - [3-4-1 Monitor](#3-4-1-monitor)
+      - [3-4-2 PID Auto Tuning](#3-4-2-pid-auto-tuning)
+      - [3-4-3 PID Constants](#3-4-3-pid-constants)
 
 ## License
 
@@ -664,6 +692,10 @@ public SocketInterface COM {set;}
 
 
 ##### 1-5-3 Methods
+
+Notes:
+
+All methods here have a asynchronous version,  the method name of asynchronous version ends in "Async".
 
 ###### 1-5-3-1 ReadLocalDeviceInWord
 
@@ -1856,6 +1888,22 @@ If ExceptionCode returns ***RUNTIME_ERROR***, this property will return the [Exc
 
 
 
+###### 1-7-2-3 Message
+
+Creates and returns a short message representation of the current exception.
+
+```c#
+ public override string Message {get;}
+```
+
+​	**Returns**
+
+​	[String](https://docs.microsoft.com/en-us/dotnet/api/system.string?view=net-5.0)
+
+​	A short message representation of the current exception.
+
+
+
 ##### 1-7-3 Methods
 
 ###### 1-7-3-1 ToString
@@ -2123,4 +2171,327 @@ catch(SLMPException e)
     Console.WriteLine(e.ToString());
 }
 ```
+
+
+
+### 2 Mcvein
+
+#### 2-1 Introduction
+
+*Mcvein* is a container of SLMP based diagnostic tool for Mitsubishi PLC.
+
+![](DocImages\McveinMain.png)
+
+<p style="text-align: center"><b><em>Figure 2.1</em></b> <em>Mcvein Main Window</em></p>
+
+You can manage the connection targets in "**Target**" sheet, please refer to [2-4 Target Management](#2-4-target-management) for details;
+
+You can manage the available tools "**Navigation**" sheet, please refer to [2-5 Tool Management](#2-5-tool-management) for details;
+
+The caption of main window shows the path of the current project;
+
+The properties of current state, which are always shown in the status bar of main window, from left to right, are "Project dirty flag", "Online/Offline flag", "Communication loop time indicator", "Data exchanging indicator",  "Program state",  "Detail exception information".
+
+
+
+#### 2-2 Install Plug-in
+
+To install a new plug-in (tool), please copy the whole folder of the plug-in to the folder "**toolkit**" exists in the same directory as ***Mcvein.exe*** before you launch tool. 
+
+The compatible plug-ins (tools) will be shown in "**Navigation**" sheet, please refer to [2-5 Tool Management](#2-5-tool-management) for details;
+
+
+
+#### 2-3 Project Management
+
+##### 2-3-1 New
+
+You can create a new project by a menu item of shortcut key.
+
+> Project -> New
+
+or
+
+> Ctrl+N
+
+
+
+##### 2-3-2 Open
+
+You can open an existing project file by a menu item or shortcut key.
+
+> Project -> Open
+
+or
+
+> Ctrl+O
+
+
+
+##### 2-3-3 Save
+
+You can save the project you are working on by a menu item or shortcut key.
+
+> Project -> Save
+
+or
+
+> Ctrl+S
+
+
+
+##### 2-3-4 Save As
+
+You can save the project you are working on as another separate file by a menu item or shortcut key.
+
+> Project -> Save As
+
+or
+
+> Ctrl+Shift+S
+
+
+
+#### 2-4 Target Management
+
+![](DocImages\McveinTargets.png)
+
+<p style="text-align: center"><b><em>Figure 2.4</em></b> <em>Target Management</em></p>
+
+##### 2-4-1 Add
+
+You can add a new connection target by a menu item of shortcut key.
+
+> Target -> Add
+
+or
+
+> Ctrl+Shift+A
+
+A connection property dialog will show:
+
+![](DocImages\McveinTargetProperty.png)
+
+<p style="text-align: center"><b><em>Figure 2.4.1</em></b> <em>Target Property</em></p>
+
+Please refer to "**SLMP Reference Manual**" for the detail information of the target property.
+
+Please click the "**OK**" button to add the target to the available targets list;
+
+Please click the "**Communication Test**" button to conduct a communication test with the current settings;
+
+**Notes:**
+
+- You can not conduct the communication test or add new connection target if the console is in **Online State**;
+- You can not have two targets with the same name, please specify another name for your target if a target with same name has already been in  existence;
+
+
+
+##### 2-4-2 Remove
+
+You can remove the specified connection target by a menu item of shortcut key.
+
+> Target -> Remove
+
+or
+
+> Ctrl+Shift+R
+
+**Notes:**
+
+- You can not remove the activated connection target if the console is in **Online State**;
+
+
+
+##### 2-4-3 Property
+
+You can review or revise the property of the specified connection target by a menu item of shortcut key.
+
+> Target -> Property
+
+or
+
+> Ctrl+Shift+P
+
+**Notes:**
+
+- You can not conduct the communication test or revise the property of the specified connection target if the console is in **Online State**;
+
+
+
+##### 2-4-4 Activate
+
+You can activate the specified connection target by a menu item of shortcut key.
+
+> Target -> Activate
+
+or
+
+> Ctrl+Shift+E
+
+**Notes:**
+
+- You can not activate the specified connection target if the console is in **Online State**;
+
+- You must activate one connection target before going online;
+
+
+
+#### 2-5 Tool Management
+
+![](DocImages/McveinNavigation.png)
+
+<p style="text-align: center"><b><em>Figure 2.5</em></b> <em>Tool Navigation</em></p>
+
+All compatible plug-ins(tools) are shown here.
+
+You can also review the plug-in name, version and detail description here.
+
+
+
+##### 2-5-1 Add
+
+Click the plus icon to instantiate the corresponding tool. You can instantiate the same tool multiple times.
+
+
+
+##### 2-5-2 Remove
+
+You can remove the tool by closing the corresponding tab.
+
+
+
+##### 2-5-3 Layout
+
+TBD
+
+**Notes:**
+
+- The layout of tool tabs will be saved to the project file;
+
+
+
+#### 2-6 Operation
+
+##### 2-6-1 Connect
+
+You can connect to the activated connection target by a menu item of shortcut key.
+
+> Online -> Connect
+
+or
+
+> Ctrl+Shift+C
+
+**Notes:**
+
+- You must activate one connection target before going online;
+
+
+
+##### 2-6-2 Disconnect
+
+You can disconnect from the activated connection target by a menu item of shortcut key.
+
+> Online -> Disconnect
+
+or
+
+> Ctrl+Shift+D
+
+
+
+### 3 Numeros
+
+#### 3-1 Introduction
+
+*Numeros* (Q64TCAutoTuning) is an auto-tuning utility for Q64TCTTN, Q64TCTTBWN, Q64TCRTN and Q64TCRTBWN.
+
+
+
+#### 3-2 Enable
+
+![](DocImages/NumerosEnable.png)
+
+<p style="text-align: center"><b><em>Figure 3.2</em></b> <em>Enable Numeros</em></p>
+
+You should input the correct module(Q64TCTTN, Q64TCTTBWN, Q64TCRTN Q64TCRTBWN) address and click the "**Enable**" button to enable the tool. The module address must be start with "U" and follow by three hexadecimal numbers.
+
+
+
+#### 3-3 Device Control
+
+![](DocImages/NumerosDeviceControl.png)
+
+<p style="text-align: center"><b><em>Figure 3.3</em></b> <em>Device Control</em></p>
+
+| Field              | Content                                                      |
+| ------------------ | ------------------------------------------------------------ |
+| **Error Code**     | Write data error code or alarm code. The error code is always given priority over the alarm code. |
+| **Error Cause**    | Detail information about the "**Error Code**".               |
+| **Operation Mode** | The current device operation mode(SETTING MODE/OPERATION MODE). |
+
+Click the "**Clear Error**" button to clear  "**Error Code**";
+
+Click the "**SETTING MODE**" button to set the device to SETTING_MODE;
+
+Click the "**OPERAITION MODE**" button to set the device to OPERATION_MODE;
+
+Click the "**CHx**" button to switch the control panel to corresponding channel;
+
+
+
+#### 3-4 Channel Control Panel
+
+##### 3-4-1 Monitor
+
+![](DocImages/NumerosChannelMonitor.png)
+
+<p style="text-align: center"><b><em>Figure 3.4.1</em></b> <em>Channel Monitor</em></p>
+
+Click "**Auto Mode**" button to set the channel to automatic mode and click "**Manual Mode**" button to set the channel to manual mode.
+
+
+
+##### 3-4-2 PID Auto Tuning
+
+![](DocImages/NumerosChannelAT.png)
+
+<p style="text-align: center"><b><em>Figure 3.4.2</em></b> <em>Channel Auto Tuning</em></p>
+
+| Field                                       | Content                                                      |
+| ------------------------------------------- | ------------------------------------------------------------ |
+| **Set Value Setting**                       | Set the target temperature value of PID control.             |
+| **AT Bias Setting**                         | The point set as the set value (SV) in the auto tuning can be rearranged by  this value. The auto tuning is performed with having the AT point (the point rearranged by the setting) as its center. When the auto tuning is completed, AT bias is not added and a control is performed toward the set value (SV). |
+| **AT Loop Disconnection Detection Flag**    | This function detects loop disconnections during auto tuning (AT). With this function, a channel that is not controlled can be detected during auto tuning, thus the error channel is detected more than two hours before the auto tuning error occurs. The auto tuning continues even if an alert is output for the loop disconnection detection. |
+| **AT Loop Disconnection Detection Setting** | Using this function detects an error occurring within a control system (control loop) due to reasons such as a load (heater) disconnection, an externally-operable device (such as a magnetic relay) failure, and input disconnection. |
+| **AT Mode Selection**                       | Select the auto tuning mode from the following two modes according to the controlled object to be used.  <br />***Standard mode:*** The standard mode is appropriate for most controlled objects. This mode is especially suitable for controlled objects that have an extremely slow response speed or can be affected by noise or disturbance. However, PID constants of slow response (low gain) may be calculated from controlled objects whose ON time or OFF time in the auto tuning is only around 10s. In this case, PID constants of fast response can be calculated by selecting the high response mode and performing the auto tuning.<br />***High response mode:*** This mode is suitable for controlled objects whose ON time or OFF time in the auto tuning is only around 10s. PID constants of fast response (high gain) can be calculated. However, the temperature process value (PV) may oscillates near the set value (SV) because of the too high gain of the PID constants calculated. In this case, select the normal mode and perform the auto tuning. |
+| **Backup of the Calculated Value**          | By enable the field at the start of auto tuning, the calculated value is automatically backed up into E2PROM on completion of auto tuning. |
+| **AT Status**                               | Indicate the auto tuning status.                             |
+
+Click "**ON**"  button to request the channel to do PID auto tuning.
+
+If the PID auto tuning is complete normally or any error occurred while doing tuning, please click "OFF" button to withdraw the request;
+
+**Note:**
+
+- You can post the auto tuning request only if the device operation mode is "**OPERATION MODE**" and the channel operation mode is **Auto Mode**".
+
+
+
+##### 3-4-3 PID Constants
+
+![](DocImages/NumerosChannelPIDConstants.png)
+
+<p style="text-align: center"><b><em>Figure 3.4.3</em></b> <em>Channel PID Constants</em></p>
+
+| Field | Content                                                      |
+| ----- | ------------------------------------------------------------ |
+| Ph    | Set proportional band (P)/heating proportional band (Ph)/cooling proportional band (Pc) to perform PID control.  <br />Heating proportional band (Ph) setting: 0 to 10000 (0.0% to 1000.0%) . |
+| Pc    | Set proportional band (P)/heating proportional band (Ph)/cooling proportional band (Pc) to perform PID control.  <br />Cooling proportional band (Pc) setting: 1 to 10000 (0.1% to 1000.0%) . |
+| I     | Set integral time (I) to perform PID control.  <br />The setting range is 0 to 3600 (0 to 3600s). |
+| D     | Set derivative time (D) to perform PID control.  <br />The setting range is 0 to 3600 (0 to 3600s). |
+| LP    | Errors such as disconnection of resistors, malfunction of an external controller, and errors of the control system due to troubles such as disconnection of the sensor can be detected by the loop disconnection detection function. If temperature does not change by 2°C ( ) or more in the Loop disconnection detection judgment time, a loop disconnection is detected.  <br />The setting range is 0 to 7200 (s) . |
+
+Click "**Backup PID Constants**" button to save the PID constants of all channels at once.
 
