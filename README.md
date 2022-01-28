@@ -2415,7 +2415,7 @@ or
 
 <p style="text-align: center"><b><em>Figure 3.2</em></b> <em>Enable Numeros</em></p>
 
-You should input the correct module(Q64TCTTN, Q64TCTTBWN, Q64TCRTN Q64TCRTBWN) address and click the "**Enable**" button to enable the tool. The module address must be start with "U" and follow by three hexadecimal numbers.
+You should input the correct module(Q64TCTTN, Q64TCTTBWN, Q64TCRTN Q64TCRTBWN) address and click the "**Enable**" button to enable the tool. The module address must be start with "U" and follow by three hexadecimal digits.
 
 
 
@@ -2475,7 +2475,7 @@ If the PID auto tuning is complete normally or any error occurred while doing tu
 
 **Note:**
 
-- You can post the auto tuning request only if the device operation mode is "**OPERATION MODE**" and the channel operation mode is **Auto Mode**".
+- You can post the auto tuning request only if the device operation mode is "**OPERATION MODE**" and the channel operation mode is “**Auto Mode**".
 
 
 
@@ -2491,7 +2491,7 @@ If the PID auto tuning is complete normally or any error occurred while doing tu
 | Pc    | Set proportional band (P)/heating proportional band (Ph)/cooling proportional band (Pc) to perform PID control.  <br />Cooling proportional band (Pc) setting: 1 to 10000 (0.1% to 1000.0%) . |
 | I     | Set integral time (I) to perform PID control.  <br />The setting range is 0 to 3600 (0 to 3600s). |
 | D     | Set derivative time (D) to perform PID control.  <br />The setting range is 0 to 3600 (0 to 3600s). |
-| LP    | Errors such as disconnection of resistors, malfunction of an external controller, and errors of the control system due to troubles such as disconnection of the sensor can be detected by the loop disconnection detection function. If temperature does not change by 2°C ( ) or more in the Loop disconnection detection judgment time, a loop disconnection is detected.  <br />The setting range is 0 to 7200 (s) . |
+| LP    | Errors such as disconnection of resistors, malfunction of an external controller, and errors of the control system due to troubles such as disconnection of the sensor can be detected by the loop disconnection detection function. If temperature does not change by 2°C (℉) or more in the Loop disconnection detection judgment time, a loop disconnection is detected.  <br />The setting range is 0 to 7200 (s) . |
 
-Click "**Backup PID Constants**" button to save the PID constants of all channels at once.
+Click "**Backup PID Constants**" button to save the PID constants of all channels into E2PROM at once.
 
