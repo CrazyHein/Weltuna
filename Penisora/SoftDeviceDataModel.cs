@@ -147,13 +147,13 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
             get { return __device_points; }
             set 
             {
-                if (value <= 512 && value > 0)
+                if (value <= 960 && value > 0)
                 {
                     if (__device_points != value)
                         SetProperty(ref __device_points, value);
                 }
                 else
-                    throw new ArgumentException(@"The input value for 'Device Point' is out of range([1 -- 512]).");
+                    throw new ArgumentException(@"The input value for 'Device Point' is out of range([1 -- 960]).");
             }
         }
 
@@ -378,7 +378,7 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
             } 
         }
 
-        public override void ExchangeDataWihtUserInterface()
+        public override void ExchangeDataWithUserInterface()
         {
             if (__explicit_results.TryDequeue(out var result))
             {

@@ -1030,7 +1030,7 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
             __device_write_data();
         }
 
-        public override void ExchangeDataWihtUserInterface()
+        public override void ExchangeDataWithUserInterface()
         {
             __user_read_data();
             var res = __process_in_data_user_interface.control_in;
@@ -1250,7 +1250,7 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
         private string __version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
         public string Name { get => "DeviceNetMasterUtility"; set => throw new NotImplementedException(); }
-        public string Description { get => @"DeviceNet Master Information and DeviceNet Master/Slave Diagnostic Tool. Compatiable with RJ71DN91(master) and QJ71DN91(master)"; set => throw new NotImplementedException(); }
+        public string Description { get => @"DeviceNet Master Information and DeviceNet Master/Slave Diagnostic Tool. Compatible with RJ71DN91(master) and QJ71DN91(master)"; set => throw new NotImplementedException(); }
         public string Version { get => __version; set => throw new NotImplementedException(); }
 
         public object CreateInstance(PropertyChangedEventHandler propertyChangedEventHandler)

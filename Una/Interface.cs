@@ -40,7 +40,7 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
         public abstract long Restore(ref Utf8JsonReader reader);
 
         protected abstract void _online_state_changed(bool online);
-        public abstract void ExchangeDataWihtUserInterface();
+        public abstract void ExchangeDataWithUserInterface();
         public abstract void Dispose();
 
         private bool __online;

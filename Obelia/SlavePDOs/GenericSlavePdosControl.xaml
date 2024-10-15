@@ -1,0 +1,211 @@
+﻿<UserControl x:Class="AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool.Obelia.SlavePDOs.Generic.GenericSlavePdosControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool.Obelia.SlavePDOs.Generic"
+             xmlns:host="clr-namespace:AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool.Obelia"
+             xmlns:control="clr-namespace:AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Control;assembly=Control.Fort"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <DockPanel LastChildFill="True" Margin="2">
+        <DockPanel.Resources>
+            <ResourceDictionary>
+                <ResourceDictionary.MergedDictionaries>
+                    <ResourceDictionary Source="../ResourceDictionary.xaml"/>
+                </ResourceDictionary.MergedDictionaries>
+                <Style TargetType="TextBox" BasedOn="{StaticResource TextBoxExtendBaseStyle}">
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                    <Setter Property="HorizontalContentAlignment" Value="Left" />
+                    <Style.Triggers>
+                        <Trigger Property="Validation.HasError" Value="true">
+                            <Setter Property="ToolTip" Value="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=(Validation.Errors)[0].ErrorContent}" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+                <ObjectDataProvider ObjectType="{x:Type sys:Enum}" MethodName="GetValues" x:Key="VariableDisplayFormat">
+                    <ObjectDataProvider.MethodParameters>
+                        <x:Type TypeName="local:VariableDisplayFormat" />
+                    </ObjectDataProvider.MethodParameters>
+                </ObjectDataProvider>
+                <local:IOStatusIndicator x:Key="IOStatusIndicator"/>
+                <local:ESMIndicator x:Key="ESMIndicator"/>
+                <host:UnshortLowerByte x:Key="UshortLowerByte" />
+                <host:UnshortUpperByte x:Key="UshortUpperByte" />
+            </ResourceDictionary>
+        </DockPanel.Resources>
+        <TextBlock DockPanel.Dock="Top" FontStyle="Italic" Margin="0,4,0,8" Text="{Binding ENIPath}"/>
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="0,4,0,8">
+            <Button Content="Switch Slave PDO Synchronous Mode" Margin="0,0,8,0" Click="SwitchSyncMode_Click" IsEnabled="{Binding CommandPending, Converter={StaticResource Boolean2BooleanReConverter}}" />
+            <Label Content="Monitor Mode" HorizontalAlignment="Left" Width="150" Margin="0,0,8,0" VerticalAlignment="Center" Visibility="{Binding InteractiveSyncSlavePdo, Converter={StaticResource Boolean2VisibilityReConverter}}" Background="GreenYellow" FontWeight="Black" HorizontalContentAlignment="Center"/>
+            <Label Content="Interactive Mode" HorizontalAlignment="Left" Width="150" Margin="0,0,8,0" VerticalAlignment="Center" Visibility="{Binding InteractiveSyncSlavePdo, Converter={StaticResource Boolean2VisibilityConverter}}" Background="OrangeRed" FontWeight="Black" HorizontalContentAlignment="Center">
+                <Label.Triggers>
+                    <EventTrigger RoutedEvent="Loaded">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" RepeatBehavior="Forever">
+                                    <DiscreteDoubleKeyFrame KeyTime="0:0:0" Value="0"/>
+                                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.5" Value="1"/>
+                                    <DiscreteDoubleKeyFrame KeyTime="0:0:1" Value="0"/>
+                                </DoubleAnimationUsingKeyFrames>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Label.Triggers>
+            </Label>
+        </StackPanel>
+        
+        <StackPanel DockPanel.Dock="Bottom" Margin="2,4,0,4" Orientation="Horizontal">
+            <TextBlock Text="OP:" Margin="0,0,4,0" VerticalAlignment="Center"/>
+            <Ellipse Height="11" Width="11" Fill="{x:Static local:ESMIndicator.OP}" VerticalAlignment="Center" Stroke="Black" StrokeThickness="1" Margin="0,0,18,0"/>
+            <TextBlock Text="SAFE OP:" Margin="0,0,4,0" VerticalAlignment="Center"/>
+            <Ellipse Height="11" Width="11" Fill="{x:Static local:ESMIndicator.SAFE_OP}" VerticalAlignment="Center" Stroke="Black" StrokeThickness="1" Margin="0,0,18,0"/>
+            <TextBlock Text="PRE OP:" Margin="0,0,4,0" VerticalAlignment="Center"/>
+            <Ellipse Height="11" Width="11" Fill="{x:Static local:ESMIndicator.PRE_OP}" VerticalAlignment="Center" Stroke="Black" StrokeThickness="1" Margin="0,0,18,0"/>
+            <TextBlock Text="INIT:" Margin="0,0,4,0" VerticalAlignment="Center"/>
+            <Ellipse Height="11" Width="11" Fill="{x:Static local:ESMIndicator.INIT}" VerticalAlignment="Center" Stroke="Black" StrokeThickness="1" Margin="0,0,18,0"/>
+            <TextBlock Text="N/A:" Margin="0,0,4,0" VerticalAlignment="Center"/>
+            <Ellipse Height="11" Width="11" Fill="{x:Static local:ESMIndicator.NA}" VerticalAlignment="Center" Stroke="Black" StrokeThickness="1" Margin="0,0,18,0"/>
+        </StackPanel>
+        <Grid>
+            <Grid.Resources>
+                <DataTemplate x:Key="VariableNameHeader">
+                    <TextBlock FontWeight="Bold" Text="Variable" Margin="4,0,4,0"/>
+                </DataTemplate>
+                <DataTemplate x:Key="VariableNameContent">
+                    <TextBlock Text="{Binding FullName}" Margin="4,0,4,0"/>
+                </DataTemplate>
+
+                <DataTemplate x:Key="VariableTypeHeader">
+                    <TextBlock FontWeight="Bold" Text="Data Type" Margin="4,0,4,0"/>
+                </DataTemplate>
+                <DataTemplate x:Key="VariableTypeContent">
+                    <TextBlock Text="{Binding DataType}" Margin="4,0,4,0"/>
+                </DataTemplate>
+
+                <DataTemplate x:Key="VariableSizeHeader">
+                    <TextBlock FontWeight="Bold" Text="Data Size" Margin="4,0,4,0"/>
+                </DataTemplate>
+                <DataTemplate x:Key="VariableSizeContent">
+                    <TextBlock Text="{Binding BitSize}" Margin="4,0,4,0"/>
+                </DataTemplate>
+
+                <DataTemplate x:Key="VariableDisplayFormatHeader">
+                    <TextBlock FontWeight="Bold" Text="F" Margin="4,0,4,0"/>
+                </DataTemplate>
+                <DataTemplate x:Key="VariableDisplayFormatContent">
+                    <ComboBox ItemsSource="{Binding DisplayFormats}" SelectedItem="{Binding DisplayFormat, Mode=TwoWay}"/>
+                </DataTemplate>
+
+                <DataTemplate x:Key="VariableReadbackHeader">
+                    <TextBlock FontWeight="Bold" Text="Readback" Margin="4,0,4,0"/>
+                </DataTemplate>
+                <DataTemplate x:Key="VariableReadbackContent">
+                    <TextBlock Text="{Binding Readback.DataString}" Margin="4,2,4,2" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                </DataTemplate>
+
+                <DataTemplate x:Key="VariableValueHeader">
+                    <TextBlock FontWeight="Bold" Text="Value" Margin="4,0,4,0"/>
+                </DataTemplate>
+                <DataTemplate x:Key="VariableValueContent">
+                    <TextBox Text="{Binding DataString, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True}" Margin="4,2,4,2" VerticalAlignment="Center" IsReadOnly="{Binding IsReadOnly}" Keyboard.KeyDown="ProcessDataValue_KeyDown">
+                        <TextBox.IsEnabled>
+                            <Binding Path="DataContext.InteractiveSyncSlavePdo" RelativeSource="{RelativeSource AncestorType=UserControl, Mode=FindAncestor}"/>
+                        </TextBox.IsEnabled>
+                    </TextBox>
+                </DataTemplate>
+                <DataTemplate x:Key="VariableValueLabelContent">
+                    <TextBlock Text="{Binding DataString}" Margin="4,2,4,2" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                </DataTemplate>
+            </Grid.Resources>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="240"/>
+                <ColumnDefinition Width="6"/>
+                <ColumnDefinition />
+                <ColumnDefinition Width="6"/>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <GridSplitter Grid.Column="1" Width="3" Margin="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="Transparent" ShowsPreview="True"/>
+            <GridSplitter Grid.Column="3" Width="3" Margin="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="Transparent" ShowsPreview="True"/>
+
+            <GroupBox Header="Slaves" Grid.Column="0" Padding="2,4,2,2">
+                <ListBox ItemsSource="{Binding Slaves}" Name ="SlaveNodes" SelectionChanged="SlavesList_SelectionChanged">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" Margin="2">
+                                <StackPanel.ToolTip>
+                                    <StackPanel Orientation="Horizontal">
+                                        <control:BitIndicator IndicatorValue="{Binding Path=ErrorStatus, Converter={StaticResource UshortLowerByte}}"/>
+                                        <control:BitIndicator StartIndex="8" IndicatorValue="{Binding Path=ErrorStatus, Converter={StaticResource UshortUpperByte}}"/>
+                                    </StackPanel>
+                                </StackPanel.ToolTip>
+                                <Ellipse Margin="0,0,8,0" Height="11" Width="11" Fill="{Binding ESM, Converter={StaticResource ESMIndicator}}" Stroke="Black" StrokeThickness="1"/>
+                                <Rectangle Margin="0,0,8,0" Height="8" Width="12" VerticalAlignment="Center" RadiusX="2" RadiusY="2" Fill="{Binding IOStatus, Converter={StaticResource IOStatusIndicator}}"/>
+                                <TextBlock Text="{Binding}" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </GroupBox>
+            <GroupBox Grid.Column="2" Header="Tx" Padding="2,4,2,2">
+                <ListView Name ="SlaveTxDetails">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem" BasedOn="{StaticResource ListViewItemBaseStyle}">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.GroupStyle>
+                        <GroupStyle>
+                            <GroupStyle.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Path=Name}" FontWeight="Bold" FontStyle="Italic" Margin="2,4,0,4"/>
+                                </DataTemplate>
+                            </GroupStyle.HeaderTemplate>
+                        </GroupStyle>
+                    </ListView.GroupStyle>
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Width="auto" HeaderTemplate="{StaticResource VariableNameHeader}" CellTemplate="{StaticResource VariableNameContent}"/>
+                            <GridViewColumn Width="auto" HeaderTemplate="{StaticResource VariableTypeHeader}" CellTemplate="{StaticResource VariableTypeContent}"/>
+                            <GridViewColumn Width="auto" HeaderTemplate="{StaticResource VariableSizeHeader}" CellTemplate="{StaticResource VariableSizeContent}"/>
+                            <GridViewColumn Width="100" HeaderTemplate="{StaticResource VariableDisplayFormatHeader}" CellTemplate="{StaticResource VariableDisplayFormatContent}"/>
+                            <GridViewColumn Width="100" HeaderTemplate="{StaticResource VariableValueHeader}" CellTemplate="{StaticResource VariableValueLabelContent}"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </GroupBox>
+            <GroupBox Grid.Column="4" Header="Rx" Padding="2,4,2,2">
+                <ListView Name ="SlaveRxDetails">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem" BasedOn="{StaticResource ListViewItemBaseStyle}">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.GroupStyle>
+                        <GroupStyle>
+                            <GroupStyle.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Path=Name}" FontWeight="Bold" FontStyle="Italic" Margin="2,4,0,4"/>
+                                </DataTemplate>
+                            </GroupStyle.HeaderTemplate>
+                        </GroupStyle>
+                    </ListView.GroupStyle>
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Width="auto" HeaderTemplate="{StaticResource VariableNameHeader}" CellTemplate="{StaticResource VariableNameContent}"/>
+                            <GridViewColumn Width="auto" HeaderTemplate="{StaticResource VariableTypeHeader}" CellTemplate="{StaticResource VariableTypeContent}"/>
+                            <GridViewColumn Width="auto" HeaderTemplate="{StaticResource VariableSizeHeader}" CellTemplate="{StaticResource VariableSizeContent}"/>
+                            <GridViewColumn Width="100" HeaderTemplate="{StaticResource VariableDisplayFormatHeader}" CellTemplate="{StaticResource VariableDisplayFormatContent}"/>
+                            <GridViewColumn Width="100" HeaderTemplate="{StaticResource VariableReadbackHeader}" CellTemplate="{StaticResource VariableReadbackContent}"/>
+                            <GridViewColumn Width="100" HeaderTemplate="{StaticResource VariableValueHeader}" CellTemplate="{StaticResource VariableValueContent}"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </GroupBox>
+        </Grid>
+    </DockPanel>
+</UserControl>

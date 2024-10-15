@@ -629,7 +629,7 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks
             try
             {
                 foreach (var tool in __cabinets_navigation_data_model.ToolDataCollection)
-                    tool.ExchangeDataWihtUserInterface();
+                    tool.ExchangeDataWithUserInterface();
                 _SynchronizeCounter.Text = __counter[__data_synchronizer.Counter / 4 % 4];
             }
             catch (Exception ex)
@@ -647,6 +647,7 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks
             if(info != null)
             {
                 __main_wnd_data_model.IsOnline = false;
+                __main_wnd_data_model.DataSyncState = DATA_SYNCHRONIZER_STATE_T.EXCEPTION;
 
                 __user_interface_synchronizer.Stop();
 

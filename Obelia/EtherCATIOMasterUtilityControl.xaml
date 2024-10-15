@@ -1,0 +1,232 @@
+﻿<UserControl x:Class="AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool.Obelia.EtherCATIOMasterUtilityControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool.Obelia"
+             xmlns:control="clr-namespace:AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Control;assembly=Control.Fort"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:genericslave="clr-namespace:AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool.Obelia.SlavePDOs.Generic"
+             xmlns:hc="https://handyorg.github.io/handycontrol"
+             mc:Ignorable="d" 
+             d:DesignHeight="1080" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ResourceDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <Style TargetType="TextBox" BasedOn="{StaticResource TextBoxExtendBaseStyle}">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="HorizontalContentAlignment" Value="Left" />
+                <Style.Triggers>
+                    <Trigger Property="Validation.HasError" Value="true">
+                        <Setter Property="ToolTip" Value="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=(Validation.Errors)[0].ErrorContent}" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+            <local:UnshortLowerByte x:Key="UshortLowerByte" />
+            <local:UnshortUpperByte x:Key="UshortUpperByte" />
+            <local:HexadecimalUInt16 x:Key="HexadecimalUInt16"/>
+            <ObjectDataProvider ObjectType="{x:Type sys:Enum}" MethodName="GetValues" x:Key="EtherCATSdoDataDisplayFormat">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="local:SDO_DATA_DISPLAY_FORMAT_T" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <ObjectDataProvider ObjectType="{x:Type sys:Enum}" MethodName="GetValues" x:Key="EtherCATStateMachine">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="local:STATE_MACHINE_T" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <ObjectDataProvider ObjectType="{x:Type sys:Enum}" MethodName="GetValues" x:Key="EtherCATControlCommand">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="local:CONTROL_COMMAND_T" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <DockPanel LastChildFill="True" Margin="4" Validation.Error="OnDataBindingError">
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="2" IsEnabled="{Binding Online}">
+            <TextBlock Text="Device Address : " VerticalAlignment="Center" />
+            <TextBox Width="100" Text="{Binding DeviceAddress, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True, NotifyOnValidationError=True}" x:Name="_DeviceAddress" />
+            <StackPanel Orientation="Horizontal" IsEnabled="{Binding CommandPending, Converter={StaticResource Boolean2BooleanReConverter}}">
+                <Button Margin="8,0,0,0" Content="Enable" Width="140" IsEnabled="{Binding IsEnabled, Converter={StaticResource Boolean2BooleanReConverter}}" Click="Enable_Click" />
+                <Button Margin="8,0,0,0" Content="Enable With ENI" Width="140" IsEnabled="{Binding IsEnabled, Converter={StaticResource Boolean2BooleanReConverter}}" Click="EnableWithENI_Click" />
+                <Button Margin="8,0,0,0" Content="Disable" Width="140" Click="Disable_Click" />
+            </StackPanel>
+        </StackPanel>
+        <Expander DockPanel.Dock="Bottom" Margin="2" Header="Exception Information" IsExpanded="False">
+            <ListBox Height="100" ItemsSource="{Binding ExceptionInfoCollection}" />
+        </Expander>
+        <TabControl Margin="2,8,2,2" TabControl.TabStripPlacement="Bottom" Style="{StaticResource TabControlCapsuleSolid}" Visibility="{Binding IsEnabled, Converter={StaticResource Boolean2VisibilityConverter}}">
+            <TabItem Header="Master Diagnostic Information &amp; Explicit Commands">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Visible">
+                    <StackPanel Orientation="Vertical">
+                        <GroupBox Header="Diagnostic Information" Padding="8" Margin="2">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Number of Slaves Registered" Margin="2,4"/>
+                                <TextBlock Text="  -  " Grid.Column="1" Margin="2,4"/>
+                                <TextBlock Text="{Binding NumberOfSlavesRegistered}" Grid.Column="2" Margin="2,4"/>
+
+                                <TextBlock Text="Configuration State" Margin="2,4" Grid.Row="1"/>
+                                <TextBlock Text="  -  " Grid.Column="1" Margin="2,4" Grid.Row="1"/>
+                                <TextBlock Text="{Binding ConfigurationState}" Grid.Column="2" Margin="2,4" Grid.Row="1"/>
+
+                                <TextBlock Text="Communication State" Margin="2,4" Grid.Row="2"/>
+                                <TextBlock Text="  -  " Grid.Column="1" Margin="2,4" Grid.Row="2"/>
+                                <TextBlock Text="{Binding CommunicationState}" Grid.Column="2" Margin="2,4" Grid.Row="2"/>
+
+                                <TextBlock Text="Master Error Status" Margin="2,4" Grid.Row="3"/>
+                                <TextBlock Text="  -  " Grid.Column="1" Margin="2,4" Grid.Row="3"/>
+                                <control:BitIndicator x:Name="MasterErrorStatus0" IndicatorValue="{Binding Path=MasterErrorStatus, Converter={StaticResource UshortLowerByte}}" Grid.Column="2" Margin="2,4" Grid.Row="3"/>
+                                <control:BitIndicator x:Name="MasterErrorStatus1" StartIndex="8" IndicatorValue="{Binding Path=MasterErrorStatus, Converter={StaticResource UshortUpperByte}}" Grid.Column="3" Margin="2,4" Grid.Row="3"/>
+
+                                <TextBlock Text="Cable Error Status" Margin="2,4" Grid.Row="4"/>
+                                <TextBlock Text="  -  " Grid.Column="1" Margin="2,4" Grid.Row="4"/>
+                                <control:BitIndicator x:Name="CableErrorStatus0" IndicatorValue="{Binding Path=CableErrorStatus, Converter={StaticResource UshortLowerByte}}" Grid.Column="2" Margin="2,4" Grid.Row="4"/>
+                                <control:BitIndicator x:Name="CableErrorStatus1" StartIndex="8" IndicatorValue="{Binding Path=CableErrorStatus, Converter={StaticResource UshortUpperByte}}" Grid.Column="3" Margin="2,4" Grid.Row="4"/>
+
+                                <TextBlock Text="Master ESM" Margin="2,4" Grid.Row="5"/>
+                                <TextBlock Text="  -  " Grid.Column="1" Margin="2,4" Grid.Row="5"/>
+                                <TextBlock Text="{Binding MasterESM}" Grid.Column="2" Margin="2,4" Grid.Row="5"/>
+                            </Grid>
+                        </GroupBox>
+                        <GroupBox Padding="8" Margin="2">
+                            <GroupBox.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text ="Explicit Commands" VerticalAlignment="Center"/>
+                                    <hc:LoadingCircle Height="18" DotDiameter="3" Visibility="{Binding CommandPending, Converter={StaticResource Boolean2VisibilityConverter}}" />
+                                </StackPanel>
+                            </GroupBox.Header>
+                            <StackPanel>
+                                <Expander Margin="0,0,0,4" Header="Event History">
+                                    <StackPanel Margin="32,8,0,4">
+                                        <Button Content="Reload" Margin="0,0,0,8"  HorizontalAlignment="Stretch" Click="ReloadMasterEventHistory_Click" IsEnabled="{Binding CommandPending, Converter={StaticResource Boolean2BooleanReConverter}}"/>
+                                        <ListBox ItemsSource="{Binding MasterEventHistory}" MaxHeight="400" MinHeight="200"/>
+                                    </StackPanel>
+                                </Expander>
+                                <Expander Margin="0,0,0,4" Header="SDO" Validation.Error="OnSDOCommandParametersError">
+                                    <Grid Margin="32,8,0,4">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="200"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Text="Timeout :" Margin="0,2" VerticalAlignment="Center"/>
+                                        <TextBox Text="{Binding OperationTimeout, ValidatesOnExceptions=True, NotifyOnValidationError=True}" Grid.Column="1" Margin="0,2"/>
+                                        <TextBlock Text="Address :" Grid.Row="1" Margin="0,2" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Column="1" Grid.Row="1" Margin="0,2" Text="{Binding SlaveSdoOperationNodeAddress, ValidatesOnExceptions=True, NotifyOnValidationError=True}"/>
+                                        <TextBlock Text="Index(hex) :" Grid.Row="2" Margin="0,2" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Column="1" Grid.Row="2" Margin="0,2" Text="{Binding SlaveSdoOperationObjectIndex, ValidatesOnExceptions=True, NotifyOnValidationError=True, Converter={StaticResource HexadecimalUInt16}}"/>
+                                        <TextBlock Text="Sub Index(hex) :" Grid.Row="3" Margin="0,2" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Column="1" Grid.Row="3" Margin="0,2" Text="{Binding SlaveSdoOperationObjectSubIndex, ValidatesOnExceptions=True, NotifyOnValidationError=True, Converter={StaticResource HexadecimalUInt16}}"/>
+                                        <TextBlock Text="Display Format :" Grid.Row="4" Margin="0,2" VerticalAlignment="Center"/>
+                                        <ComboBox ItemsSource="{Binding Source={StaticResource EtherCATSdoDataDisplayFormat}}" SelectedItem="{Binding SlaveSdoDataDisplayFormat}" Grid.Column="1" Grid.Row="4" Margin="0,2"/>
+
+
+                                        <TextBox Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="3" Margin="0,2" IsReadOnly="True" Text="{Binding SlaveSdoRecvData, Mode=OneWay}" Height="25" VerticalContentAlignment="Center"/>
+                                        <TextBlock Grid.Row="6" Margin="0,2,8,0" VerticalAlignment="Center" Text="{Binding SlaveSdoOperationError, StringFormat=X4}"/>
+                                        <Button Content="Upload" Grid.Column="1" Grid.Row="6" Margin="0,4" HorizontalAlignment="Stretch"  Click="UploadSDO_Click" IsEnabled="{Binding CommandPending, Converter={StaticResource Boolean2BooleanReConverter}}"/>
+
+                                        <TextBox Grid.Column="0" Grid.Row="7" Grid.ColumnSpan="3" Margin="0,2" Name="SdoDataToBeDownloaded" Text="{Binding SlaveSdoSendData, UpdateSourceTrigger=Explicit, Mode=OneWayToSource,ValidatesOnExceptions=True, NotifyOnValidationError=True}" Height="25" VerticalContentAlignment="Center" KeyDown="SdoDataToBeDownloaded_KeyDown"/>
+                                        <TextBlock Grid.Row="8" Margin="0,2,8,0" VerticalAlignment="Center" Text="{Binding SlaveSdoOperationError, StringFormat=X4}"/>
+                                        <Button Content="Download" Grid.Column="2" Grid.Row="8" Margin="0,4" HorizontalAlignment="Stretch" Click="DownloadSDO_Click" IsEnabled="{Binding CommandPending, Converter={StaticResource Boolean2BooleanReConverter}}"/>
+                                    </Grid>
+                                </Expander>
+                                <Expander Margin="0,0,0,4" Header="Master EtherCAT State Machine" Validation.Error="OnRequestMasterEsmParametersError">
+                                    <Grid Margin="32,8,0,4">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="200"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Text="Timeout :" Margin="0,2" VerticalAlignment="Center"/>
+                                        <TextBox Text="{Binding OperationTimeout, ValidatesOnExceptions=True, NotifyOnValidationError=True}" Grid.Column="1" Margin="0,2"/>
+                                        <TextBlock Text="Request ESM :" Grid.Row="1" Margin="0,2" VerticalAlignment="Center"/>
+                                        <ComboBox ItemsSource="{Binding Source={StaticResource EtherCATStateMachine}}" SelectedItem="{Binding MasterRequestedStateMachine}" Grid.Column="1" Grid.Row="1" Margin="0,2"/>
+                                        <TextBlock Text="Error Code :" Margin="0,2" Grid.Row="2"/>
+                                        <TextBlock Text="{Binding MasterStateMachineErrorCode, StringFormat={}0x{0:X8}}" Grid.Column="1" Grid.Row="2" Margin="0,2"/>
+                                        <Button Content="Request" Grid.Column="1" Grid.Row="3" Margin="0,4" HorizontalAlignment="Stretch" Click="RequstMasterESM_Click" IsEnabled="{Binding CommandPending, Converter={StaticResource Boolean2BooleanReConverter}}"/>
+                                    </Grid>
+                                </Expander>
+                                <Expander Margin="0,0,0,4" Header="Slave EtherCAT State Machine" Validation.Error="OnRequestSlaveEsmParametersError">
+                                    <Grid Margin="32,8,0,4">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="200"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Text="Timeout :" Margin="0,2" VerticalAlignment="Center"/>
+                                        <TextBox Text="{Binding OperationTimeout, ValidatesOnExceptions=True, NotifyOnValidationError=True}" Grid.Column="1" Margin="0,2"/>
+                                        <TextBlock Text="Index :" Grid.Row="1" Margin="0,2" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Column="1" Grid.Row="1" Margin="0,2" Text="{Binding SlaveStateMachineNodeIndex, ValidatesOnExceptions=True, NotifyOnValidationError=True}"/>
+                                        <TextBlock Text="Request ESM :" Grid.Row="2" Margin="0,2" VerticalAlignment="Center"/>
+                                        <ComboBox ItemsSource="{Binding Source={StaticResource EtherCATStateMachine}}" SelectedItem="{Binding SlaveRequestedStateMachine}" Grid.Column="1" Grid.Row="2" Margin="0,2"/>
+                                        <TextBlock Text="Error Code :" Margin="0,2" Grid.Row="3"/>
+                                        <TextBlock Text="{Binding SlaveStateMachineErrorCode, StringFormat={}0x{0:X8}}" Grid.Column="1" Grid.Row="3" Margin="0,2"/>
+                                        <Button Content="Request" Grid.Column="1" Grid.Row="4" Margin="0,4" HorizontalAlignment="Stretch" Click="RequstSlaveESM_Click" IsEnabled="{Binding CommandPending, Converter={StaticResource Boolean2BooleanReConverter}}"/>
+                                    </Grid>
+                                </Expander>
+                                <Expander Margin="0,0,0,4" Header="Master Control Commands" Validation.Error="OnExecuteMasterControlCommandParametersError">
+                                    <Grid Margin="32,8,0,4">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="200"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Text="Timeout :" Margin="0,2" VerticalAlignment="Center"/>
+                                        <TextBox Text="{Binding OperationTimeout, ValidatesOnExceptions=True, NotifyOnValidationError=True}" Grid.Column="1" Margin="0,2"/>
+                                        <TextBlock Text="Commmand :" Grid.Row="1" Margin="0,2" VerticalAlignment="Center"/>
+                                        <ComboBox ItemsSource="{Binding Source={StaticResource EtherCATControlCommand}}" SelectedItem="{Binding MasterControlCommand}" Grid.Column="1" Grid.Row="1" Margin="0,2"/>
+                                        <Button Content="Request" Grid.Column="1" Grid.Row="2" Margin="0,4" HorizontalAlignment="Stretch" Click="ExecuteMasterControlCommand_Click" IsEnabled="{Binding CommandPending, Converter={StaticResource Boolean2BooleanReConverter}}"/>
+                                    </Grid>
+                                </Expander>
+                            </StackPanel>
+                        </GroupBox>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="Slave Diagnostic" Name="SlaveDiagnostic">
+                
+            </TabItem>
+        </TabControl>
+    </DockPanel>
+</UserControl>

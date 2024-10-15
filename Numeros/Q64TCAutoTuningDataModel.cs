@@ -709,7 +709,7 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
             return true;
         }
 
-        public override void ExchangeDataWihtUserInterface()
+        public override void ExchangeDataWithUserInterface()
         {
             __user_read_data();
             var res = __process_in_data_user_interface.control_in;
