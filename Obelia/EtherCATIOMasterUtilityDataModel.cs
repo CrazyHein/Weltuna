@@ -79,6 +79,17 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
                                 new ushort[Marshal.SizeOf<ECAT_PROCESS_IN_DATA_T.PROCESS_IN_T.MASTER_DIAGNOSTIC_INFO_T>()/2],
                                 new ushort[1]
                         };
+
+                        __process_xy_address_table = new List<(string, uint, ushort)>()
+                        {
+                            ("X", __device_sync_address, 2),
+                            ("Y", __device_sync_address, 2),
+                        };
+                        __process_xy_data = new Memory<ushort>[2]
+                        {
+                            new ushort[2],
+                            new ushort[2],
+                        };
                     }
                     __process_in_data_device.control_in = new ENABLE_RESULT_T() { device_address = __device_sync_specification, model = __device_sync_model };
                     __process_out_data_device.control_out = null;
@@ -114,6 +125,17 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
                             new ushort[1],
                             new ushort[1],
                             new ushort[1],
+                        };
+
+                        __process_xy_address_table = new List<(string, uint, ushort)>()
+                        {
+                            ("X", __device_sync_address, 2),
+                            ("Y", __device_sync_address, 2),
+                        };
+                        __process_xy_data = new Memory<ushort>[2]
+                        {
+                            new ushort[2],
+                            new ushort[2],
                         };
                     }
 
@@ -167,6 +189,22 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
                     __process_in_data_device.control_in = new DISABLE_RESULT_T() { end_code = 0, exception_code = SLMP_EXCEPTION_CODE_T.NO_ERROR };
                     __process_out_data_device.control_out = null;
                     __device_sync_control = false;
+                    break;
+                case EXECUTE_Y_COMMAND_T xy:
+                    try
+                    {
+                        master.WriteLocalDeviceInBit(monitoringTimer, "Y", __device_sync_address + (ushort)xy.request_command, 1, out end, new byte[] { (byte)(xy.request_value ? 1 : 0) });
+                        __process_in_data_device.control_in = new EXECUTE_Y_RESULT_T() { end_code = end, exception_code = SLMP_EXCEPTION_CODE_T.NO_ERROR, request_command = xy.request_command, request_value = xy.request_value };
+                        __process_out_data_device.control_out = null;
+                    }
+                    catch (SLMPException ex)
+                    {
+                        __process_in_data_device.control_in = new EXECUTE_Y_RESULT_T() { end_code = end, exception_code = ex.ExceptionCode, request_command = xy.request_command, request_value = xy.request_value };
+                        __process_out_data_device.control_out = null;
+
+                        if (ex.ExceptionCode == SLMP_EXCEPTION_CODE_T.RUNTIME_ERROR)
+                            throw;
+                    }
                     break;
                 case SWITCH_INTERACTIVE_COMMAND_T sw:
                     __process_out_data_device.control_out = null;
@@ -736,6 +774,16 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
                             }
                         }
 
+                        if (__process_in_data_device.process_in.pin_end_code == 0)
+                        {
+                            master.ReadLocalDeviceInWord(monitoringTimer, null, __process_xy_address_table, out __process_in_data_device.process_in.pin_end_code, null, __process_xy_data);
+                            if (__process_in_data_device.process_in.pin_end_code == 0)
+                            {
+                                __process_in_data_device.process_in.x_status = __process_xy_data[0].Span[0];
+                                __process_in_data_device.process_in.y_status = __process_xy_data[1].Span[0];
+                            }
+                        }
+
                         if (__process_in_data_device.process_in.pin_end_code == 0 && __slave_pdo_sync_mode != SLAVE_PDO_SYNC_MODE_T.Disabled)
                         {
                             if (__slave_pdo_sync_mode == SLAVE_PDO_SYNC_MODE_T.Interactive)
@@ -925,6 +973,12 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
                         else if (ret.timeout == true)
                             __add_exception_info($"EXECUTE MASTER CONTROL COMMAND: {ret.control}", "Operation Timout");
                         break;
+                    case EXECUTE_Y_RESULT_T ret:
+                        if (res.exception_code != SLMP_EXCEPTION_CODE_T.NO_ERROR)
+                            __add_exception_info($"EXECUTE Y REQUEST: {ret.request_command} - {ret.request_value}", res.exception_code);
+                        else if (res.end_code != 0)
+                            __add_exception_info($"EXECUTE Y REQUEST: {ret.request_command} - {ret.request_value}", res.end_code);
+                        break;
                 }
                 __process_in_data_user_interface.control_in = null;
                 CommandPending = false;
@@ -960,6 +1014,9 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
                     MasterErrorStatus = __process_in_data_user_interface.process_in.master_diagnostic_info.master_error;
                     CableErrorStatus = __process_in_data_user_interface.process_in.master_diagnostic_info.cable_error;
                     MasterESM = __process_in_data_user_interface.process_in.master_state_machine;
+                    XStatus = __process_in_data_user_interface.process_in.x_status;
+
+                    ClearModuleErrorRequested = (__process_in_data_user_interface.process_in.y_status & (1 << (int)Y_REQUEST_T.CLEAR_MODULE_ERROR)) != 0;
 
                     if (ENIOpened)
                     {
@@ -1278,6 +1335,8 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
         {
             __process_in_address_table = null;
             __process_in_data = null;
+            __process_xy_address_table = null;
+            __process_xy_data = null;
 
             __slave_pdo_data = null;
             __slave_tx_pdo_segments = null;
@@ -1307,6 +1366,8 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
         private DEVICE_MODEL_TYPE_T __device_sync_model;
         List<(string, uint, ushort)>? __process_in_address_table = null;
         Memory<ushort>[]? __process_in_data = null;
+        List<(string, uint, ushort)>? __process_xy_address_table = null;
+        Memory<ushort>[]? __process_xy_data = null;
         List<(string, uint, ushort)> __parameter_address_table = null;
         Memory<ushort>[] __parameter_values = null;
         List<(string deviceCode, uint headDevice, ushort devicePoints, ReadOnlyMemory<ushort> data)> __parameters = null;
@@ -1388,6 +1449,19 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
             }
         }
 
+        private bool __clear_module_error_requested = false;
+        public bool ClearModuleErrorRequested
+        {
+            get { return __clear_module_error_requested; }
+            private set
+            {
+                if (value != __clear_module_error_requested)
+                {
+                    SetProperty(ref __clear_module_error_requested, value, false);
+                }
+            }
+        }
+
         private bool __interactive_sync_slave_pdo = false;
         public bool InteractiveSyncSlavePdo
         {
@@ -1429,6 +1503,12 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
         {
             get { return __process_in_data_user_interface.process_in.master_diagnostic_info.cable_error; }
             private set { SetProperty(ref __process_in_data_user_interface.process_in.master_diagnostic_info.cable_error, value, false); }
+        }
+
+        public ushort XStatus
+        {
+            get { return __process_in_data_user_interface.process_in.x_status; }
+            private set { SetProperty(ref __process_in_data_user_interface.process_in.x_status, value, false); }
         }
 
         public STATE_MACHINE_T MasterESM
@@ -1751,6 +1831,18 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
                 timeout = OperationTimeout,
                 start_ticks = Environment.TickCount,
                 control = MasterControlCommand,
+            };
+            CommandPending = true;
+            return true;
+        }
+
+        public bool RequestClearModuleError(bool rsq)
+        {
+            if (CommandPending) return false;
+            __process_out_data_user_interface.control_out = new EXECUTE_Y_COMMAND_T()
+            {
+                request_command = Y_REQUEST_T.CLEAR_MODULE_ERROR,
+                request_value = rsq,
             };
             CommandPending = true;
             return true;

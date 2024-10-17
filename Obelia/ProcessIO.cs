@@ -101,6 +101,7 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
         ENABLE,
         ENABLE_WITH_ENI,
         DISABLE,
+        Y,
         START_IO_COMMUNICATION,
         STOP_IO_COMMUNICATION,
         INTERACTIVE_MODE,
@@ -109,6 +110,11 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
         REQUEST_MASTER_ESM,
         REQUEST_SLAVE_ESM,
         MASTER_CONTROL
+    }
+
+    public enum Y_REQUEST_T: ushort
+    {
+        CLEAR_MODULE_ERROR = 15
     }
 
     internal abstract class ASYNC_COMMAND_T
@@ -161,6 +167,21 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
     internal class DISABLE_RESULT_T : ASYNC_RESULT_T
     {
         public DISABLE_RESULT_T() : base() { cmd = ASYNC_COMMAND_CODE_T.DISABLE; }
+    }
+
+    internal class EXECUTE_Y_COMMAND_T : ASYNC_COMMAND_T
+    {
+        public Y_REQUEST_T request_command { get; init; }
+        public bool request_value { get; init; }
+
+        public EXECUTE_Y_COMMAND_T() : base() { cmd = ASYNC_COMMAND_CODE_T.Y; }
+    }
+
+    internal class EXECUTE_Y_RESULT_T : ASYNC_RESULT_T
+    {
+        public Y_REQUEST_T request_command { get; init; }
+        public bool request_value { get; init; }
+        public EXECUTE_Y_RESULT_T() : base() { cmd = ASYNC_COMMAND_CODE_T.Y; }
     }
 
     internal class SWITCH_INTERACTIVE_COMMAND_T : ASYNC_COMMAND_T
@@ -300,7 +321,6 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
                 public COMMUNICATION_STATE_T communication_state;
                 public ushort master_error;
                 public ushort cable_error;
-
                 public void Reset()
                 {
                     number_of_slaves_registered = 0;
@@ -312,6 +332,8 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
             }
 
             public MASTER_DIAGNOSTIC_INFO_T master_diagnostic_info;
+            public ushort x_status;
+            public ushort y_status;
             public STATE_MACHINE_T master_state_machine;
 
             public SLAVE_PDO_T? slave_pdo;
@@ -328,6 +350,8 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
             public void CopyTo(ref PROCESS_IN_T data)
             {
                 data.master_diagnostic_info = master_diagnostic_info;
+                data.x_status = x_status;
+                data.y_status = y_status;
                 data.master_state_machine = master_state_machine;
                 data.pin_end_code = pin_end_code;
                 data.pin_exception_code = pin_exception_code;
@@ -339,6 +363,8 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
             public void Reset()
             {
                 master_diagnostic_info.Reset();
+                x_status = 0;
+                y_status = 0;
                 master_state_machine = STATE_MACHINE_T.NONE;
                 slave_pdo = null;
                 pin_end_code = 0;

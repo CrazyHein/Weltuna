@@ -195,6 +195,8 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
                 uint globalOffset = globalTxOffset;
                 foreach (XmlNode pdoNode in slaveNode.SelectNodes("ProcessData/TxPdo"))
                 {
+                    if (pdoNode.Attributes["Sm"] == null)
+                        continue;
                     string pdoName = pdoNode.SelectSingleNode("Name").FirstChild.Value;
                     ushort pdoIndex = Convert.ToUInt16(pdoNode.SelectSingleNode("Index").FirstChild.Value.Substring(2), 16);
                     List<Variable> variables = new List<Variable>();

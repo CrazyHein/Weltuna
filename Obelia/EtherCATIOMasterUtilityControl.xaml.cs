@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static System.Windows.Forms.DataFormats;
 
 namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool.Obelia
 {
@@ -41,6 +42,14 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
 
             CableErrorStatus1.IndicatorToolTips = new string[] {
                 "n/a", "n/a", "n/a", "n/a", "n/a", "n/a", "n/a", "n/a"
+            };
+
+            XStatus0.IndicatorToolTips = new string[] {
+                "ready", "n/a", "n/a", "n/a", "n/a", "n/a", "n/a", "n/a"
+            };
+
+            XStatus1.IndicatorToolTips = new string[] {
+                "n/a", "n/a", "n/a", "n/a", "n/a", "n/a", "n/a", "module_error"
             };
         }
 
@@ -187,6 +196,15 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
             else
                 (DataContext as EtherCATIOMasterUtilityDataModel).ExecuteMasterControlCommand();
         }
+
+        private void SetClearModuleErrorRequest_Click(object sender, RoutedEventArgs e)
+        {
+            (DataContext as EtherCATIOMasterUtilityDataModel).RequestClearModuleError(true);
+        }
+        private void ClrClearModuleErrorRequest_Click(object sender, RoutedEventArgs e)
+        {
+            (DataContext as EtherCATIOMasterUtilityDataModel).RequestClearModuleError(false);
+        }
     }
 
     internal class UnshortUpperByte : IValueConverter
@@ -232,6 +250,25 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks.Tool
             {
                 return new ArgumentException();
             }
+        }
+    }
+
+    internal class BitIndicatorValueConverter : IValueConverter
+    {
+        private SolidColorBrush ON { get; set; } = new SolidColorBrush(Colors.LawnGreen);
+        private SolidColorBrush OFF { get; set; } = new SolidColorBrush(Colors.LightGray);
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if ((bool)value == false)
+                return OFF;
+            else
+                return ON;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
         }
     }
 }
