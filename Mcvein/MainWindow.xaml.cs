@@ -107,8 +107,8 @@ namespace AMEC.PCSoftware.RemoteConsole.CrazyHein.MitsubishiControllerWorks
 
         private void RemoveTarget_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = __target_manager_data_model != null && __target_manager_data_model.SelectedTarget != null &&
-                (__main_wnd_data_model.IsOnline == false || (__target_manager_data_model.SelectedTarget != __target_manager_data_model.ActivedTarget));
+            e.CanExecute = __target_manager_data_model != null && __target_manager_data_model.SelectedTarget != null && __target_manager_data_model.SelectedTarget != __target_manager_data_model.ActivedTarget;
+                //(__main_wnd_data_model.IsOnline == false || (__target_manager_data_model.SelectedTarget != __target_manager_data_model.ActivedTarget));
         }
 
         private void RemoveTarget_Executed(object sender, ExecutedRoutedEventArgs e)
